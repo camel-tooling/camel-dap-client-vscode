@@ -1,8 +1,19 @@
 {
 	"name": "vscode-debug-adapter-apache-camel",
-	"displayName": "vscode-debug-adapter-apache-camel",
+	"displayName": "Debug Adapter for Apache Camel by Red Hat",
 	"description": "Client for the Debug Adapter implementation for Apache Camel",
+	"license": "Apache-2.0",
 	"version": "0.0.1",
+	"preview": true,
+	"publisher": "redhat",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/camel-tooling/camel-dap-client-vscode.git"
+	},
+	"homepage": "https://github.com/camel-tooling/camel-dap-client-vscode",
+	"bugs": {
+		"url": "https://github.com/camel-tooling/camel-dap-client-vscode/issues"
+	},
 	"engines": {
 		"vscode": "^1.63.0"
 	},
