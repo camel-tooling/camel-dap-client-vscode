@@ -21,6 +21,14 @@
 		"Other"
 	],
 	"main": "./out/extension.js",
+	"activationEvents": [
+		"onLanguage:xml",
+		"workspaceContains:**/*.xml",
+		"onLanguage:java",
+		"workspaceContains:**/*.java",
+		"onLanguage:yaml",
+		"workspaceContains:**/*.yaml"
+	],
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
