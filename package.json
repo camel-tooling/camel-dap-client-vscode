@@ -18,7 +18,7 @@
 		"vscode": "^1.63.0"
 	},
 	"categories": [
-		"Other"
+		"Debuggers"
 	],
 	"main": "./out/extension.js",
 	"activationEvents": [
@@ -27,8 +27,49 @@
 		"onLanguage:java",
 		"workspaceContains:**/*.java",
 		"onLanguage:yaml",
-		"workspaceContains:**/*.yaml"
+		"workspaceContains:**/*.yaml",
+		"onDebug"
 	],
+	"contributes": {
+		"breakpoints": [
+			{
+				"language": "xml"
+			},
+			{
+				"language": "java"
+			},
+			{
+				"language": "yaml"
+			}
+		],
+		"debuggers": [
+			{
+				"type": "apache.camel",
+				"label": "Apache Camel Debug",
+				"languages": ["xml", "java", "yaml"],
+				"configurationAttributes": {
+					"attach" : {
+						"required": ["attach_pid"],
+						"properties" : {
+							"attach_pid": {
+								"type": "string",
+								"description": "PID of the Camel Application To Debug."
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "apache.camel",
+						"request": "attach",
+						"name": "Attach Camel Debugger",
+						"attach_pid": "<replaceWithPidOfTheCamelApplicationToDebug>"
+					}
+				]
+			}
+		]
+		
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
