@@ -11,7 +11,7 @@ export class CamelDebugAdapterDescriptorFactory implements vscode.DebugAdapterDe
 	createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
 		if(!executable) {
 			const command = 'java';
-			const jarPath = this.context.asAbsolutePath('jars/camel-dap-server-0.0.1-SNAPSHOT.jar');
+			const jarPath = this.context.asAbsolutePath('jars/camel-dap-server.jar');
 			const args = ['-jar', jarPath];
 			return new vscode.DebugAdapterExecutable(command, args);
 		}
