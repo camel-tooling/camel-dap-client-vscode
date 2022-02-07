@@ -15,7 +15,10 @@
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "${defaultBuildTask}",
+			"env": {
+				"VSCODE_REDHAT_TELEMETRY_DEBUG":"true"
+			}
 		},
 		{
 			"name": "Extension Tests",
