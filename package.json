@@ -15,7 +15,7 @@
 		"url": "https://github.com/camel-tooling/camel-dap-client-vscode/issues"
 	},
 	"engines": {
-		"vscode": "^1.63.0"
+		"vscode": "^1.64.0"
 	},
 	"categories": [
 		"Debuggers"
@@ -42,6 +42,17 @@
 				"language": "yaml"
 			}
 		],
+		"configuration": {
+			"properties": {
+				"redhat.telemetry.enabled": {
+					"type": "boolean",
+					"default": null,
+					"markdownDescription": "Enable usage data and errors to be sent to Red Hat servers. Read our [privacy statement](https://developers.redhat.com/article/tool-data-collection).",
+					"scope": "window",
+					"tags": ["telemetry"]
+				  }
+			}	
+		},
 		"debuggers": [
 			{
 				"type": "apache.camel",
@@ -98,5 +109,8 @@
 		"mocha-jenkins-reporter": "^0.4.7",
 		"mvn-artifact-download": "^6.0.0",
 		"typescript": "^4.5.4"
+	},
+	"dependencies": {
+		"@redhat-developer/vscode-redhat-telemetry": "^0.4.2"
 	}
 }
