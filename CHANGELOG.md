@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 0.0.2
+
 ## 0.0.1
 
 - Support local use of Camel debugger by attaching to a running Camel route written in Java using the PID
