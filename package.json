@@ -6,6 +6,7 @@
 	"version": "0.0.2",
 	"preview": true,
 	"publisher": "redhat",
+	"icon": "icons/icon128.png",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/camel-tooling/camel-dap-client-vscode.git"
