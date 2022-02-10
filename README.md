@@ -1,3 +1,4 @@
+[![Build and Test](https://github.com/camel-tooling/camel-dap-client-vscode/actions/workflows/ci.yaml/badge.svg)](https://github.com/camel-tooling/camel-dap-client-vscode/actions/workflows/ci.yaml)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=camel-tooling_camel-dap-client-vscode&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=camel-tooling_camel-dap-client-vscode)
 
 # VS Code Debug Adapter client for Apache Camel
