@@ -1,3 +1,5 @@
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=camel-tooling_camel-dap-client-vscode&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=camel-tooling_camel-dap-client-vscode)
+
 # VS Code Debug Adapter client for Apache Camel
 
 ![A breakpoint hit on a Camel route endpoint and the variables displayed](./docs/images/breakpoint.png)
