@@ -20,6 +20,13 @@
 	"categories": [
 		"Debuggers"
 	],
+	"keywords": [
+		"Camel",
+		"Apache Camel",
+		"DAP",
+		"Debug Adapter Protocol",
+		"Debugging"
+	],
 	"main": "./out/extension.js",
 	"activationEvents": [
 		"onLanguage:xml",
