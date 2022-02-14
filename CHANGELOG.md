@@ -4,6 +4,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.0.2
 
+- Support Camel routes written with Camel Yaml DSL
 - Add keywords to the extension to have a better discoverability in the Marketplace
 - Provide icon for the extension to improve visibility in marketplace. It also improve coherence with other `Camel Tooling` extensions
 - Provide license file at the root of the binary to better match `vsce` recommendations
