@@ -29,7 +29,7 @@
 
 ## Features
 
-- Support local use of Camel debugger by attaching to a running Camel route written in Java or Yaml using the PID
+- Support local use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML (only `Camel Main` mode for XML) using the PID
 - Support a single Camel context
 - Add/Remove breakpoint
 - Inspect variable values on suspended breakpoints
