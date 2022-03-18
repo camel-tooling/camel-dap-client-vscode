@@ -9,6 +9,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
   - the message body
   - a message header when it is of type String
   - an exchange property when it is of type String
+- Support JMX connection
 
 ## 0.0.2
 

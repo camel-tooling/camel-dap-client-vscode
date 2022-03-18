@@ -7,9 +7,58 @@
 
 ## How to use it
 
-- Start a Camel application
-- Grab the PID of the java process
-- In `.vscode/launch.json`, provide this kind of content:
+### Happy path
+
+- Start a Camel 3.16+ application with `camel-debug` on the classpath
+- In `.vscode/launch.json`, provide this kind of content for a local default JMX connection (which is `service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel`):
+
+```json
+  {
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "apache.camel",
+			"request": "attach",
+			"name": "Attach Camel Debugger"
+		}
+	]
+  }
+  ```
+- In `Run and Debug` panel, launch the `Attach Camel Debugger`
+- Put a breakpoint on the Camel route
+- Enjoy!
+
+### Debug launch configuration
+
+In `.vscode/launch.json`, provide this kind of content for a local default JMX connection (which is `service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel`):
+
+```json
+  {
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "apache.camel",
+			"request": "attach",
+			"name": "Attach Camel Debugger"
+		}
+	]
+  }
+  ```
+or for a specific JMX Url:
+  ```json
+  {
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "apache.camel",
+			"request": "attach",
+			"name": "Attach Camel Debugger",
+			"attach_jmx_url": "service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel"
+		}
+	]
+  }
+  ```
+or for a local connection using PID of the Camel application process:
   ```json
   {
 	"version": "0.2.0",
@@ -23,12 +72,10 @@
 	]
   }
   ```
-- In `Run and Debug` panel, launch the `Attach Camel Debugger`
-- Put a breakpoint on the Camel route
-- Enjoy!
 
 ## Features
 
+- Support use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML (only `Camel Main` mode for XML) using the JMX Url
 - Support local use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML (only `Camel Main` mode for XML) using the PID
 - Support a single Camel context
 - Add/Remove breakpoint
@@ -46,8 +93,8 @@
 Java Runtime Environment 11+ with com.sun.tools.attach.VirtualMachine (available in most JVMs such as Hotspot and OpenJDK) must be available on system path.
 
 The Camel instance to debug must follow these requirements:
-  - Camel 3.15+
-  - Have camel-debug on the classpath
+  - Camel 3.16+
+  - Have `camel-debug` on the classpath
   - Have JMX enabled
 
 ## Usage data
