@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.1.0
 
+- Allow to update values of variables in scope `Debugger`
+
 ## 0.0.2
 
 - Support Camel routes written with Camel Yaml DSL
