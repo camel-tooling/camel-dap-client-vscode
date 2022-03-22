@@ -4,7 +4,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.1.0
 
-- Allow to update values of variables in scope `Debugger`
+- Allow to update values of variables in scope `Debugger` and the message body
 
 ## 0.0.2
 
