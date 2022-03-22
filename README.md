@@ -35,7 +35,7 @@
 - Inspect variable values on suspended breakpoints
 - Resume a single route instance and resume all route instances
 - Stepping when the route definition is in the same file
-- Update values of variables in scope `Debugger`
+- Update values of variables in scope `Debugger` and the message body
 
 ## Requirements
 
