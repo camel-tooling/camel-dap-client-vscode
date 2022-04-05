@@ -41,11 +41,11 @@ node('rhel8'){
 	if(params.UPLOAD_LOCATION) {
 		stage('Snapshot') {
 			def filesToPush = findFiles(glob: '**.vsix')
-			sh "sftp ${UPLOAD_LOCATION}/snapshots/vscode-debug-adapter-apache-camel/ <<< \$'put {filesToPush[0].path}'"
+			sh "sftp -C ${UPLOAD_LOCATION}/snapshots/vscode-debug-adapter-apache-camel/ <<< \$'put -p -r ${filesToPush[0].path}'"
             stash name:'vsix', includes:filesToPush[0].path
             def tgzFilesToPush = findFiles(glob: '**.tgz')
             stash name:'tgz', includes:tgzFilesToPush[0].path
-            sh "sftp ${UPLOAD_LOCATION}/snapshots/vscode-debug-adapter-apache-camel/ <<< \$'put {tgzFilesToPush[0].path}'"
+            sh "sftp -C ${UPLOAD_LOCATION}/snapshots/vscode-debug-adapter-apache-camel/ <<< \$'put -p -r ${tgzFilesToPush[0].path}'"
 		}
     }
 }
@@ -67,10 +67,10 @@ node('rhel8'){
 
             stage "Promote the build to stable"
             def vsix = findFiles(glob: '**.vsix')
-            sh "sftp ${UPLOAD_LOCATION}/stable/vscode-debug-adapter-apache-camel/ <<< \$'put {vsix[0].path}'"
+            sh "sftp -C ${UPLOAD_LOCATION}/stable/vscode-debug-adapter-apache-camel/ <<< \$'put -p -r ${vsix[0].path}'"
 
             def tgz = findFiles(glob: '**.tgz')
-            sh "sftp ${UPLOAD_LOCATION}/stable/vscode-debug-adapter-apache-camel/ <<< \$'put {tgz[0].path}'"
+            sh "sftp -C ${UPLOAD_LOCATION}/stable/vscode-debug-adapter-apache-camel/ <<< \$'put -p -r ${tgz[0].path}'"
 
             sh "npm install -g ovsx"
 		    withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
