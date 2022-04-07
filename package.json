@@ -3,7 +3,7 @@
 	"displayName": "Debug Adapter for Apache Camel by Red Hat",
 	"description": "Client for the Debug Adapter implementation for Apache Camel",
 	"license": "Apache-2.0",
-	"version": "0.2.0",
+	"version": "0.1.1",
 	"preview": true,
 	"publisher": "redhat",
 	"icon": "icons/icon128.png",
@@ -72,13 +72,14 @@
 				],
 				"configurationAttributes": {
 					"attach": {
-						"required": [
-							"attach_pid"
-						],
 						"properties": {
 							"attach_pid": {
 								"type": "string",
 								"description": "PID of the Camel Application To Debug."
+							},
+							"attach_jmx_url": {
+								"type": "string",
+								"description": "JMX URL of the Camel Application To Debug. Default is service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel"
 							}
 						}
 					}
@@ -87,8 +88,7 @@
 					{
 						"type": "apache.camel",
 						"request": "attach",
-						"name": "Attach Camel Debugger",
-						"attach_pid": "<replaceWithPidOfTheCamelApplicationToDebug>"
+						"name": "Attach Camel Debugger"
 					}
 				]
 			}

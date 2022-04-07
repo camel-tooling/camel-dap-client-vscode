@@ -2,7 +2,9 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
-## 0.2.0
+## 0.1.1
+
+- Fix Launch Configuration data type: removing `attach_pid` as mandatory and provide `attach_jmx_url`
 
 ## 0.1.0
 
