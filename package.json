@@ -90,6 +90,37 @@
 						"request": "attach",
 						"name": "Attach Camel Debugger"
 					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Camel: Attach Debugger",
+						"description": "Attach Camel Debugger using default JMX connection URL. It expects that the Camel application to debug is running with JMX exposed, camel-debug available on the classpath and Camel version greater than 3.16.",
+						"body": {
+							"name": "Attach Camel Debugger",
+							"type": "apache.camel",
+							"request": "attach"
+						}
+					},
+					{
+						"label": "Camel: Attach Debugger with JMX URL",
+						"description": "Attach Camel Debugger using JMX connection URL. It expects that the Camel application to debug is running with JMX exposed, camel-debug available on the classpath and Camel version greater than 3.16.",
+						"body": {
+							"name": "Attach Camel Debugger",
+							"type": "apache.camel",
+							"request": "attach",
+							"attach_jmx_url": "service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel"
+						}
+					},
+					{
+						"label": "Camel: Attach Debugger using PID",
+						"description": "Attach Camel Debugger using PID of the Camel Application to debug. It expects that the Camel application to debug is running with JMX exposed, camel-debug available on the classpath and Camel version greater than 3.16.",
+						"body": {
+							"name": "Attach Camel Debugger",
+							"type": "apache.camel",
+							"request": "attach",
+							"attach_pid": "<replace with PID>"
+						}
+					}
 				]
 			}
 		]
