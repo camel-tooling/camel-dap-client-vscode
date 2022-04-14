@@ -5,7 +5,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 0.2.0
 
 - Provide error message and remind requirements in case of failure when trying to attach the debugger
-- Provide configuration snippets for Camel debugger
+- Provide configuration snippets for Camel debugger launch configuration and Camel application launch task
 
 ## 0.1.1
 
