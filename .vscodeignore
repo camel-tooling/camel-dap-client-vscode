@@ -12,3 +12,4 @@ docs/**
 sonar-project.properties
 **/*.vsix
 .github/**
+test Fixture with speci@l chars
