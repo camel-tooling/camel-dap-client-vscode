@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { CamelDebugAdapterDescriptorFactory } from './CamelDebugAdpaterDescriptorFactory';
 import { getRedHatService, TelemetryService } from "@redhat-developer/vscode-redhat-telemetry";
-import { CamelMavenTasksCompletionItemProvider } from './completion/CamelMavenTasksCompletionItemProvider';
+import { CamelApplicationLauncherTasksCompletionItemProvider } from './completion/CamelApplicationLauncherTasksCompletionItemProvider';
 
 let telemetryService: TelemetryService;
 
@@ -11,7 +11,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.debug.registerDebugAdapterDescriptorFactory(CAMEL_DEBUG_ADAPTER_ID, new CamelDebugAdapterDescriptorFactory(context));
 	
 	const tasksJson:vscode.DocumentSelector = { scheme: 'file', language: 'jsonc', pattern: '**/tasks.json' };
-	vscode.languages.registerCompletionItemProvider(tasksJson, new CamelMavenTasksCompletionItemProvider());
+	vscode.languages.registerCompletionItemProvider(tasksJson, new CamelApplicationLauncherTasksCompletionItemProvider());
 	
 	const redhatService = await getRedHatService(context);  
 	telemetryService = await redhatService.getTelemetryService();

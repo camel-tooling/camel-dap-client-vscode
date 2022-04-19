@@ -5,9 +5,15 @@ import path = require('path');
 suite('Should do completion in tasks.json', () => {
 	
 	
-	test('Completion for Start appliction with camel.debug profile', async () => {
+	test('Completion for Start application with camel.debug profile', async () => {
 		const docURiTasksJson = getDocUri('.vscode/tasks.json');
-		const expectedCompletion = { label: 'Start Camel application with camel.debug profile' };
+		const expectedCompletion = { label: 'Start Camel application with Maven with camel.debug profile' };
+		await testCompletion(docURiTasksJson, new vscode.Position(3, 7), expectedCompletion);
+	}).timeout(20000);
+	
+	test('Completion for Start application with jbang', async () => {
+		const docURiTasksJson = getDocUri('.vscode/tasks.json');
+		const expectedCompletion = { label: 'Start Camel application with JBang with camel-debug' };
 		await testCompletion(docURiTasksJson, new vscode.Position(3, 7), expectedCompletion);
 	}).timeout(20000);
 
