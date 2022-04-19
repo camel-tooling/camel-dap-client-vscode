@@ -107,12 +107,12 @@
 					},
 					{
 						"label": "Camel: Start Camel application and attach Camel debugger",
-						"description": "Start Camel application and attach Camel debugger. It expects that a VS Code task with name 'Run Camel application with camel.debug profile' is available. This task is responsible to launch the Camel application with all requirements. To help, a completion is available in .vscode/tasks.json file.",
+						"description": "Start Camel application and attach Camel debugger. It expects that a VS Code task with name 'Start Camel application' is available. This task is responsible to launch the Camel application with all requirements. To help, a completion is available in .vscode/tasks.json file.",
 						"body": {
 							"name": "Attach Camel Debugger",
 							"type": "apache.camel",
 							"request": "attach",
-							"preLaunchTask": "Run Camel application with camel.debug profile"
+							"preLaunchTask": "Start Camel application"
 						}
 					},
 					{
