@@ -30,7 +30,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 		"camel:run",
 		"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
 	],
-	"problemMatcher": { // Problem matcher is mandatory to avoid a dialog warning on each launch but cannot find a good way to configure it. This one is a dummy one.
+	"problemMatcher": { // Problem matcher is mandatory to avoid a dialog warning on each launch. This is a very minimal implementation.
 		"owner": "camel",
 		"pattern": {
 			"regexp": "^.*$" 				
@@ -40,7 +40,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 		"background": {
 			"activeOnStart": true,
 			"beginsPattern": "^.*$",
-			"endsPattern": "^.*$"
+			"endsPattern": "^.*JMX Connector thread started and listening at.*$"
 		}
 	},
 	"presentation": {
@@ -67,17 +67,17 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 		"--reload",
 		"--dep=org.apache.camel:camel-debug"
 	],
-	"problemMatcher": { // Problem matcher is mandatory to avoid a dialog warning on each launch but cannot find a good way to configure it. This one is a dummy one.
+	"problemMatcher": { // Problem matcher is mandatory to avoid a dialog warning on each launch. This is a very minimal implementation.
 		"owner": "camel",
 		"pattern": {
 			"regexp": "^.*$" 				
 		},
 		"severity": "error",	
-		"source": "maven",
+		"source": "jbang",
 		"background": {
 			"activeOnStart": true,
 			"beginsPattern": "^.*$",
-			"endsPattern": "^.*$"
+			"endsPattern": "^.*JMX Connector thread started and listening at.*$"
 		}
 	},
 	"presentation": {
