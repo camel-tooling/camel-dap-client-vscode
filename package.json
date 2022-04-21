@@ -154,6 +154,12 @@
 					"endsPattern": "^.*JMX Connector thread started and listening at.*$"
 				}
 			}
+		],
+		"commands": [
+			{
+				"command": "apache.camel.debug.jbang",
+				"title": "Start Camel Application with Jbang and Debug"
+			}
 		]
 	},
 	"scripts": {
