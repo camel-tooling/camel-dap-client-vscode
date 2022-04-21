@@ -109,7 +109,7 @@
 						"label": "Camel: Start Camel application and attach Camel debugger",
 						"description": "Start Camel application and attach Camel debugger. It expects that a VS Code task with name 'Start Camel application' is available. This task is responsible to launch the Camel application with all requirements. To help, a completion is available in .vscode/tasks.json file.",
 						"body": {
-							"name": "Attach Camel Debugger",
+							"name": "Attach Camel Debugger after starting the Camel Application using the preLaunchTask specified",
 							"type": "apache.camel",
 							"request": "attach",
 							"preLaunchTask": "Start Camel application"
@@ -136,6 +136,23 @@
 						}
 					}
 				]
+			}
+		],
+		"problemMatchers": [
+			{
+				"name": "camel.debug.problemMatcher",
+				"label": "Minimal problem matcher which allows to wait for the JMX endpoint to be ready for the Camel Debugger.",
+				"owner": "camel",
+				"pattern": {
+					"regexp": "^.*$"
+				},
+				"severity": "error",
+				"source": "camel",
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^.*$",
+					"endsPattern": "^.*JMX Connector thread started and listening at.*$"
+				}
 			}
 		]
 	},
