@@ -9,6 +9,19 @@
 
 ### Happy path
 
+- Ensure `jbang` is available on system command-line
+- Open a Camel route which can be started with Jbang
+- Call command Palette (`Ctrl+Alt+P`), and pick command `Start camel Application with JBang and debug`
+- Wait that the route is started and debugger is connected
+- Put a breakpoint on the Camel route
+- Enjoy!
+
+![Happy path to start and debug Camel route](./images/singleClickCamelDebugWithJBangWithoutVSCodeConfiguration.gif)
+
+### Advanced use cases
+
+#### Use a Debug Launch configuration
+
 - Start a Camel 3.16+ application with `camel-debug` on the classpath
 - In `.vscode/launch.json`, provide this kind of content for a local default JMX connection (which is `service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel`):
 
@@ -28,7 +41,7 @@
 - Put a breakpoint on the Camel route
 - Enjoy!
 
-### Debug launch configuration
+#### Configuration possibilities of the Debug Launch configuration
 
 In `.vscode/launch.json`, provide this kind of content for a local default JMX connection (which is `service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel`):
 
@@ -87,6 +100,9 @@ or for a local connection using PID of the Camel application process:
   - the message body
   - a message header when it is of type String
   - an exchange property when it is of type String
+- Command `Start camel Application with JBang and debug`. It allows a one-click start and Camel debug in simple cases.
+- Configuration snippets for Camel debugger launch configuration
+- Configuration snippets to launch Camel application ready to accept a Camel debugger connection using jbang or Maven
 
 ## Requirements
 
