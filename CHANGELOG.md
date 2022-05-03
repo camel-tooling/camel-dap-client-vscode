@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 0.3.0
+
+- Upgrade Debug Adapter for Apache Camel to 0.3.0
+
 ## 0.2.0
 
 - Provide command `Start camel Application with JBang and debug`. It allows a one-click start and Camel debug in simple cases.
