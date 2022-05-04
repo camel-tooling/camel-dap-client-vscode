@@ -18,7 +18,7 @@ import { CancellationToken, ProviderResult, ShellExecution, Task, TaskDefinition
 
 export class CamelJBangTaskProvider implements TaskProvider {
 	
-	public static labelProvidedTask :string = "Start Camel application with debug enabled with Jbang";
+	public static labelProvidedTask :string = "Start Camel application with debug enabled with JBang";
 	
 	provideTasks(token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];

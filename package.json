@@ -158,7 +158,7 @@
 		"commands": [
 			{
 				"command": "apache.camel.debug.jbang",
-				"title": "Start Camel Application with Jbang and Debug"
+				"title": "Start Camel Application with JBang and Debug"
 			}
 		]
 	},
