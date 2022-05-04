@@ -10,7 +10,7 @@
 ### Happy path
 
 - Ensure `jbang` is available on system command-line
-- Open a Camel route which can be started with Jbang
+- Open a Camel route which can be started with JBang
 - Call command Palette (`Ctrl+Alt+P`), and pick command `Start camel Application with JBang and debug`
 - Wait that the route is started and debugger is connected
 - Put a breakpoint on the Camel route
