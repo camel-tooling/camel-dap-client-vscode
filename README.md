@@ -108,6 +108,8 @@ or for a local connection using PID of the Camel application process:
 
 Java Runtime Environment 11+ with com.sun.tools.attach.VirtualMachine (available in most JVMs such as Hotspot and OpenJDK) must be available on system path.
 
+For some features, [JBang](https://www.jbang.dev/) must be available on command-line.
+
 The Camel instance to debug must follow these requirements:
   - Camel 3.16+
   - Have `camel-debug` on the classpath
