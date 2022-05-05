@@ -16,7 +16,7 @@
 - Put a breakpoint on the Camel route
 - Enjoy!
 
-![Happy path to start and debug Camel route](./images/singleClickCamelDebugWithJBangWithoutVSCodeConfiguration.gif)
+![Happy path to start and debug Camel route](./docs/images/singleClickCamelDebugWithJBangWithoutVSCodeConfiguration.gif)
 
 ### Advanced use cases
 
