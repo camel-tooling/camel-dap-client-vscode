@@ -19,11 +19,12 @@ import { CamelDebugAdapterDescriptorFactory } from './CamelDebugAdapterDescripto
 import { getRedHatService, TelemetryEvent, TelemetryService } from "@redhat-developer/vscode-redhat-telemetry";
 import { CamelApplicationLauncherTasksCompletionItemProvider } from './completion/CamelApplicationLauncherTasksCompletionItemProvider';
 import { CamelJBangTaskProvider } from './task/CamelJBangTaskProvider';
+import {CamelJBangCodelens} from './codelenses/CamelJBangCodelens';
 
 let telemetryService: TelemetryService;
 
 const CAMEL_DEBUG_ADAPTER_ID = 'apache.camel';
-const CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID = 'apache.camel.debug.jbang';
+export const CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID = 'apache.camel.debug.jbang';
 
 export async function activate(context: vscode.ExtensionContext) {
 	vscode.debug.registerDebugAdapterDescriptorFactory(CAMEL_DEBUG_ADAPTER_ID, new CamelDebugAdapterDescriptorFactory(context));
@@ -69,6 +70,17 @@ export async function activate(context: vscode.ExtensionContext) {
 			};
 		}
 	});
+	const docSelector: vscode.DocumentSelector = [{
+		language: 'java',
+		scheme: 'file'
+	}, {
+		language: 'xml',
+		scheme: 'file'
+	}, {
+		language: 'yaml',
+		scheme: 'file'
+	}];
+	vscode.languages.registerCodeLensProvider(docSelector, new CamelJBangCodelens());
 }
 
 export function deactivate() {
