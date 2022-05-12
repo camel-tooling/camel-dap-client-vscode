@@ -1,0 +1,7 @@
+- route:
+    from:
+      uri: timer:demo
+      steps:
+        - log:
+            message: Hello
+    id: foo

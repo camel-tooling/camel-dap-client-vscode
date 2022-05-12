@@ -1,6 +1,6 @@
 import { waitUntil } from 'async-wait-until';
 import * as vscode from 'vscode';
-import path = require('path');
+import { getDocUri } from './util';
 
 suite('Should do completion in tasks.json', () => {
 	
@@ -18,14 +18,6 @@ suite('Should do completion in tasks.json', () => {
 	}).timeout(20000);
 
 });
-
-const getDocPath = (p: string) => {
-	return path.resolve(__dirname, '../../../test Fixture with speci@l chars', p);
-};
-
-const getDocUri = (p: string) => {
-	return vscode.Uri.file(getDocPath(p));
-};
 
 async function testCompletion(
 	docUri: vscode.Uri,

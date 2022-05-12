@@ -1,6 +1,6 @@
 import * as path from 'path';
-
-import { runTests } from '@vscode/test-electron';
+import { downloadAndUnzipVSCode, resolveCliArgsFromVSCodeExecutablePath, runTests } from '@vscode/test-electron';
+const cp = require('child_process');
 
 async function main() {
 	try {
@@ -13,8 +13,14 @@ async function main() {
 		const extensionTestsPath = path.resolve(__dirname, './suite/index');
 		
 		const testWorkspace = path.resolve(__dirname, '../../../test Fixture with speci@l chars');
-
-		// Download VS Code, unzip it and run the integration test
+		
+		const vscodeExecutablePath = await downloadAndUnzipVSCode('stable');
+		const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+		cp.spawnSync(cli, [...args, '--install-extension', 'redhat.vscode-yaml'], {
+				encoding: 'utf-8',
+				stdio: 'inherit'
+			});
+		
 		await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs: [testWorkspace, '--disable-workspace-trust'] });
 	} catch (err) {
 		console.error('Failed to run tests');
