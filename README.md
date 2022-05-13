@@ -11,7 +11,7 @@
 
 - Ensure `jbang` is available on system command-line
 - Open a Camel route which can be started with JBang
-- Call command Palette (`Ctrl+Alt+P`), and pick command `Start camel Application with JBang and debug` or click on codelens `Debug with JBang` which appears on top of the file.
+- Call command Palette (`Ctrl+Alt+P`), and pick command `Start Camel Application with JBang and debug` or click on codelens `Debug with JBang` which appears on top of the file.
 - Wait that the route is started and debugger is connected
 - Put a breakpoint on the Camel route
 - Enjoy!
@@ -100,7 +100,10 @@ or for a local connection using PID of the Camel application process:
   - the message body
   - a message header when it is of type String
   - an exchange property when it is of type String
-- Command `Start camel Application with JBang and debug`. It allows a one-click start and Camel debug in simple cases. This command is available through codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
+- Command `Start Camel Application with JBang and debug`. It allows a one-click start and Camel debug in simple cases. This command is available through:
+  - Command Palette. It requires having a valid Camel file opened in editor.
+  - Contextual menu in File explorer. It is visible to all `*.xml`, `*.java`, `*.yaml` and `*.yml`. It is up to the user to ensure it is a Camel route file. The command is also opening the files in editor to be ready to place breakpoints.
+  - Codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using jbang or Maven
 

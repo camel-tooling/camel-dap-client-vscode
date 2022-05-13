@@ -39,8 +39,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	telemetryService.sendStartupEvent();
 	
 	vscode.commands.registerCommand(CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID, async (uri: vscode.Uri) => {
+		if (uri !== undefined) {
+			await vscode.window.showTextDocument(uri);
+		}
 		const debugConfiguration: vscode.DebugConfiguration = {
-			name: 'Start camel Application with JBang and debug',
+			name: 'Start Camel Application with JBang and debug',
 			type: 'apache.camel',
 			request: 'attach',
 			preLaunchTask: `camel: ${CamelJBangTaskProvider.labelProvidedTask}`,
