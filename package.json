@@ -160,7 +160,16 @@
 				"command": "apache.camel.debug.jbang",
 				"title": "Start Camel Application with JBang and Debug"
 			}
-		]
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "apache.camel.debug.jbang",
+					"when": "resourceExtname =~ /\\.(java|xml|yaml|yml)$/",
+					"group": "camel.group"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
