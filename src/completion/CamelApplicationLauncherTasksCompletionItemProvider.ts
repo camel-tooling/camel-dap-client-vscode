@@ -38,6 +38,27 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 }`
 	};
 	
+	private mavenQuarkusCompletion: vscode.CompletionItem = {
+		label: 'Start Camel application with Maven Quarkus Dev with camel.debug profile',
+		documentation: 'Start Camel application with Maven Quarkus dev and camel.debug profile. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask.',
+		insertText:
+			`{
+	"label": "Start Camel application with Maven Quarkus Dev with camel.debug profile",
+	"type": "shell",
+	"command": "mvn", // mvn binary of Maven must be available on command-line
+	"args": [
+		"compile",
+		"quarkus:dev",
+		"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+	],
+	"problemMatcher": "$camel.debug.problemMatcher",
+	"presentation": {
+		"reveal": "always"
+	},
+	"isBackground": true // Must be set as background as the Maven commands doesn't return until the Camel application stops. 
+}`
+	};
+	
 	private jbangCompletion: vscode.CompletionItem = {
 		label: 'Start Camel application with JBang with camel-debug',
 		documentation: 'Start debuggable Camel application with JBang. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask.',
@@ -73,6 +94,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 				if (this.isInTasksArray(node)) {
 					
 					completions.push(this.mavenCompletion);
+					completions.push(this.mavenQuarkusCompletion);
 					completions.push(this.jbangCompletion);
 				}
 			}
