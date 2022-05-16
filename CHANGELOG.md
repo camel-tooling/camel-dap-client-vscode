@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 0.4.0
+
 ## 0.3.0
 
 - Upgrade Debug Adapter for Apache Camel to 0.3.0
