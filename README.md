@@ -92,6 +92,7 @@ or for a local connection using PID of the Camel application process:
 - Support local use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML (only `Camel Main` mode for XML) using the PID
 - Support a single Camel context
 - Add/Remove breakpoint
+- Support conditional breakpoint with `simple` language. See [here](https://camel.apache.org/components/latest/languages/simple-language.html) for details on how to write condition with simple language.
 - Inspect variable values on suspended breakpoints
 - Resume a single route instance and resume all route instances
 - Stepping when the route definition is in the same file
