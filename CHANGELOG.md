@@ -8,13 +8,14 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Provide Codelens to `Debug with JBang`
 - Provide contextual menu on File Explorer to `Start Camel Application with JBang and debug`
 - Support setting breakpoints before starting the debugger
+- Provide configuration snippet to launch Camel application ready to accept a Camel debugger connection using Quarkus Dev mode
 
 ## 0.2.0
 
 - Provide command `Start Camel Application with JBang and debug`. It allows a one-click start and Camel debug in simple cases.
 - Provide error message and remind requirements in case of failure when trying to attach the debugger
 - Provide configuration snippets for Camel debugger launch configuration
-- Provide configuration snippets to launch Camel application ready to accept a Camel debugger connection using jbang or Maven
+- Provide configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang or Maven with Camel maven plugin
 - Upgrade Debug Adapter for Apache Camel to 0.2.0
 
 ## 0.1.1

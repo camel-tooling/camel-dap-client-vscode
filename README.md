@@ -105,7 +105,7 @@ or for a local connection using PID of the Camel application process:
   - Contextual menu in File explorer. It is visible to all `*.xml`, `*.java`, `*.yaml` and `*.yml`. It is up to the user to ensure it is a Camel route file. The command is also opening the files in editor to be ready to place breakpoints.
   - Codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
 - Configuration snippets for Camel debugger launch configuration
-- Configuration snippets to launch Camel application ready to accept a Camel debugger connection using jbang or Maven
+- Configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang or Maven with Camel maven plugin or Quarkus Devs
 
 ## Requirements
 
