@@ -36,5 +36,11 @@ jobs:
     - name: test
       run: npm test
       if: ${{ matrix.os != 'ubuntu-latest' }}
+    - name: test-ui
+      run: xvfb-run -a npm run ui-test
+      if: ${{ matrix.os == 'ubuntu-latest' }} 
+    - name: test-ui
+      run: npm run ui-test
+      if: ${{ matrix.os != 'ubuntu-latest' }} 
     - name: vsce package
       run: vsce package
