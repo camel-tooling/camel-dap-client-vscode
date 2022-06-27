@@ -38,6 +38,32 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 }`
 	};
 	
+	private mavenCompletionToLaunchTest: vscode.CompletionItem = {
+		label: 'Launch Camel test with Maven with camel.debug profile',
+		documentation: 'Launch Camel test with camel.debug profile. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask. A single test can be launch at the same time.',
+		insertText:
+			`{
+	"label": "Launch Camel test with Maven with camel.debug profile",
+	"type": "shell",
+	"command": "mvn", // mvn binary of Maven must be available on command-line
+	"args": [
+		"test",
+		"-Dtest=*", // If more than one test is present, a specific one must be specified as a single test can be Camel debugged per launch.
+		"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+	],
+	"options": {
+		"env": {
+			"CAMEL_DEBUGGER_SUSPEND": "true" // Set to true by default. A debugger must be attached for message to be processed.
+		}
+	},
+	"problemMatcher": "$camel.debug.problemMatcher",
+	"presentation": {
+		"reveal": "always"
+	},
+	"isBackground": true // Must be set as background as the Maven commands doesn't return until the Camel application stops. 
+}`
+	};
+	
 	private mavenCompletionWithDebugGoal: vscode.CompletionItem = {
 		label: 'Start Camel application with camel:debug Maven goal',
 		documentation: 'Start Camel application with camel:debug Maven goal. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask. It requires Camel 3.18+.',
@@ -120,6 +146,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 					completions.push(this.mavenCompletionWithDebugGoal);
 					completions.push(this.mavenCompletion);
 					completions.push(this.mavenQuarkusCompletion);
+					completions.push(this.mavenCompletionToLaunchTest);
 					completions.push(this.jbangCompletion);
 				}
 			}

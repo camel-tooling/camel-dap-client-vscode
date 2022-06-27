@@ -5,7 +5,9 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 0.4.0
 
 - Await configuration of debugger set before processing Camel route (available with Camel Application 3.18+)
-- Provide additional VS Code Task template using the `camel:debug` Maven goal (requires Camel Application using 3.18+)
+- Provide additional VS Code Task templates:
+  - Using the `camel:debug` Maven goal (requires Camel Application using 3.18+)
+  - To launch a test with Maven
 
 ## 0.3.0
 
