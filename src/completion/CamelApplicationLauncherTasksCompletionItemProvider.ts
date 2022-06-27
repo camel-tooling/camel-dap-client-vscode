@@ -38,6 +38,30 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 }`
 	};
 	
+	private mavenCompletionWithDebugGoal: vscode.CompletionItem = {
+		label: 'Start Camel application with camel:debug Maven goal',
+		documentation: 'Start Camel application with camel:debug Maven goal. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask. It requires Camel 3.18+.',
+		insertText:
+			`{
+	"label": "Start Camel application with camel:debug Maven goal",
+	"type": "shell",
+	"command": "mvn", // mvn binary of Maven must be available on command-line
+	"args": [
+		"camel:debug"
+	],
+	"options": {
+		"env": {
+			"CAMEL_DEBUGGER_SUSPEND": "true" // Set to true by default. A debugger must be attached for message to be processed.
+		}
+	},
+	"problemMatcher": "$camel.debug.problemMatcher",
+	"presentation": {
+		"reveal": "always"
+	},
+	"isBackground": true // Must be set as background as the Maven commands doesn't return until the Camel application stops. 
+}`
+	};
+	
 	private mavenQuarkusCompletion: vscode.CompletionItem = {
 		label: 'Start Camel application with Maven Quarkus Dev with camel.debug profile',
 		documentation: 'Start Camel application with Maven Quarkus dev and camel.debug profile. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask.',
@@ -93,7 +117,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 			const node = jsonparser.findNodeAtOffset(globalNode, document.offsetAt(position), false);
 			if (node) {
 				if (this.isInTasksArray(node)) {
-					
+					completions.push(this.mavenCompletionWithDebugGoal);
 					completions.push(this.mavenCompletion);
 					completions.push(this.mavenQuarkusCompletion);
 					completions.push(this.jbangCompletion);
