@@ -68,6 +68,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"type": "shell",
 	"command": "jbang", // jbang binary must be available on command-line
 	"args": [
+		"-Dorg.apache.camel.debugger.suspend=true", // requires Camel 3.18+ to take effect
 		"-Dcamel.jbang.version=3.16.0", // to adapt to your Camel version. 3.16+ is required
 		"camel@apache/camel",
 		"run",

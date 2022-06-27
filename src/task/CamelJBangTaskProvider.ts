@@ -32,7 +32,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedTask,
 			'camel',
-			new ShellExecution('jbang camel@apache/camel run ${relativeFile} --logging-level=info --dep=org.apache.camel:camel-debug'),
+			new ShellExecution('jbang -Dorg.apache.camel.debugger.suspend=true camel@apache/camel run ${relativeFile} --logging-level=info --dep=org.apache.camel:camel-debug'),
 			'$camel.debug.problemMatcher');
 		task.isBackground = true;
 		task.presentationOptions.reveal = TaskRevealKind.Always;
