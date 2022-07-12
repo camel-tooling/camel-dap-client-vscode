@@ -200,6 +200,6 @@
 	},
 	"dependencies": {
 		"@redhat-developer/vscode-redhat-telemetry": "^0.4.2",
-		"jsonc-parser": "^3.0.0"
+		"jsonc-parser": "^3.1.0"
 	}
 }
