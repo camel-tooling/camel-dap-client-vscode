@@ -4,3 +4,4 @@ node_modules
 .vscode-test/
 *.vsix
 jars/camel-dap-server.jar
+test-resources
