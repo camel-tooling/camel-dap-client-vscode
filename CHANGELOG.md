@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 1.0.0
+
+- Release version of the extension, supported by Red Hat.
+
 ## 0.5.0
 
 - Upgrade Debug Adapter for Apache Camel to 0.5.0
