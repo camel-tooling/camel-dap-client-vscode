@@ -5,6 +5,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 0.5.0
 
 - Upgrade Debug Adapter for Apache Camel to 0.5.0
+- Fix regression on updating variable values [FUSETOOLS2-1819](https://issues.redhat.com/browse/FUSETOOLS2-1819)
 
 ## 0.4.0
 
