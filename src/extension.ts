@@ -62,6 +62,15 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.debug.registerDebugAdapterTrackerFactory(CAMEL_DEBUG_ADAPTER_ID, {
 		createDebugAdapterTracker(session: vscode.DebugSession) {
 		  return {
+			onError: err => {
+				const outputChannel = vscode.window.createOutputChannel("Camel Debug Adapter Protocol");
+				outputChannel.appendLine(err.message);
+				
+				const cp = require('child_process')
+				cp.exec('kamel debug', (_, stdout: string, _) => {
+					outputChannel.appendLine(stdout);
+				});
+			},
 			onDidSendMessage: m => {
 					if (m.type === 'event'
 						&& m.event === 'output'
@@ -70,7 +79,7 @@ export async function activate(context: vscode.ExtensionContext) {
 							telemetryService.send(m.body?.data);
 					}
 				}
-			};
+			}
 		}
 	});
 	const docSelector: vscode.DocumentSelector = [{
