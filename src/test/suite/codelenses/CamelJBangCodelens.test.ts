@@ -22,7 +22,7 @@ import * as vscode from 'vscode';
 import { getDocUri } from '../util';
 import { waitUntil } from 'async-wait-until';
 
-suite("Debug with JBang CodeLenses Test", function () {
+suite("Camel Debug with JBang CodeLenses Test", function () {
 
 	test("Codelens provider returns correct CodeLens for yaml file", async () => {
 		const doc = getDocUri('my-route.yaml');
