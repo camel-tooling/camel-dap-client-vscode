@@ -31,7 +31,7 @@ export class CamelJBangCodelens implements vscode.CodeLensProvider {
 				command: extension.CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID,
 				title: CODELENS_TITLE_START_INTEGRATION,
 				tooltip: 'Start integration file with Camel JBang and attach the Camel Debugger.\n' 
-						+ 'Take care that the integration file is in supported scope of Camel JBang and that jbang CLI is avilable on system path.',
+						+ 'Take care that the integration file is in supported scope of Camel JBang and that jbang CLI is available on system path.',
 				arguments: [document.uri]
 			};
 			return [new vscode.CodeLens(topOfDocument, classPathRefreshCommand)];
