@@ -177,10 +177,14 @@
 		"watch": "tsc -watch -p ./",
 		"postinstall": "node ./scripts/postinstall.js",
 		"pretest": "npm run compile && npm run lint",
+		"preui-test": "npm run compile",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"test:ui:install": "node ./out/test/ui-test/launcher.js ./out/test/ui-test/install.test.js",
+		"ui-test": "npm run test:ui:install"
 	},
 	"devDependencies": {
+		"@theia-extension-tester/repeat": "^0.1.2",
 		"@types/chai": "^4.3.4",
 		"@types/glob": "^8.0.0",
 		"@types/mocha": "^10.0.1",
@@ -196,7 +200,9 @@
 		"mocha": "^10.1.0",
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.0.0",
-		"typescript": "^4.9.3"
+		"typescript": "^4.9.3",
+		"vscode-extension-tester": "^5.1.0",
+		"vscode-uitests-tooling": "^2.3.3"
 	},
 	"dependencies": {
 		"@redhat-developer/vscode-redhat-telemetry": "^0.5.2",
