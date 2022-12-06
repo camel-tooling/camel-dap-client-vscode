@@ -2,6 +2,9 @@ import { expect } from 'chai';
 import * as fs from 'fs';
 import { repeat, TimeoutError } from '@theia-extension-tester/repeat';
 import {
+    after,
+    afterEach,
+    beforeEach,
     EditorView,
     error,
     ExtensionsViewItem,
@@ -23,11 +26,11 @@ describe('Install test', function () {
     describe('Marketplace presentation', function () {
         let marketplace: ExtensionsViewSection;
 
-        beforeEach('Open marketplace', async function () {
+        beforeEach('Open marketplace', async function (this: Mocha.Context) {
             marketplace = await openMarketplace(this.timeout() - 1000);
         });
 
-        afterEach('Close marketplace', async function () {
+        afterEach('Close marketplace', async function (this: Mocha.Context) {
             await closeMarketplace(this.timeout() - 1000);
         });
 
