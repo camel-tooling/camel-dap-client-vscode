@@ -186,7 +186,7 @@
 	"devDependencies": {
 		"@theia-extension-tester/repeat": "^0.1.2",
 		"@types/chai": "^4.3.4",
-		"@types/glob": "^8.0.0",
+		"@types/glob": "^8.0.1",
 		"@types/mocha": "^10.0.1",
 		"@types/node": "14.x",
 		"@types/vscode": "^1.63.0",
