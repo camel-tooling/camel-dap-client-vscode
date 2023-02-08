@@ -1,0 +1,5 @@
+title: Debug Adapter for Apache Camel by Red Hat
+logo: https://raw.githubusercontent.com/camel-tooling/camel-dap-client-vscode/main/icons/icon128.png
+description: This is the client implementation of the Debug Adapter Server for Apache Camel for Visual Studio Code
+# Used theme https://github.com/pages-themes/minimal
+theme: jekyll-theme-minimal
