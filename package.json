@@ -201,7 +201,7 @@
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.0.0",
 		"typescript": "^4.9.5",
-		"vscode-extension-tester": "^5.3.0",
+		"vscode-extension-tester": "^5.4.0",
 		"vscode-uitests-tooling": "^2.3.3"
 	},
 	"dependencies": {
