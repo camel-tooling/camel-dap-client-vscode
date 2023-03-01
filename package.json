@@ -196,7 +196,7 @@
 		"async-wait-until": "^2.0.12",
 		"chai": "^4.3.7",
 		"eslint": "^8.35.0",
-		"glob": "^8.1.0",
+		"glob": "^9.1.0",
 		"mocha": "^10.2.0",
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.0.0",
