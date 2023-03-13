@@ -180,8 +180,7 @@
 		"preui-test": "npm run compile",
 		"lint": "eslint src --ext ts",
 		"test": "node ./out/test/runTest.js",
-		"test:ui:install": "node ./out/test/ui-test/launcher.js ./out/test/ui-test/install.test.js",
-		"ui-test": "npm run test:ui:install"
+		"ui-test": "node --unhandled-rejections=warn-with-error-code out/ui-test/uitest_runner.js"
 	},
 	"devDependencies": {
 		"@theia-extension-tester/repeat": "^0.1.2",

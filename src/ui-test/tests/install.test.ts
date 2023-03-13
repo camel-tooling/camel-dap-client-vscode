@@ -15,6 +15,7 @@ import {
 } from 'vscode-extension-tester';
 import { Workbench } from 'vscode-uitests-tooling';
 
+
 describe('Install test', function () {
     this.timeout(30000);
     this.slow(10000);
@@ -55,7 +56,7 @@ describe('Install test', function () {
         });
     });
 
-    describe('Command check', function() {
+    describe('Command check', function () {
 
         // Make tests independent
         beforeEach('Close input', closeInput);
@@ -70,13 +71,14 @@ describe('Install test', function () {
     });
 });
 
+
 async function closeInput(): Promise<void> {
     try {
         const input = new InputBox();
         await input.clear();
         await input.cancel();
     }
-    catch(e) {
+    catch (e) {
         // ignore non-existent input on start and handle already closed input
         if (!(e instanceof error.NoSuchElementError || e instanceof error.ElementNotInteractableError)) {
             throw e;
