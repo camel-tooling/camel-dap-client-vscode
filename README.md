@@ -6,7 +6,7 @@
 
 <p align="center">
  <a href="https://marketplace.visualstudio.com/items?itemName=redhat.vscode-debug-adapter-apache-camel"><img src="https://img.shields.io/visual-studio-marketplace/v/redhat.vscode-debug-adapter-apache-camel?style=for-the-badge" alt="Marketplace Version"/></a>
- <a href="https://github.com/camel-tooling/camel-dap-client-vscode/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/camel-tooling/camel-dap-client-vscode/ci.yaml?style=for-the-badge" alt="Main CI"></a>
+ <a href="https://github.com/camel-tooling/camel-dap-client-vscode/actions/workflows/main.yaml"><img src="https://img.shields.io/github/actions/workflow/status/camel-tooling/camel-dap-client-vscode/ci.yaml?style=for-the-badge" alt="Main CI"></a>
  <a href="https://github.com/camel-tooling/camel-dap-client-vscode/blob/main/LICENSE.txt"><img src="https://img.shields.io/github/license/camel-tooling/camel-dap-client-vscode?color=blue&style=for-the-badge" alt="License"/></a>
  <a href="https://gitter.im/camel-tooling/Lobby"><img src="https://img.shields.io/gitter/room/camel-tooling/Lobby?color=yellow&style=for-the-badge" alt="Gitter"/></a>
 </p><br/>
