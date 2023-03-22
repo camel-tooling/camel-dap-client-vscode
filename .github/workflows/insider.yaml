@@ -39,7 +39,7 @@ jobs:
           cache: "npm"
 
       - name: Install global dependencies
-        run: npm install -g typescript vsce
+        run: npm install -g typescript @vscode/vsce
 
       - name: npm-ci
         run: npm ci
