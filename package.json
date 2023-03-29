@@ -204,7 +204,7 @@
 		"vscode-uitests-tooling": "^2.3.5"
 	},
 	"dependencies": {
-		"@redhat-developer/vscode-redhat-telemetry": "^0.5.4",
+		"@redhat-developer/vscode-redhat-telemetry": "^0.6.1",
 		"jsonc-parser": "^3.2.0"
 	}
 }
