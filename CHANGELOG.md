@@ -6,6 +6,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 - Upgrade Debug Adapter for Apache Camel to 0.6.0
 - Fix typo in tooltip of codelens `Camel debug with JBang`
+- Provide Action to start and debug with JBang for Camel files
 
 ## 0.5.0
 

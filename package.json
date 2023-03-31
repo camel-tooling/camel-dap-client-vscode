@@ -158,7 +158,8 @@
 		"commands": [
 			{
 				"command": "apache.camel.debug.jbang",
-				"title": "Start Camel Application with JBang and Debug"
+				"title": "Start Camel Application with JBang and Debug",
+				"icon": "$(run-view-icon)"
 			}
 		],
 		"menus": {
@@ -167,6 +168,13 @@
 					"command": "apache.camel.debug.jbang",
 					"when": "resourceExtname =~ /\\.(java|xml|yaml|yml)$/",
 					"group": "camel.group"
+				}
+			],
+			"editor/title": [
+				{
+				  "command": "apache.camel.debug.jbang",
+				  "when": "resourceFilename =~ /\\.camel\\.(yaml|yml)$/",
+				  "group": "navigation"
 				}
 			]
 		}
