@@ -158,6 +158,7 @@
 		"commands": [
 			{
 				"command": "apache.camel.debug.jbang",
+				"category": "Camel",
 				"title": "Start Camel Application with JBang and Debug",
 				"icon": "$(run-view-icon)"
 			}
