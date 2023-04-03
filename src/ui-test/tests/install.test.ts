@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
+import * as path  from 'path';
 import { repeat, TimeoutError } from '@theia-extension-tester/repeat';
 import {
     after,
+    before,
     afterEach,
     beforeEach,
     EditorView,
@@ -11,10 +13,10 @@ import {
     ExtensionsViewSection,
     InputBox,
     SideBarView,
-    ViewControl
+    ViewControl,
+    VSBrowser
 } from 'vscode-extension-tester';
 import { Workbench } from 'vscode-uitests-tooling';
-
 
 describe('Install test', function () {
     this.timeout(30000);
@@ -58,9 +60,20 @@ describe('Install test', function () {
 
     describe('Command check', function () {
 
+        const CAMEL_ROUTE_YAML = 'demo route.camel.yaml';
+
+        before('Open file before tests', async function () {
+            await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources', CAMEL_ROUTE_YAML));
+            await VSBrowser.instance.waitForWorkbench();
+        });
+
+        after('Cleanup after tests', async function () {
+            await closeInput();
+            await new EditorView().closeAllEditors();
+        });
+
         // Make tests independent
         beforeEach('Close input', closeInput);
-        after('Cleanup input', closeInput);
 
         for (const commandMetadata of extensionMetadata['contributes']['commands']) {
             const { title } = commandMetadata;

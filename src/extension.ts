@@ -25,6 +25,7 @@ let telemetryService: TelemetryService;
 
 const CAMEL_DEBUG_ADAPTER_ID = 'apache.camel';
 export const CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID = 'apache.camel.debug.jbang';
+export const CAMEL_RUN_WITH_JBANG_COMMAND_ID = 'apache.camel.run.jbang';
 
 export async function activate(context: vscode.ExtensionContext) {
 	vscode.debug.registerDebugAdapterDescriptorFactory(CAMEL_DEBUG_ADAPTER_ID, new CamelDebugAdapterDescriptorFactory(context));
@@ -33,6 +34,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerCompletionItemProvider(tasksJson, new CamelApplicationLauncherTasksCompletionItemProvider());
 
 	vscode.tasks.registerTaskProvider('camel.jbang', new CamelJBangTaskProvider());
+
+	const camelRunTask = (await vscode.tasks.fetchTasks()).find((t) => t.name === CamelJBangTaskProvider.labelProvidedRunTask);
 	
 	const redhatService = await getRedHatService(context);  
 	telemetryService = await redhatService.getTelemetryService();
@@ -57,6 +60,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			}
 		};
 		telemetryService.send(telemetryEvent);
+	});
+
+	vscode.commands.registerCommand(CAMEL_RUN_WITH_JBANG_COMMAND_ID, async function () {
+		if(camelRunTask) {
+			await vscode.tasks.executeTask(camelRunTask);
+		}
 	});
 	
 	vscode.debug.registerDebugAdapterTrackerFactory(CAMEL_DEBUG_ADAPTER_ID, {
