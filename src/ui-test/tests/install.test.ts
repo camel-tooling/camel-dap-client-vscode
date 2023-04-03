@@ -87,13 +87,13 @@ async function closeInput(): Promise<void> {
 }
 
 async function testCommand(commandMetadata: any, timeout: number): Promise<void> {
-    const { command, title } = commandMetadata;
+    const { command, title, category } = commandMetadata;
     let input = await getInput();
-    await input.setText(`>${title}`);
+    await input.setText(`>${category}: ${title}`);
     await repeat(async () => {
         try {
             const quickpick = await input.findQuickPick(title);
-            return await quickpick?.getLabel() === title;
+            return await quickpick?.getLabel() === `${category}: ${title}`;
         }
         catch (e) {
             // Input cannot be stale by design. Refresh quickpicks.
@@ -107,7 +107,7 @@ async function testCommand(commandMetadata: any, timeout: number): Promise<void>
             // Input was unexpectedly closed. Open it again.
             if (e instanceof error.ElementNotInteractableError) {
                 input = await getInput();
-                await input.setText(`>${title}`);
+                await input.setText(`>${category}: ${title}`);
                 return undefined;
             }
 
