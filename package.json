@@ -161,6 +161,13 @@
 				"category": "Camel",
 				"title": "Start Camel Application with JBang and Debug",
 				"icon": "$(run-view-icon)"
+			},
+			{
+				"command": "apache.camel.run.jbang",
+				"category": "Camel",
+				"title": "Run Camel Application with JBang",
+				"icon": "$(run)",
+				"enablement": "resourceFilename =~ /\\.(yaml|yml)$/"
 			}
 		],
 		"menus": {

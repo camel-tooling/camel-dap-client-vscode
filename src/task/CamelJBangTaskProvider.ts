@@ -19,6 +19,7 @@ import { CancellationToken, ProviderResult, ShellExecution, Task, TaskDefinition
 export class CamelJBangTaskProvider implements TaskProvider {
 	
 	public static labelProvidedTask :string = "Start Camel application with debug enabled with JBang";
+	public static labelProvidedRunTask: string = "Run Camel application with JBang";
 	
 	provideTasks(token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];
@@ -36,7 +37,21 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			'$camel.debug.problemMatcher');
 		task.isBackground = true;
 		task.presentationOptions.reveal = TaskRevealKind.Always;
+
+		const runTask = new Task(
+			{
+				"label": CamelJBangTaskProvider.labelProvidedRunTask,
+				"type": "shell"
+			},
+			TaskScope.Workspace,
+			CamelJBangTaskProvider.labelProvidedRunTask,
+			'camel',
+			new ShellExecution('jbang camel@apache/camel run ${relativeFile} --logging-level=info')
+		);
+		runTask.isBackground = true;
+
 		tasks.push(task);
+		tasks.push(runTask);
 		return tasks;
 	}
 	
