@@ -13,7 +13,7 @@ suite('Should do completion in tasks.json', () => {
 	
 	test('Completion for Start application with jbang', async () => {
 		const docURiTasksJson = getDocUri('.vscode/tasks.json');
-		const expectedCompletion = { label: 'Start Camel application with JBang with camel-debug' };
+		const expectedCompletion = { label: 'Run Camel application with JBang with camel-debug' };
 		await testCompletion(docURiTasksJson, new vscode.Position(3, 7), expectedCompletion);
 	}).timeout(20000);
 

@@ -11,7 +11,7 @@ import {
 
 describe('Camel file editor test', function () {
 
-    const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Start Camel Application with JBang and Debug';
+    const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
     const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
     const CAMEL_ROUTE_YAML = 'demo route.camel.yaml';
 
