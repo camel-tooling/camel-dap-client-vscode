@@ -46,7 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			await vscode.window.showTextDocument(uri);
 		}
 		const debugConfiguration: vscode.DebugConfiguration = {
-			name: 'Start Camel Application with JBang and debug',
+			name: 'Run Camel Application with JBang and Debug',
 			type: 'apache.camel',
 			request: 'attach',
 			preLaunchTask: `camel: ${CamelJBangTaskProvider.labelProvidedTask}`,

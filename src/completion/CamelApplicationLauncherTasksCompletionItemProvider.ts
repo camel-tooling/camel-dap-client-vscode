@@ -110,11 +110,11 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	};
 	
 	private jbangCompletion: vscode.CompletionItem = {
-		label: 'Start Camel application with JBang with camel-debug',
+		label: 'Run Camel application with JBang with camel-debug',
 		documentation: 'Start debuggable Camel application with JBang. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask.',
 		insertText:
 			`{
-	"label": "Start Camel application with JBang with camel-debug",
+	"label": "Run Camel application with JBang with camel-debug",
 	"type": "shell",
 	"command": "jbang", // jbang binary must be available on command-line
 	"args": [
