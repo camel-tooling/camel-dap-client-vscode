@@ -9,6 +9,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Provide Action to start and debug with JBang for Camel files
 - Provide 'Camel' category for command to ease research in command palette
 - Provide command to run Camel file with JBang
+- Provide Action to Run with Camel JBang
 
 ## 0.5.0
 
