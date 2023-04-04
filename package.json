@@ -180,9 +180,14 @@
 			],
 			"editor/title": [
 				{
-				  "command": "apache.camel.debug.jbang",
-				  "when": "resourceFilename =~ /\\.camel\\.(yaml|yml)$/",
-				  "group": "navigation"
+					"command": "apache.camel.debug.jbang",
+					"when": "resourceFilename =~ /\\.camel\\.(yaml|yml)$/",
+					"group": "navigation"
+				},
+				{
+					"command": "apache.camel.run.jbang",
+					"when": "resourceFilename =~ /\\.camel\\.(yaml|yml)$/",
+					"group": "navigation"
 				}
 			]
 		}
