@@ -16,7 +16,9 @@
  */
 import * as vscode from 'vscode';
 import * as extension from '../extension';
-const CODELENS_TITLE_START_INTEGRATION = 'Camel Debug with JBang';
+const CODELENS_TITLE_DEBUG_INTEGRATION = 'Camel Debug with JBang';
+const CODELENS_TITLE_RUN_INTEGRATION = 'Camel Run with JBang';
+const JBANG_TOOLTIP = 'Take care that the integration file is in supported scope of Camel JBang and that jbang CLI is available on system path.';
 
 export class CamelJBangCodelens implements vscode.CodeLensProvider {
 
@@ -27,14 +29,21 @@ export class CamelJBangCodelens implements vscode.CodeLensProvider {
 		if (fulltext.includes('from')
 			&& (fulltext.includes('to') || fulltext.includes('log'))) {
 			const topOfDocument = new vscode.Range(0, 0, 0, 0);
-			const classPathRefreshCommand: vscode.Command = {
-				command: extension.CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID,
-				title: CODELENS_TITLE_START_INTEGRATION,
-				tooltip: 'Start integration file with Camel JBang and attach the Camel Debugger.\n' 
-						+ 'Take care that the integration file is in supported scope of Camel JBang and that jbang CLI is available on system path.',
+			const debugCamelCommand: vscode.Command = {
+				command: extension.CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID,
+				title: CODELENS_TITLE_DEBUG_INTEGRATION,
+				tooltip: 'Run integration file with Camel JBang and attach the Camel Debugger.\n'
+						+ JBANG_TOOLTIP,
 				arguments: [document.uri]
 			};
-			return [new vscode.CodeLens(topOfDocument, classPathRefreshCommand)];
+			const runCamelCommand: vscode.Command = {
+				command: extension.CAMEL_RUN_WITH_JBANG_COMMAND_ID,
+				title: CODELENS_TITLE_RUN_INTEGRATION,
+				tooltip: 'Run integration file with Camel JBang.\n'
+						+ JBANG_TOOLTIP,
+				arguments: [document.uri]
+			};
+			return [new vscode.CodeLens(topOfDocument, debugCamelCommand), new vscode.CodeLens(topOfDocument, runCamelCommand)];
 		}
 		return [];
 	}
