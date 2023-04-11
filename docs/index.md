@@ -33,7 +33,8 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
   - the message body
   - a message header of type String
   - an exchange property of type String
-- One-click start and Camel debug via command `Run Camel Application with JBang and Debug`
+- One-click Run and Camel debug via command `Run Camel Application with JBang and Debug`
+- One-click Run Camel via command `Run Camel Application with JBang`
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using
   - JBang

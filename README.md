@@ -50,6 +50,7 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
   - Codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
 - Command `Run Camel application with JBang`.
   - It requires a valid Camel file defined in Yaml DSL (`.yaml|.yml`) opened in editor.
+  - Codelens at the top of a Camel file.
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang, Maven with Camel maven plugin or Quarkus Devs
 

@@ -24,7 +24,7 @@ import {CamelJBangCodelens} from './codelenses/CamelJBangCodelens';
 let telemetryService: TelemetryService;
 
 const CAMEL_DEBUG_ADAPTER_ID = 'apache.camel';
-export const CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID = 'apache.camel.debug.jbang';
+export const CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID = 'apache.camel.debug.jbang';
 export const CAMEL_RUN_WITH_JBANG_COMMAND_ID = 'apache.camel.run.jbang';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -41,7 +41,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	telemetryService = await redhatService.getTelemetryService();
 	telemetryService.sendStartupEvent();
 	
-	vscode.commands.registerCommand(CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID, async (uri: vscode.Uri) => {
+	vscode.commands.registerCommand(CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID, async (uri: vscode.Uri) => {
 		if (uri !== undefined) {
 			await vscode.window.showTextDocument(uri);
 		}
@@ -56,7 +56,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			type: 'track',
 			name: 'command',
 			properties: {
-				identifier: CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID
+				identifier: CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID
 			}
 		};
 		telemetryService.send(telemetryEvent);

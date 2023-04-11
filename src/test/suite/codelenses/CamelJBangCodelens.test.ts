@@ -22,34 +22,38 @@ import * as vscode from 'vscode';
 import { getDocUri } from '../util';
 import { waitUntil } from 'async-wait-until';
 
-suite("Camel Debug with JBang CodeLenses Test", function () {
+suite("CodeLenses Test", function () {
 
-	test("Codelens provider returns correct CodeLens for yaml file", async () => {
-		const doc = getDocUri('my-route.yaml');
-		await vscode.workspace.openTextDocument(doc);
+	suite("Camel Debug with JBang", function () {
 
-		await checkCodelensForOpenedDocument(doc);
+		test("Codelens provider returns correct CodeLens for YAML file", async () => testCodeLens('my-route.yaml', extension.CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID));
+
+		test("Codelens provider returns correct CodeLens for XML file", async () => testCodeLens('my-route.xml', extension.CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID));
+
+		test("Codelens provider returns correct CodeLens for Java file", async () => testCodeLens('MyCamelRoute.java', extension.CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID));
+
 	});
 
-	test("Codelens provider returns correct CodeLens for xml file", async () => {
-		const doc = getDocUri('my-route.xml');
-		await vscode.workspace.openTextDocument(doc);
+	suite("Camel Run with JBang", function () {
 
-		await checkCodelensForOpenedDocument(doc);
+		test("Codelens provider returns correct CodeLens for YAML file", async () => testCodeLens('my-route.yaml', extension.CAMEL_RUN_WITH_JBANG_COMMAND_ID));
+
+		test("Codelens provider returns correct CodeLens for XML file", async () => testCodeLens('my-route.xml', extension.CAMEL_RUN_WITH_JBANG_COMMAND_ID));
+
+		test("Codelens provider returns correct CodeLens for Java file", async () => testCodeLens('MyCamelRoute.java', extension.CAMEL_RUN_WITH_JBANG_COMMAND_ID));
+
 	});
-
-	test("Codelens provider returns correct CodeLens for java file", async () => {
-		const doc = getDocUri('MyCamelRoute.java');
-		await vscode.workspace.openTextDocument(doc);
-
-		await checkCodelensForOpenedDocument(doc);
-	});
-
 });
 
-export async function checkCodelensForOpenedDocument(uri: vscode.Uri) {
+async function testCodeLens(uri: string, camelCommand: string) {
+	const doc = getDocUri(uri);
+	await vscode.workspace.openTextDocument(doc);
+	await checkCodelensForOpenedDocument(doc, camelCommand);
+}
+
+export async function checkCodelensForOpenedDocument(uri: vscode.Uri, camelCommand: string) {
 	const codeLenses: vscode.CodeLens[] | undefined = await retrieveCodeLensOnOpenedDocument(uri);
-	checkCodeLens(codeLenses as vscode.CodeLens[]);
+	checkCodeLens(codeLenses as vscode.CodeLens[], camelCommand);
 }
 
 async function retrieveCodeLensOnOpenedDocument(uri: vscode.Uri): Promise<vscode.CodeLens[] | undefined> {
@@ -61,11 +65,11 @@ async function retrieveCodeLensOnOpenedDocument(uri: vscode.Uri): Promise<vscode
 	return res;
 }
 
-function checkCodeLens(codeLenses: vscode.CodeLens[]) {
-	const startIntegrationCodeLenses = codeLenses.filter(codelens => {
-		return codelens.command?.command === extension.CAMEL_START_AND_DEBUG_WITH_JBANG_COMMAND_ID;
+function checkCodeLens(codeLenses: vscode.CodeLens[], camelCommand: string) {
+	const integrationCondeLens = codeLenses.find(codelens => {
+		return codelens.command?.command === camelCommand;
 	});
-	expect(startIntegrationCodeLenses).has.length(1);
-	const codeLens: vscode.CodeLens = startIntegrationCodeLenses[0];
+	expect(integrationCondeLens).to.not.be.undefined;
+	const codeLens = integrationCondeLens as vscode.CodeLens;
 	expect(codeLens.isResolved).to.be.true;
 }
