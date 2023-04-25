@@ -11,5 +11,7 @@
     "workbench.editor.enablePreview": false,
     "window.restoreFullscreen": true,
     "window.newWindowDimensions": "maximized",
-    "window.title": "${dirty}${activeEditorLong}${separator}${rootPath}${separator}${appName}"
+    "window.title": "${dirty}${activeEditorLong}${separator}${rootPath}${separator}${appName}",
+    "redhat.telemetry.enabled": false,
+    "terminal.integrated.sendKeybindingsToShell": true
 }
