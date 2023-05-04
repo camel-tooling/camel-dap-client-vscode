@@ -1,6 +1,6 @@
 ## Introduction
 
-Welcome to the `vscode-debug-adapter-apache-camel` project created by Red Hat! Here you'll find a description of how to use VS Code extension providing Debug Adapter for Apache Camel.
+Welcome to the `VS Code extension Debug Adapter for Apache Camel` project created by Red Hat! Here you'll find a description of how to use VS Code extension providing Debug Adapter for Apache Camel.
 
 ## Description
 
@@ -8,7 +8,7 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
 
 ## How to install
 
-1. You can download **vscode-debug-adapter-apache-camel** extension from the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-debug-adapter-apache-camel) and the [Open VSX Registry](https://open-vsx.org/extension/redhat/vscode-debug-adapter-apache-camel).
+1. You can download **Debug Adapter for Apache Camel** extension from the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-debug-adapter-apache-camel) and the [Open VSX Registry](https://open-vsx.org/extension/redhat/vscode-debug-adapter-apache-camel).
 2. Debug Adapter for Apache Camel can be also installed directly in the [Microsoft VS Code](https://code.visualstudio.com/).
 
     **Steps**
