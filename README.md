@@ -67,7 +67,7 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 
 1. Ensure `jbang` is available on system command-line
 2. Open a Camel route which can be started with JBang
-3. Call command Palette (`Ctrl + Alt + P`), and pick command `Run Camel Application with JBang and Debug` or click on codelens `Camel Debug with JBang` which appears on top of the file.
+3. Call command Palette (`Ctrl + Shift + P`), and pick command `Run Camel Application with JBang and Debug` or click on codelens `Camel Debug with JBang` which appears on top of the file.
 4. Wait until the route is started and debugger is connected
 5. Put a breakpoint on the Camel route
 6. Debug! 🔥
