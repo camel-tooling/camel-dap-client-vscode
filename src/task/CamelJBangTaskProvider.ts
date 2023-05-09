@@ -46,7 +46,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedRunTask,
 			'camel',
-			new ShellExecution('jbang camel@apache/camel run \'${relativeFile}\' --logging-level=info')
+			new ShellExecution('jbang camel@apache/camel run \'${relativeFile}\' --dev --logging-level=info')
 		);
 		runTask.isBackground = true;
 
