@@ -49,6 +49,7 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
   - Contextual menu in File explorer. It is visible to all `*.xml`, `*.java`, `*.yaml` and `*.yml`.
   - Codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
 - Command `Run Camel application with JBang`.
+  - Support automatic reload mode `--dev` by default
   - It requires a valid Camel file defined in Yaml DSL (`.yaml|.yml`) opened in editor.
   - Contextual menu in File explorer. It is visible to all `*.yaml` and `*.yml`.
   - Codelens at the top of a Camel file.
