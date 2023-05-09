@@ -177,6 +177,11 @@
 					"command": "apache.camel.debug.jbang",
 					"when": "resourceExtname =~ /\\.(java|xml|yaml|yml)$/",
 					"group": "camel.group"
+				},
+				{
+					"command": "apache.camel.run.jbang",
+					"when": "resourceExtname =~ /\\.(yaml|yml)$/",
+					"group": "camel.group"
 				}
 			],
 			"editor/title": [
