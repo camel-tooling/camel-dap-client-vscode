@@ -20,6 +20,8 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	
 	public static labelProvidedTask :string = "Start Camel application with debug enabled with JBang";
 	public static labelProvidedRunTask: string = "Run Camel application with JBang";
+
+	private camelVersion: string = '3.20.4';
 	
 	provideTasks(token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];
@@ -33,7 +35,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedTask,
 			'camel',
-			new ShellExecution('jbang \'-Dorg.apache.camel.debugger.suspend=true\' camel@apache/camel run \'${relativeFile}\' --logging-level=info \'--dep=org.apache.camel:camel-debug\''),
+			new ShellExecution(`jbang \'-Dorg.apache.camel.debugger.suspend=true\' \'-Dcamel.jbang.version=${this.camelVersion}\' camel@apache/camel run \'\${relativeFile}\' --logging-level=info \'--dep=org.apache.camel:camel-debug\'`),
 			'$camel.debug.problemMatcher');
 		task.isBackground = true;
 		task.presentationOptions.reveal = TaskRevealKind.Always;
@@ -46,7 +48,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedRunTask,
 			'camel',
-			new ShellExecution('jbang camel@apache/camel run \'${relativeFile}\' --dev --logging-level=info')
+			new ShellExecution(`jbang \'-Dcamel.jbang.version=${this.camelVersion}\' camel@apache/camel run \'\${relativeFile}\' --dev --logging-level=info`)
 		);
 		runTask.isBackground = true;
 
