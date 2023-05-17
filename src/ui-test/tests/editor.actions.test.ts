@@ -1,11 +1,14 @@
 import { expect } from 'chai';
 import * as path from 'path';
 import {
+    ActivityBar,
     after,
     before,
     BottomBarPanel,
     EditorView,
     SideBarView,
+    ViewControl,
+    ViewSection,
     VSBrowser,
     WebDriver,
     WebElement,
@@ -15,42 +18,53 @@ import {
     CAMEL_RUN_ACTION_LABEL,
     CAMEL_RUN_DEBUG_ACTION_LABEL,
     waitUntilTerminalHasText,
+    activateTerminalView,
+    killTerminal,
+    disconnectDebugger,
+    HELLO_CAMEL_MESSAGE,
     TEST_ARRAY_RUN,
+    DEBUGGER_ATTACHED_MESSAGE
 } from '../utils';
 
 describe('Camel file editor test', function () {
 
-
     describe('Camel Actions', function () {
-        this.timeout(180000);
+        this.timeout(240000);
 
         let driver: WebDriver;
         let editorView: EditorView;
+        let bottomBar: BottomBarPanel;
 
         before('Before setup', async function () {
             driver = VSBrowser.instance.driver;
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
             await VSBrowser.instance.waitForWorkbench();
 
-            const section = await new SideBarView().getContent().getSection('resources');
-            await section?.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
+            const section = await new SideBarView().getContent().getSection('resources') as ViewSection;
+            await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
             editorView = new EditorView();
             await driver.wait(async function () {
                 return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
             }, 5000);
+
+            bottomBar = new BottomBarPanel();
+            bottomBar.toggle(true);
         });
 
         after('After cleanup', async function () {
             await editorView.closeAllEditors();
+            await bottomBar.toggle(false);
         });
 
         it('Debug and Run action is available', async function () {
+            await driver.sleep(500);
             const button = await editorView.getAction(CAMEL_RUN_DEBUG_ACTION_LABEL);
             expect(button).to.not.undefined;
         });
 
         it('Run action is available', async function () {
+            await driver.sleep(500);
             const button = await editorView.getAction(CAMEL_RUN_ACTION_LABEL);
             expect(button).to.not.undefined;
         });
@@ -60,11 +74,23 @@ describe('Camel file editor test', function () {
             await run.click();
 
             await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
+            expect(await (await activateTerminalView()).getText()).to.contain(HELLO_CAMEL_MESSAGE);
 
-            const bottomBar = new BottomBarPanel();
-            const terminal = await bottomBar.openTerminalView();
-            await terminal.killTerminal();
-            await bottomBar.toggle(false);
+            await killTerminal();
+        });
+
+        it(`Can execute '${CAMEL_RUN_DEBUG_ACTION_LABEL}' action`, async function () {
+            const run = await editorView.getAction(CAMEL_RUN_DEBUG_ACTION_LABEL) as WebElement;
+            await run.click();
+
+            await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
+            const terminalLog = await (await activateTerminalView()).getText();
+            expect(terminalLog).to.contain(DEBUGGER_ATTACHED_MESSAGE);
+            expect(terminalLog).to.contain(HELLO_CAMEL_MESSAGE);
+
+            await (await new ActivityBar().getViewControl('Run and Debug') as ViewControl).closeView();
+            await disconnectDebugger(driver);
+            await killTerminal();
         });
 
     });

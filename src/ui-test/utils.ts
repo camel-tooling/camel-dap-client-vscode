@@ -1,8 +1,11 @@
-import { BottomBarPanel, InputBox, WebDriver, Workbench } from "vscode-uitests-tooling";
+import { BottomBarPanel, DebugToolbar, InputBox, TerminalView, WebDriver, Workbench, until } from "vscode-uitests-tooling";
 
+export const HELLO_CAMEL_MESSAGE = 'Hello Camel from yaml';
+export const DEBUGGER_ATTACHED_MESSAGE = 'debugger has been attached';
 export const TEST_ARRAY_RUN = [
-    "Routes startup",
-    "Hello Camel from yaml"];
+    'Routes startup',
+    HELLO_CAMEL_MESSAGE
+];
 
 export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
 export const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
@@ -29,9 +32,9 @@ export async function executeCommand(command: string): Promise<void> {
  * @returns A Promise that resolves to a boolean indicating whether the terminal view has the texts or not.
  */
 export async function waitUntilTerminalHasText(driver: WebDriver, textArray: string[], interval = 500): Promise<void> {
-    await driver.wait(async () => {
+    await driver.wait(async function () {
         try {
-            const terminal = await new BottomBarPanel().openTerminalView();
+            const terminal = await activateTerminalView();
             const terminalText = await terminal.getText();
             for (const text of textArray) {
                 if (!(terminalText.includes(text))) {
@@ -43,4 +46,30 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
             return false;
         }
     }, undefined, undefined, interval);
+}
+
+/**
+ * Click on button to kill running process in Terminal View
+ */
+export async function killTerminal(): Promise<void> {
+    await (await activateTerminalView()).killTerminal();
+}
+
+/**
+ * Click on 'Disconnect' button in debug bar
+ *
+ * @param driver The WebDriver instance to use.
+ */
+export async function disconnectDebugger(driver: WebDriver): Promise<void> {
+    const debugBar = await DebugToolbar.create();
+    await debugBar.disconnect();
+    await driver.wait(until.elementIsNotVisible(debugBar));
+}
+
+/**
+ * Ensures Terminal View is opened and focused
+ */
+export async function activateTerminalView(): Promise<TerminalView> {
+    await new Workbench().executeCommand('Terminal: Focus on Terminal View'); // workaround ExTester issue - https://github.com/redhat-developer/vscode-extension-tester/issues/785
+    return await new BottomBarPanel().openTerminalView();
 }
