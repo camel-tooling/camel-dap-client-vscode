@@ -13,5 +13,6 @@
     "window.newWindowDimensions": "maximized",
     "window.title": "${dirty}${activeEditorLong}${separator}${rootPath}${separator}${appName}",
     "redhat.telemetry.enabled": false,
-    "terminal.integrated.sendKeybindingsToShell": true
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "git.autoRepositoryDetection": false
 }
