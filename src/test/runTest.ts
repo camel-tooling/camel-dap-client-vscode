@@ -14,7 +14,7 @@ async function main() {
 		const extensionTestsPath = path.resolve(__dirname, './suite/index');
 		console.log(`extensionTestsPath = ${extensionTestsPath}`);
 
-		const testWorkspace = path.resolve(__dirname, '../../../test Fixture with speci@l chars');
+		const testWorkspace = path.resolve(__dirname, '../../test Fixture with speci@l chars');
 		console.log(`testWorkspace = ${testWorkspace}`);
 
 		const vscodeVersion = computeVSCodeVersionToPlayTestWith();

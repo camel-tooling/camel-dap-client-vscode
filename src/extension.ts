@@ -35,8 +35,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	vscode.tasks.registerTaskProvider('camel.jbang', new CamelJBangTaskProvider());
 
-	const camelRunTask = (await vscode.tasks.fetchTasks()).find((t) => t.name === CamelJBangTaskProvider.labelProvidedRunTask);
-	
 	const redhatService = await getRedHatService(context);  
 	telemetryService = await redhatService.getTelemetryService();
 	telemetryService.sendStartupEvent();
@@ -63,6 +61,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand(CAMEL_RUN_WITH_JBANG_COMMAND_ID, async function () {
+		const camelRunTask = (await vscode.tasks.fetchTasks()).find((t) => t.name === CamelJBangTaskProvider.labelProvidedRunTask);
 		if(camelRunTask) {
 			await vscode.tasks.executeTask(camelRunTask);
 		}
