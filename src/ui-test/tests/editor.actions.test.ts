@@ -6,37 +6,39 @@ import {
     BottomBarPanel,
     EditorView,
     SideBarView,
-    TerminalView,
     VSBrowser,
+    WebDriver,
     WebElement,
-} from 'vscode-extension-tester';
+} from 'vscode-uitests-tooling';
+import {
+    CAMEL_ROUTE_YAML_WITH_SPACE,
+    CAMEL_RUN_ACTION_LABEL,
+    CAMEL_RUN_DEBUG_ACTION_LABEL,
+    waitUntilTerminalHasText,
+    TEST_ARRAY_RUN,
+} from '../utils';
 
 describe('Camel file editor test', function () {
 
-    const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
-    const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
-    const CAMEL_ROUTE_YAML = 'demo route.camel.yaml';
 
     describe('Camel Actions', function () {
         this.timeout(180000);
 
+        let driver: WebDriver;
         let editorView: EditorView;
-        let bottomBar: BottomBarPanel;
 
         before('Before setup', async function () {
+            driver = VSBrowser.instance.driver;
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
             await VSBrowser.instance.waitForWorkbench();
 
             const section = await new SideBarView().getContent().getSection('resources');
-            await section?.openItem(CAMEL_ROUTE_YAML);
+            await section?.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
             editorView = new EditorView();
-            await section.getDriver().wait(async function () {
-                return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML);
+            await driver.wait(async function () {
+                return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
             }, 5000);
-
-            bottomBar = new BottomBarPanel();
-            await bottomBar.openTerminalView();
         });
 
         after('After cleanup', async function () {
@@ -57,21 +59,10 @@ describe('Camel file editor test', function () {
             const run = await editorView.getAction(CAMEL_RUN_ACTION_LABEL) as WebElement;
             await run.click();
 
-            await run.getDriver().wait(async function () {
-                console.log('Waiting for JBang dependencies...');
-                await bottomBar.openTerminalView(); // ensure terminal view is opened and focused
-                return (await new TerminalView().getText()).includes('[jbang] Dependencies resolved');
-            }, 60000);
+            await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
 
-            await run.getDriver().wait(async function () {
-                console.log('Waiting for Camel route to be started...');
-                await bottomBar.openTerminalView(); // ensure terminal view is opened and focused
-                return (await new TerminalView().getText()).includes('(demo route) started');
-            }, 30000);
-
-            const terminal = await bottomBar.openTerminalView(); // ensure terminal view is opened and focused
-            expect(await terminal.getText()).to.contain('Hello Camel');
-
+            const bottomBar = new BottomBarPanel();
+            const terminal = await bottomBar.openTerminalView();
             await terminal.killTerminal();
             await bottomBar.toggle(false);
         });
