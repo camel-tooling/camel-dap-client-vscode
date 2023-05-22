@@ -228,7 +228,7 @@
 		"@vscode/test-electron": "^2.3.2",
 		"async-wait-until": "^2.0.12",
 		"chai": "^4.3.7",
-		"eslint": "^8.40.0",
+		"eslint": "^8.41.0",
 		"glob": "^10.2.4",
 		"mocha": "^10.2.0",
 		"mocha-jenkins-reporter": "^0.4.8",
