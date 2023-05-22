@@ -4,6 +4,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.7.0
 
+- Minimal version of VS Code to run this extension is 1.76.0
 - Provide Codelens to `Camel Run with JBang`
 - Provide Contextual Menu on File Explorer to `Run Camel Application with JBang`
 - `Camel Run with JBang` command is now using [automatic reloading](https://camel.apache.org/manual/camel-jbang.html#_dev_mode_with_live_reload)
