@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
-import * as path  from 'path';
+import * as path from 'path';
 import { repeat, TimeoutError } from '@theia-extension-tester/repeat';
 import {
     after,
@@ -105,8 +105,13 @@ async function testCommand(commandMetadata: any, timeout: number): Promise<void>
     await input.setText(`>${category}: ${title}`);
     await repeat(async () => {
         try {
-            const quickpick = await input.findQuickPick(title);
-            return await quickpick?.getLabel() === `${category}: ${title}`;
+            const quickpicks = await input.getQuickPicks();
+            for (let quickpick of quickpicks) {
+                if (await quickpick.getLabel() === `${category}: ${title}`) {
+                    return true;
+                }
+            }
+            return false;
         }
         catch (e) {
             // Input cannot be stale by design. Refresh quickpicks.

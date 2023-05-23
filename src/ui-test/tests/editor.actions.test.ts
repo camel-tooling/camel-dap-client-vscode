@@ -40,6 +40,8 @@ describe('Camel file editor test', function () {
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
             await VSBrowser.instance.waitForWorkbench();
 
+            await (await new ActivityBar().getViewControl('Explorer') as ViewControl).openView();
+
             const section = await new SideBarView().getContent().getSection('resources') as ViewSection;
             await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
