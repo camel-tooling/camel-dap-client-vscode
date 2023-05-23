@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import * as path from 'path';
 import {
+    ActivityBar,
     before,
     SideBarView,
+    ViewControl,
     ViewItem,
     VSBrowser,
 } from 'vscode-extension-tester';
@@ -21,6 +23,8 @@ import {
         before('Before setup', async function () {
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
             await VSBrowser.instance.waitForWorkbench();
+
+            await (await new ActivityBar().getViewControl('Explorer') as ViewControl).openView();
 
             item = await (await new SideBarView().getContent().getSection('resources')).findItem(CAMEL_ROUTE_YAML) as ViewItem;
         });

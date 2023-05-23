@@ -1,4 +1,12 @@
-import { BottomBarPanel, DebugToolbar, InputBox, TerminalView, WebDriver, Workbench, until } from "vscode-uitests-tooling";
+import {
+    BottomBarPanel,
+    DebugToolbar,
+    InputBox,
+    TerminalView,
+    WebDriver,
+    Workbench,
+    until
+} from 'vscode-uitests-tooling';
 
 export const HELLO_CAMEL_MESSAGE = 'Hello Camel from yaml';
 export const DEBUGGER_ATTACHED_MESSAGE = 'debugger has been attached';
@@ -6,22 +14,35 @@ export const TEST_ARRAY_RUN = [
     'Routes startup',
     HELLO_CAMEL_MESSAGE
 ];
+export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
+    'Enabling Camel debugger',
+    DEBUGGER_ATTACHED_MESSAGE
+]);
 
 export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
 export const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 
+
 /**
  * Executes a command in the command prompt of the workbench.
  * @param command The command to execute.
  * @returns A Promise that resolves when the command is executed.
+ * @throws An error if the command is not found in the command palette.
  */
 export async function executeCommand(command: string): Promise<void> {
     const workbench = new Workbench();
     await workbench.openCommandPrompt();
     const input = await InputBox.create();
     await input.setText(`>${command}`);
-    await input.confirm();
+    const quickpicks = await input.getQuickPicks();
+    for (let quickpick of quickpicks) {
+        if (await quickpick.getLabel() === `Camel: ${command}`) {
+            await quickpick.select();
+            return;
+        }
+    }
+    throw new Error(`Command '${command}' not found in the command palette`);
 }
 
 /**
@@ -57,7 +78,6 @@ export async function killTerminal(): Promise<void> {
 
 /**
  * Click on 'Disconnect' button in debug bar
- *
  * @param driver The WebDriver instance to use.
  */
 export async function disconnectDebugger(driver: WebDriver): Promise<void> {
@@ -68,8 +88,10 @@ export async function disconnectDebugger(driver: WebDriver): Promise<void> {
 
 /**
  * Ensures Terminal View is opened and focused
+ * @returns A Promise that resolves to TerminalView instance.
  */
 export async function activateTerminalView(): Promise<TerminalView> {
-    await new Workbench().executeCommand('Terminal: Focus on Terminal View'); // workaround ExTester issue - https://github.com/redhat-developer/vscode-extension-tester/issues/785
+    // workaround ExTester issue - https://github.com/redhat-developer/vscode-extension-tester/issues/785
+    await new Workbench().executeCommand('Terminal: Focus on Terminal View');
     return await new BottomBarPanel().openTerminalView();
 }
