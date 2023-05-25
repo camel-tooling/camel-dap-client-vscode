@@ -50,19 +50,13 @@ export async function activate(context: vscode.ExtensionContext) {
 			preLaunchTask: `camel: ${CamelJBangTaskProvider.labelProvidedTask}`,
 		};
 		await vscode.debug.startDebugging(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0] : undefined, debugConfiguration);
-		const telemetryEvent: TelemetryEvent = {
-			type: 'track',
-			name: 'command',
-			properties: {
-				identifier: CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID
-			}
-		};
-		telemetryService.send(telemetryEvent);
+		sendCommandTrackingEvent(telemetryService, CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID);
 	});
 
 	vscode.commands.registerCommand(CAMEL_RUN_WITH_JBANG_COMMAND_ID, async function () {
 		const camelRunTask = (await vscode.tasks.fetchTasks()).find((t) => t.name === CamelJBangTaskProvider.labelProvidedRunTask);
 		if(camelRunTask) {
+			sendCommandTrackingEvent(telemetryService, CAMEL_RUN_WITH_JBANG_COMMAND_ID);
 			await vscode.tasks.executeTask(camelRunTask);
 		}
 	});
@@ -96,4 +90,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
 	telemetryService.sendShutdownEvent();
+}
+
+function sendCommandTrackingEvent(telemetryService: TelemetryService, commandId: string) {
+	const telemetryEvent: TelemetryEvent = {
+		type: 'track',
+		name: 'command',
+		properties: {
+			identifier: commandId
+		}
+	};
+	telemetryService.send(telemetryEvent);
 }
