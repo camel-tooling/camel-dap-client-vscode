@@ -27,7 +27,7 @@ async function main() {
 			stdio: 'inherit'
 		});
 
-		await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs: [testWorkspace, '--disable-workspace-trust', '--user-data-dir', `${extensionDevelopmentPath}/.vscode-test`] });
+		await runTests({ vscodeExecutablePath, extensionDevelopmentPath, extensionTestsPath, launchArgs: [testWorkspace, '--disable-workspace-trust', '--user-data-dir', `${extensionDevelopmentPath}/.vscode-test`] });
 	} catch (err) {
 		console.error('Failed to run tests');
 		process.exit(1);
