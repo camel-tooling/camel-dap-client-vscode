@@ -8,7 +8,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Provide Codelens to `Camel Run with JBang`
 - Provide Contextual Menu on File Explorer to `Run Camel Application with JBang`
 - `Camel Run with JBang` command is now using [automatic reloading](https://camel.apache.org/manual/camel-jbang.html#_dev_mode_with_live_reload)
-- Provide default Camel JBang version 3.20.4 for commands `Camel Run with JBang` and `Camel Debug with JBang`
+- Provide default Camel JBang version 3.20.5 for commands `Camel Run with JBang` and `Camel Debug with JBang`
 - Provide settings for default Camel JBang version
 
 ## 0.6.0
