@@ -6,6 +6,7 @@ import {
     InputBox,
     SideBarView,
     TerminalView,
+    TextEditor,
     ViewItem,
     WebDriver,
     Workbench,
@@ -13,6 +14,7 @@ import {
 } from 'vscode-uitests-tooling';
 
 export const HELLO_CAMEL_MESSAGE = 'Hello Camel from yaml';
+export const HELLO_WORLD_MESSAGE = 'Hello World from yaml';
 export const DEBUGGER_ATTACHED_MESSAGE = 'debugger has been attached';
 export const TEST_ARRAY_RUN = [
     'Routes startup',
@@ -26,7 +28,7 @@ export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
 export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
 export const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
-
+export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
 
 /**
  * Executes a command in the command prompt of the workbench.
@@ -125,4 +127,22 @@ export async function activateTerminalView(): Promise<TerminalView> {
     // workaround ExTester issue - https://github.com/redhat-developer/vscode-extension-tester/issues/785
     await new Workbench().executeCommand('Terminal: Focus on Terminal View');
     return await new BottomBarPanel().openTerminalView();
+}
+
+/**
+ * Replaces the specified text with the given replacement in the editor.
+ * @param text The text to be replaced.
+ * @param replacement The replacement text.
+ * @returns A boolean indicating whether the text replacement was successful.
+ */
+export async function replaceTextInCodeEditor(text: string, replacement: string): Promise<boolean> {
+    try {
+        const editor = new TextEditor();
+        await editor.selectText(text);
+        await editor.typeText(replacement);
+        await editor.save();
+        return true;
+    } catch (err) {
+        return false;
+    }
 }
