@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 0.8.0
+
 ## 0.7.0
 
 - Minimal version of VS Code to run this extension is 1.76.0
