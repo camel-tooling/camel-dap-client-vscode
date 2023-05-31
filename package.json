@@ -235,7 +235,7 @@
 		"mvn-artifact-download": "^6.1.1",
 		"typescript": "^5.0.4",
 		"vscode-extension-tester": "^5.6.0",
-		"vscode-uitests-tooling": "^3.0.0"
+		"vscode-uitests-tooling": "^3.0.1"
 	},
 	"dependencies": {
 		"@redhat-developer/vscode-redhat-telemetry": "^0.6.1",
