@@ -113,10 +113,19 @@ export async function killTerminal(): Promise<void> {
  * Click on 'Disconnect' button in debug bar
  * @param driver The WebDriver instance to use.
  */
-export async function disconnectDebugger(driver: WebDriver): Promise<void> {
-    const debugBar = await DebugToolbar.create();
-    await debugBar.disconnect();
-    await driver.wait(until.elementIsNotVisible(debugBar));
+export async function disconnectDebugger(driver: WebDriver, interval = 500): Promise<void> {
+    await driver.wait(async function () {
+        try {
+            const debugBar = await DebugToolbar.create();
+            await debugBar.disconnect();
+            await driver.wait(until.elementIsNotVisible(debugBar));
+            return true;
+        } catch (err) {
+            // Workaround for the issue: https://issues.redhat.com/browse/FUSETOOLS2-2100 
+            await driver.actions().click().perform();
+            return false;
+        }
+    }, 10000, undefined, interval);
 }
 
 /**
