@@ -5,8 +5,6 @@ import {
     before,
     EditorView,
     SideBarView,
-    ViewControl,
-    ViewSection,
     VSBrowser,
     WebDriver,
 } from 'vscode-uitests-tooling';
@@ -31,21 +29,20 @@ describe('JBang commands execution through command palette', function () {
 
     let driver: WebDriver;
 
-    before('Before setup', async function () {
+    before(async function () {
         driver = VSBrowser.instance.driver;
     });
 
-    after('After cleanup', async function () {
+    after(async function () {
         await new EditorView().closeAllEditors();
     });
 
-    beforeEach('Before each test', async function () {
+    beforeEach(async function () {
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
-        await VSBrowser.instance.waitForWorkbench();
 
-        await (await new ActivityBar().getViewControl('Explorer') as ViewControl).openView();
+        await (await new ActivityBar().getViewControl('Explorer')).openView();
 
-        const section = await new SideBarView().getContent().getSection('resources') as ViewSection;
+        const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
         const editorView = new EditorView();
@@ -54,7 +51,7 @@ describe('JBang commands execution through command palette', function () {
         }, 5000);
     });
 
-    afterEach('After each test', async function () {
+    afterEach(async function () {
         await killTerminal();
     });
 
@@ -71,6 +68,6 @@ describe('JBang commands execution through command palette', function () {
         expect(terminalLog).to.contain(DEBUGGER_ATTACHED_MESSAGE);
         expect(terminalLog).to.contain(HELLO_CAMEL_MESSAGE);
         await disconnectDebugger(driver);
-        await (await new ActivityBar().getViewControl('Run and Debug') as ViewControl).closeView();
+        await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
     });
 });

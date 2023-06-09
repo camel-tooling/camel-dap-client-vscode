@@ -99,7 +99,7 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
         } catch (err) {
             return false;
         }
-    }, undefined, undefined, interval);
+    }, 220000, undefined, interval);
 }
 
 /**
@@ -118,9 +118,10 @@ export async function disconnectDebugger(driver: WebDriver, interval = 500): Pro
         try {
             const debugBar = await DebugToolbar.create();
             await debugBar.disconnect();
-            await driver.wait(until.elementIsNotVisible(debugBar));
+            await driver.wait(until.elementIsNotVisible(debugBar), 10000);
             return true;
         } catch (err) {
+            // Extra click to avoid the error: "Element is not clickable at point (x, y)"
             // Workaround for the issue: https://issues.redhat.com/browse/FUSETOOLS2-2100 
             await driver.actions().click().perform();
             return false;
@@ -145,8 +146,8 @@ export async function activateTerminalView(): Promise<TerminalView> {
  * @returns A boolean indicating whether the text replacement was successful.
  */
 export async function replaceTextInCodeEditor(text: string, replacement: string): Promise<boolean> {
+    const editor = new TextEditor();
     try {
-        const editor = new TextEditor();
         await editor.selectText(text);
         await editor.typeText(replacement);
         await editor.save();

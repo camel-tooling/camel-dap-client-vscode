@@ -5,8 +5,6 @@ import {
     before,
     EditorView,
     SideBarView,
-    ViewControl,
-    ViewSection,
     VSBrowser,
     WebDriver,
     resources,
@@ -28,12 +26,12 @@ import {
 import { expect } from 'chai';
 
 describe('Jbang commands with automatic reload', function () {
-    this.timeout(240000);
+    this.timeout(300000);
 
     let driver: WebDriver;
     let resourceManager: resources.IResourceManager;
 
-    before('Before setup', async function () {
+    before(async function () {
         driver = VSBrowser.instance.driver;
 
         resourceManager = resources.createResourceManager(
@@ -44,11 +42,10 @@ describe('Jbang commands with automatic reload', function () {
         await resourceManager.copy(CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
 
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
-        await VSBrowser.instance.waitForWorkbench();
 
-        await (await new ActivityBar().getViewControl('Explorer') as ViewControl).openView();
+        await (await new ActivityBar().getViewControl('Explorer')).openView();
 
-        const section = await new SideBarView().getContent().getSection('resources') as ViewSection;
+        const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
 
         const editorView = new EditorView();
@@ -57,12 +54,12 @@ describe('Jbang commands with automatic reload', function () {
         }, 5000);
     });
 
-    after('After cleanup', async function () {
+    after(async function () {
         await new EditorView().closeAllEditors();
-        await resourceManager.deleteFromResources(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
+        await resourceManager.delete(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
     });
 
-    afterEach('After each test', async function () {
+    afterEach(async function () {
         await killTerminal();
     });
 
@@ -70,7 +67,7 @@ describe('Jbang commands with automatic reload', function () {
         await executeCommand(CAMEL_RUN_ACTION_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
 
-        await driver.wait(async () => { return await replaceTextInCodeEditor(HELLO_CAMEL_MESSAGE, HELLO_WORLD_MESSAGE); });
+        await driver.wait(async () => { return await replaceTextInCodeEditor(HELLO_CAMEL_MESSAGE, HELLO_WORLD_MESSAGE); }, 60000);
         await waitUntilTerminalHasText(driver, [HELLO_WORLD_MESSAGE]);
 
         expect(await (await activateTerminalView()).getText()).to.contain(HELLO_WORLD_MESSAGE);
