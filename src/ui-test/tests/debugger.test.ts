@@ -7,7 +7,6 @@ import {
     SideBarView,
     TextEditor,
     VSBrowser,
-    ViewSection,
     WebDriver
 } from "vscode-uitests-tooling";
 import {
@@ -24,18 +23,18 @@ import {
 } from '../utils';
 
 describe('Camel Debugger tests', function () {
-    this.timeout(240000);
+    this.timeout(300000);
 
     let driver: WebDriver;
 
-    before('Before setup', async function () {
+    before(async function () {
         driver = VSBrowser.instance.driver;
 
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
 
         await (await new ActivityBar().getViewControl('Explorer')).openView();
 
-        const section = await new SideBarView().getContent().getSection('resources') as ViewSection;
+        const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
         const editorView = new EditorView();
@@ -44,7 +43,7 @@ describe('Camel Debugger tests', function () {
         }, 5000);
     });
 
-    after('After cleanup', async function () {
+    after(async function () {
         await driver.wait(async function () {
             return !await new TextEditor().toggleBreakpoint(11);
         }, 5000);
@@ -62,9 +61,9 @@ describe('Camel Debugger tests', function () {
         }, 5000);
 
         // WORKAROUND: https://github.com/redhat-developer/vscode-extension-tester/issues/402
+        const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
         await driver.wait(async function () {
             try {
-                const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
                 const variables = await debugView.getContent().getSection('Variables');
                 const messages = await variables.openItem('Message');
                 for await (let message of messages) {
@@ -81,7 +80,7 @@ describe('Camel Debugger tests', function () {
                 // Issue is similar to https://issues.redhat.com/browse/FUSETOOLS2-2100
                 await driver.actions().click().perform();
             }
-        }, 180000, undefined, 500);
+        }, 240000, undefined, 500);
 
         await waitUntilTerminalHasText(driver, [HELLO_WORLD_MESSAGE]);
         expect(await (await activateTerminalView()).getText()).to.contain(HELLO_WORLD_MESSAGE);

@@ -7,8 +7,6 @@ import {
     BottomBarPanel,
     EditorView,
     SideBarView,
-    ViewControl,
-    ViewSection,
     VSBrowser,
     WebDriver,
     WebElement,
@@ -35,14 +33,13 @@ describe('Camel file editor test', function () {
         let editorView: EditorView;
         let bottomBar: BottomBarPanel;
 
-        before('Before setup', async function () {
+        before(async function () {
             driver = VSBrowser.instance.driver;
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
-            await VSBrowser.instance.waitForWorkbench();
 
-            await (await new ActivityBar().getViewControl('Explorer') as ViewControl).openView();
+            await (await new ActivityBar().getViewControl('Explorer')).openView();
 
-            const section = await new SideBarView().getContent().getSection('resources') as ViewSection;
+            const section = await new SideBarView().getContent().getSection('resources');
             await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
             editorView = new EditorView();
@@ -54,7 +51,7 @@ describe('Camel file editor test', function () {
             bottomBar.toggle(true);
         });
 
-        after('After cleanup', async function () {
+        after(async function () {
             await editorView.closeAllEditors();
             await bottomBar.toggle(false);
         });
@@ -90,7 +87,7 @@ describe('Camel file editor test', function () {
             expect(terminalLog).to.contain(DEBUGGER_ATTACHED_MESSAGE);
             expect(terminalLog).to.contain(HELLO_CAMEL_MESSAGE);
 
-            await (await new ActivityBar().getViewControl('Run and Debug') as ViewControl).closeView();
+            await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
             await disconnectDebugger(driver);
             await killTerminal();
         });

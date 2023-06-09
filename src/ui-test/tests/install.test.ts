@@ -14,9 +14,9 @@ import {
     InputBox,
     SideBarView,
     ViewControl,
-    VSBrowser
-} from 'vscode-extension-tester';
-import { Workbench } from 'vscode-uitests-tooling';
+    VSBrowser,
+    Workbench
+} from 'vscode-uitests-tooling';
 
 describe('Install test', function () {
     this.timeout(30000);
@@ -64,7 +64,6 @@ describe('Install test', function () {
 
         before('Open file before tests', async function () {
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources', CAMEL_ROUTE_YAML));
-            await VSBrowser.instance.waitForWorkbench();
         });
 
         after('Cleanup after tests', async function () {
