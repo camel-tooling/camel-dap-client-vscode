@@ -59,7 +59,7 @@ describe('Jbang commands with automatic reload', function () {
 
     after('After cleanup', async function () {
         await new EditorView().closeAllEditors();
-        await resourceManager.deleteFromResources(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
+        resourceManager.deleteSync(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
     });
 
     afterEach('After each test', async function () {
