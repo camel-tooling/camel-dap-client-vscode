@@ -50,7 +50,8 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'--dev',
 					'--logging-level=info',
 					'--dep=org.apache.camel:camel-debug',
-					`${this.getCamelVersion()}`
+					`${this.getCamelVersion()}`,
+					`${this.getRedHatMavenRepository()}`
 				]
 			),
 			'$camel.debug.problemMatcher'
@@ -78,7 +79,8 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'${relativeFile}',
 					'--dev',
 					'--logging-level=info',
-					`${this.getCamelVersion()}`
+					`${this.getCamelVersion()}`,
+					`${this.getRedHatMavenRepository()}`
 				]
 			)
 		);
@@ -101,6 +103,25 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		const camelVersion = workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
 		if (camelVersion) {
 			return `--camel-version=${camelVersion}`;
+		} else {
+			return '';
+		}
+	}
+
+	private getCamelGlobalRepos(): string {
+		const globalRepos = workspace.getConfiguration().get('camel.debugAdapter.redHatMavenRepository.global') as boolean;
+		if (globalRepos) {
+			return '#repos,';
+		} else {
+			return '';
+		}
+	}
+
+	private getRedHatMavenRepository(): string {
+		if (this.getCamelVersion().includes('redhat')) {
+			const url = workspace.getConfiguration().get('camel.debugAdapter.RedHatMavenRepository') as string;
+			const reposPlaceholder = this.getCamelGlobalRepos();
+			return url ? `--repos=${reposPlaceholder}${url}` : '';
 		} else {
 			return '';
 		}
