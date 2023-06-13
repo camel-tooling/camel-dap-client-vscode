@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.8.0
 
+- Provide settings for specifying the Camel version to run integrations with Camel JBang CLI
+
 ## 0.7.0
 
 - Minimal version of VS Code to run this extension is 1.76.0

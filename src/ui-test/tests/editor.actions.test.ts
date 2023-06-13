@@ -31,7 +31,6 @@ describe('Camel file editor test', function () {
 
         let driver: WebDriver;
         let editorView: EditorView;
-        let bottomBar: BottomBarPanel;
 
         before(async function () {
             driver = VSBrowser.instance.driver;
@@ -46,14 +45,11 @@ describe('Camel file editor test', function () {
             await driver.wait(async function () {
                 return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
             }, 5000);
-
-            bottomBar = new BottomBarPanel();
-            bottomBar.toggle(true);
         });
 
         after(async function () {
             await editorView.closeAllEditors();
-            await bottomBar.toggle(false);
+            await new BottomBarPanel().toggle(false);
         });
 
         it('Debug and Run action is available', async function () {
