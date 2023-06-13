@@ -73,6 +73,16 @@
 				"camel.debugAdapter.CamelVersion": {
 					"type": "string",
 					"markdownDescription": "Camel version used for internal VS Code Camel JBang CLI commands execution. Camel version can differ from `#camel.debugAdapter.JBangVersion#`. As default Camel version is used `#camel.debugAdapter.JBangVersion#`.\n\nCustom Camel version definition is supported from minimal Camel JBang CLI version `3.20.3`.\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension."
+				},
+				"camel.debugAdapter.RedHatMavenRepository": {
+					"type": "string",
+					"markdownDescription": "Define Red Hat Maven Repository, which is used automatically in case the `#camel.debugAdapter.CamelVersion#` uses Red Hat productized Camel version (e.g. `3.20.1.redhat-00026`).\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension.",
+					"default": "https://maven.repository.redhat.com/ga/"
+				},
+				"camel.debugAdapter.redHatMavenRepository.global": {
+					"type": "boolean",
+					"markdownDescription": "The `#repos` placeholder will be added by default to use also repositories defined in global Camel JBang configuration file.\n\n**Note**: The placeholder is available for versions `3.20.7/3.21` onwards.",
+					"default": true
 				}
 			}
 		},

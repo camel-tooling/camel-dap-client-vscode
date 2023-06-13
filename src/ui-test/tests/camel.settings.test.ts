@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Workbench, VSBrowser, EditorView, WebDriver, after, before, ActivityBar, SideBarView, BottomBarPanel } from 'vscode-uitests-tooling';
+import { Workbench, VSBrowser, EditorView, WebDriver, before, ActivityBar, SideBarView, BottomBarPanel, beforeEach, afterEach } from 'vscode-uitests-tooling';
 import * as path from 'path';
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 import * as fs from 'node:fs';
@@ -24,8 +24,8 @@ describe('Camel User Settings', function () {
     this.timeout(240000);
 
     let driver: WebDriver;
-    let defaultCamelVersion: string = '';
-    let defaultJBangVersion: string = '';
+    let defaultJBangVersion: string;
+    let defaultMavenRepository: string;
 
     const RESOURCES = path.resolve('src', 'ui-test', 'resources');
 
@@ -33,37 +33,28 @@ describe('Camel User Settings', function () {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(path.join(RESOURCES));
 
-        defaultCamelVersion = await getSettingsValue('Camel Version');
-        defaultJBangVersion = await getSettingsValue('JBang Version');
-    });
-
-    after(async function () {
-        if (defaultCamelVersion.length > 0) {
-            await setCamelVersion(defaultCamelVersion);
-        } else {
-            resetUserSettings('camel.debugAdapter.CamelVersion');
-        }
-
-        resetUserSettings('camel.debugAdapter.JBangVersion');
+        defaultJBangVersion = await getSettingsValue('JBang Version') as string;
+        defaultMavenRepository = await getSettingsValue('Red Hat Maven Repository') as string;
     });
 
     describe('Update Camel Version', function () {
 
         const customCamelVersion = '3.20.1';
 
-        before(async function () {
+        beforeEach(async function () {
             await prepareEnvironment();
         });
 
-        after(async function () {
+        afterEach(async function () {
             await cleanEnvironment();
+            resetUserSettings('camel.debugAdapter.CamelVersion');
         });
 
         it(`Should use '${customCamelVersion}' user defined Camel version`, async function () {
             await setCamelVersion(customCamelVersion);
             await executeCommand(CAMEL_RUN_ACTION_LABEL);
 
-            await waitUntilTerminalHasText(driver, [`--camel-version=${customCamelVersion}`, ...TEST_ARRAY_RUN], 15000, 180000);
+            await waitUntilTerminalHasText(driver, [`--camel-version=${customCamelVersion}`, ...TEST_ARRAY_RUN.concat([`Apache Camel ${customCamelVersion}`])], 15000, 180000);
         });
 
     });
@@ -78,20 +69,51 @@ describe('Camel User Settings', function () {
 
         afterEach(async function () {
             await cleanEnvironment();
+            resetUserSettings('camel.debugAdapter.JBangVersion');
         });
 
         it(`Should use default JBang version`, async function () {
             await executeCommand(CAMEL_RUN_ACTION_LABEL);
 
-            await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${defaultJBangVersion}`]);
+            await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${defaultJBangVersion}`, ...TEST_ARRAY_RUN.concat([`Apache Camel ${defaultJBangVersion}`])], 6000, 120000);
         });
 
         it(`Should use user defined JBang version '${customJBangVersion}'`, async function () {
             await setJBangVersion(customJBangVersion);
-
             await executeCommand(CAMEL_RUN_ACTION_LABEL);
 
-            await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${customJBangVersion}`]);
+            await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${customJBangVersion}`, ...TEST_ARRAY_RUN.concat([`Apache Camel ${customJBangVersion}`])], 6000, 120000);
+        });
+
+    });
+
+    describe.skip('Update Maven Repository', function () {
+
+        const productizedCamelVersion = '3.20.1.redhat-00026';
+
+        beforeEach(async function () {
+            await prepareEnvironment();
+        });
+
+        afterEach(async function () {
+            await cleanEnvironment();
+            resetUserSettings('camel.debugAdapter.CamelVersion');
+            resetUserSettings('camel.debugAdapter.redHatMavenRepository.global');
+        });
+
+        it(`Should use '${productizedCamelVersion}' user defined Camel Version and Red Hat Maven Repository`, async function () {
+            await setCamelVersion(productizedCamelVersion);
+            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+
+            await waitUntilTerminalHasText(driver, [`--camel-version=${productizedCamelVersion} --repos=#repos,${defaultMavenRepository}`, ...TEST_ARRAY_RUN], 6000, 120000);
+        });
+
+        it(`Should not use '#repos' placeholder for global Camel JBang repository config`, async function () {
+            await setCamelVersion(productizedCamelVersion);
+            await setSettingsValue(false, 'Global', ['Camel', 'Debug Adapter', 'Red Hat Maven Repository']);
+            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+
+            await waitUntilTerminalHasText(driver, [`--camel-version=${productizedCamelVersion} --repos=${defaultMavenRepository}`, ...TEST_ARRAY_RUN], 6000, 120000);
         });
 
     });
@@ -120,23 +142,23 @@ describe('Camel User Settings', function () {
         await setSettingsValue(version, 'JBang Version');
     }
 
-    async function setSettingsValue(value: string, title: string): Promise<void> {
-        const textField = await (await new Workbench().openSettings()).findSetting(title, 'Camel', 'Debug Adapter');
+    async function setSettingsValue(value: string | boolean, title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<void> {
+        const textField = await (await new Workbench().openSettings()).findSetting(title, ...path);
         await textField.setValue(value);
         await driver.sleep(500);
         await new EditorView().closeEditor('Settings');
     }
 
-    async function getSettingsValue(title: string): Promise<string> {
-        const textField = await (await new Workbench().openSettings()).findSetting(title, 'Camel', 'Debug Adapter');
-        const value = await textField.getValue() as string;
+    async function getSettingsValue(title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<string | boolean> {
+        const textField = await (await new Workbench().openSettings()).findSetting(title, ...path);
+        const value = await textField.getValue();
         await new EditorView().closeEditor('Settings');
         return value;
     }
 
-    function resetUserSettings(id: string) {
+    function resetUserSettings(id: string): void {
         const settingsPath = path.resolve(storageFolder, 'settings', 'User', 'settings.json');
-        const reset = fs.readFileSync(settingsPath, 'utf-8').replace(new RegExp(`"${id}.*`), '').replace(/,(?=[^,]*$)/, '');
+        const reset = fs.readFileSync(settingsPath, 'utf-8').replace(new RegExp(`"${id}.*`), '');
         fs.writeFileSync(settingsPath, reset, 'utf-8');
     }
 });
