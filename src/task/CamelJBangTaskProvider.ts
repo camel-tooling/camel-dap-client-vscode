@@ -33,7 +33,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedTask,
 			'camel',
-			new ShellExecution(`jbang \'-Dorg.apache.camel.debugger.suspend=true\' \'-Dcamel.jbang.version=${this.getCamelJBangVersion()}\' camel@apache/camel run \'\${relativeFile}\' --logging-level=info \'--dep=org.apache.camel:camel-debug\'`),
+			new ShellExecution(`jbang \'-Dorg.apache.camel.debugger.suspend=true\' \'-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}\' camel@apache/camel run \'\${relativeFile}\' --logging-level=info \'--dep=org.apache.camel:camel-debug\' ${this.getCamelVersion()}`),
 			'$camel.debug.problemMatcher');
 		task.isBackground = true;
 		task.presentationOptions.reveal = TaskRevealKind.Always;
@@ -46,7 +46,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedRunTask,
 			'camel',
-			new ShellExecution(`jbang \'-Dcamel.jbang.version=${this.getCamelJBangVersion()}\' camel@apache/camel run \'\${relativeFile}\' --dev --logging-level=info`)
+			new ShellExecution(`jbang \'-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}\' camel@apache/camel run \'\${relativeFile}\' --dev --logging-level=info ${this.getCamelVersion()}`)
 		);
 		runTask.isBackground = true;
 
@@ -59,7 +59,16 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		return undefined;
 	}
 
-	private getCamelJBangVersion(): string {
+	private getCamelJBangCLIVersion(): string {
 		return workspace.getConfiguration().get('camel.debugAdapter.JBangVersion') as string;
+	}
+
+	private getCamelVersion(): string {
+		const camelVersion = workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
+		if(camelVersion) {
+			return `--camel-version=${camelVersion}`;
+		} else {
+			return '';
+		}
 	}
 }

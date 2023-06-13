@@ -67,8 +67,12 @@
 				},
 				"camel.debugAdapter.JBangVersion": {
 					"type": "string",
-					"markdownDescription": "Apache Camel JBang version used for internal VS Code JBang commands execution. Camel JBang requirements can differ between versions, it is recommended to use `default` version to ensure all extension features work properly.\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension.",
+					"markdownDescription": "Apache Camel JBang CLI version used for internal VS Code JBang commands execution. Camel JBang CLI requirements can differ between versions, it is recommended to use `default` version to ensure all extension features work properly.\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension.",
 					"default": "3.20.5"
+				},
+				"camel.debugAdapter.CamelVersion": {
+					"type": "string",
+					"markdownDescription": "Camel version used for internal VS Code Camel JBang CLI commands execution. Camel version can differ from `#camel.debugAdapter.JBangVersion#`. As default Camel version is used `#camel.debugAdapter.JBangVersion#`.\n\nCustom Camel version definition is supported from minimal Camel JBang CLI version `3.20.3`.\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension."
 				}
 			}
 		},

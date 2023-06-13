@@ -21,7 +21,7 @@ import * as fs from 'fs';
 import { ExTester } from 'vscode-extension-tester';
 import { ReleaseQuality } from 'vscode-extension-tester/out/util/codeUtil';
 
-const storageFolder = 'test-resources';
+export const storageFolder = 'test-resources';
 const releaseType: ReleaseQuality = process.env.CODE_TYPE === 'insider' ? ReleaseQuality.Insider : ReleaseQuality.Stable;
 export const projectPath = path.resolve(__dirname, '..', '..');
 const extensionFolder = path.join(projectPath, '.test-extensions');
@@ -37,7 +37,8 @@ async function main(): Promise<void> {
 			'cleanup': true,
 			'settings': './src/ui-test/resources/vscode-settings.json',
 			resources: []
-		});
+		}
+	);
 	fs.rmSync(extensionFolder, { recursive: true });
 }
 
