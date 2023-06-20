@@ -119,7 +119,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"command": "jbang", // jbang binary must be available on command-line
 	"args": [
 		"-Dorg.apache.camel.debugger.suspend=true", // requires Camel 3.18+ to take effect
-		"-Dcamel.jbang.version=3.20.5", // to adapt to your Camel version. 3.16+ is required
+		"-Dcamel.jbang.version=3.20.6", // to adapt to your Camel version. 3.16+ is required
 		"camel@apache/camel",
 		"run",
 		"\${relativeFile}", //to adapt to your workspace, using relativeFile means that the task must be launched when the file to start in debug in the active editor
