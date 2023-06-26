@@ -172,38 +172,38 @@
 				"category": "Camel",
 				"title": "Run Camel Application with JBang and Debug",
 				"icon": "$(run-view-icon)",
-				"enablement": "resourceFilename =~ /\\.(java|xml|yaml|yml)$/"
+				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			},
 			{
 				"command": "apache.camel.run.jbang",
 				"category": "Camel",
 				"title": "Run Camel Application with JBang",
 				"icon": "$(run)",
-				"enablement": "resourceFilename =~ /\\.(yaml|yml)$/"
+				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			}
 		],
 		"menus": {
 			"explorer/context": [
 				{
 					"command": "apache.camel.debug.jbang",
-					"when": "resourceExtname =~ /\\.(java|xml|yaml|yml)$/",
+					"when": "resourceExtname =~ /\\.(java|xml|yaml)$/",
 					"group": "camel.group"
 				},
 				{
 					"command": "apache.camel.run.jbang",
-					"when": "resourceExtname =~ /\\.(yaml|yml)$/",
+					"when": "resourceExtname =~ /\\.(java|xml|yaml)$/",
 					"group": "camel.group"
 				}
 			],
 			"editor/title": [
 				{
 					"command": "apache.camel.debug.jbang",
-					"when": "resourceFilename =~ /\\.camel\\.(yaml|yml)$/",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
 					"group": "navigation"
 				},
 				{
 					"command": "apache.camel.run.jbang",
-					"when": "resourceFilename =~ /\\.camel\\.(yaml|yml)$/",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
 					"group": "navigation"
 				}
 			]
