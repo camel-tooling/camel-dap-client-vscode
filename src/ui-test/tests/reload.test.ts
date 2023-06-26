@@ -56,7 +56,15 @@ describe('Jbang commands with automatic reload', function () {
 
     after(async function () {
         await new EditorView().closeAllEditors();
-        await resourceManager.delete(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
+        // Necessary try block to avoid "EBUSY" error on windows instances 
+        // File can be hold by the Java process for a bit more time
+        await driver.wait(async () => {
+            try {
+                return await resourceManager.delete(CAMEL_ROUTE_YAML_WITH_SPACE_COPY) === undefined;
+            } catch {
+                return false;
+            }
+        }, 60000);
     });
 
     afterEach(async function () {
