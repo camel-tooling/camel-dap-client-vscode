@@ -53,8 +53,13 @@ describe('Camel Debugger tests', function () {
         await new EditorView().closeAllEditors();
     });
 
-    it('Update of a value with Camel debugger', async function () {
+    beforeEach(async function () {
+        // Necessary wait to avoid the error: 
+        // Wrong attached debugger
         await driver.sleep(1000);
+    });
+
+    it('Update of a value with Camel debugger', async function () {
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG);
         await driver.wait(async function () {
