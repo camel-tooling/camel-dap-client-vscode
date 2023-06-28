@@ -67,6 +67,5 @@ describe('JBang commands execution through command palette', function () {
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
         await killTerminal();
-        await driver.sleep(5000);
     });
 });

@@ -50,11 +50,11 @@ describe('Camel Debugger tests', function () {
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
         await killTerminal();
-        await driver.sleep(5000);
         await new EditorView().closeAllEditors();
     });
 
     it('Update of a value with Camel debugger', async function () {
+        await driver.sleep(1000);
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG);
         await driver.wait(async function () {
