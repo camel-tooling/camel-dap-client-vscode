@@ -51,14 +51,11 @@ describe('JBang commands execution through command palette', function () {
         }, 5000);
     });
 
-    afterEach(async function () {
-        await killTerminal();
-    });
-
     it(`Execute command '${CAMEL_RUN_ACTION_LABEL}' in command palette`, async function () {
         await executeCommand(CAMEL_RUN_ACTION_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
         expect(await (await activateTerminalView()).getText()).to.contain(HELLO_CAMEL_MESSAGE);
+        await killTerminal();
     });
 
     it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_LABEL}' in command palette`, async function () {
@@ -69,5 +66,7 @@ describe('JBang commands execution through command palette', function () {
         expect(terminalLog).to.contain(HELLO_CAMEL_MESSAGE);
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+        await killTerminal();
+        await driver.sleep(5000);
     });
 });

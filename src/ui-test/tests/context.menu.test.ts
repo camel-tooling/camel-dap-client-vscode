@@ -82,5 +82,6 @@ import {
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
         await disconnectDebugger(driver);
         await killTerminal();
+        await driver.sleep(5000);
     });
 });
