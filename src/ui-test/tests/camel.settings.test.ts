@@ -25,8 +25,8 @@ describe('Camel User Settings', function () {
     this.timeout(240000);
 
     let driver: WebDriver;
-    let editorView: EditorView;
     let defaultCamelVersion: string = '';
+    let defaultJBangVersion: string = '';
 
     const RESOURCES = path.resolve('src', 'ui-test', 'resources');
 
@@ -35,6 +35,7 @@ describe('Camel User Settings', function () {
         await VSBrowser.instance.openResources(path.join(RESOURCES));
 
         defaultCamelVersion = await getSettingsValue('Camel Version');
+        defaultJBangVersion = await getSettingsValue('JBang Version');
     });
 
     after(async function () {
@@ -43,6 +44,8 @@ describe('Camel User Settings', function () {
         } else {
             resetUserSettings('camel.debugAdapter.CamelVersion');
         }
+
+        resetUserSettings('camel.debugAdapter.JBangVersion');
     });
 
     describe('Update Camel Version', function () {
@@ -50,20 +53,11 @@ describe('Camel User Settings', function () {
         const customCamelVersion = '3.20.1';
 
         before(async function () {
-            await (await new ActivityBar().getViewControl('Explorer')).openView();
-            const section = await new SideBarView().getContent().getSection('resources');
-            await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
-
-            editorView = new EditorView();
-            await driver.wait(async function () {
-                return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
-            }, 5000);
+            await prepareEnvironment();
         });
 
         after(async function () {
-            await killTerminal();
-            await editorView.closeAllEditors();
-            await new BottomBarPanel().toggle(false);
+            await cleanEnvironment();
         });
 
         it(`Should use '${customCamelVersion}' user defined Camel version`, async function () {
@@ -80,8 +74,58 @@ describe('Camel User Settings', function () {
 
     });
 
+    describe('Update JBang Version', function () {
+
+        const customJBangVersion = '3.20.5';
+
+        beforeEach(async function () {
+            await prepareEnvironment();
+        });
+
+        afterEach(async function () {
+            await cleanEnvironment();
+        });
+
+        it(`Should use default JBang version`, async function () {
+            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+
+            await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${defaultJBangVersion}`]);
+            expect(await (await activateTerminalView()).getText()).to.contain(`-Dcamel.jbang.version=${defaultJBangVersion}`);
+        });
+
+        it(`Should use user defined JBang version '${customJBangVersion}'`, async function () {
+            await setJBangVersion(customJBangVersion);
+
+            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+
+            await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${customJBangVersion}`]);
+            expect(await (await activateTerminalView()).getText()).to.contain(`-Dcamel.jbang.version=${customJBangVersion}`);
+        });
+
+    });
+
+    async function prepareEnvironment(): Promise<void> {
+        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        const section = await new SideBarView().getContent().getSection('resources');
+        await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
+
+        await driver.wait(async function () {
+            return (await new EditorView().getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
+        }, 5000);
+    }
+
+    async function cleanEnvironment(): Promise<void> {
+        await killTerminal();
+        await new EditorView().closeAllEditors();
+        await new BottomBarPanel().toggle(false);
+    }
+
     async function setCamelVersion(version: string): Promise<void> {
         await setSettingsValue(version, 'Camel Version');
+    }
+
+    async function setJBangVersion(version: string): Promise<void> {
+        await setSettingsValue(version, 'JBang Version');
     }
 
     async function setSettingsValue(value: string, title: string): Promise<void> {
@@ -103,5 +147,4 @@ describe('Camel User Settings', function () {
         const reset = fs.readFileSync(settingsPath, 'utf-8').replace(new RegExp(`"${id}.*`), '').replace(/,(?=[^,]*$)/, '');
         fs.writeFileSync(settingsPath, reset, 'utf-8');
     }
-
 });
