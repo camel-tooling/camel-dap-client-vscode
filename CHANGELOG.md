@@ -5,7 +5,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 0.8.0
 
 - Provide settings for specifying the Camel version to run integrations with Camel JBang CLI
-- Update default Camel version used for Camel JBang from 3.20.5 to 3.20.6
+- Update default Camel version used for Camel JBang from 3.20.5 to 3.21.0
 
 ## 0.7.0
 
