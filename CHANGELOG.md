@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.9.0
 
+- On `Step In` and `Step Out` actions, redirect to `Next Step` (as specified by Debug Adapter Protocol specification when no specific implementation is provided)
+
 ## 0.8.0
 
 - Provide settings for specifying the Camel version to run integrations with Camel JBang CLI
