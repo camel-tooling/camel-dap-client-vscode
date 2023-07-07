@@ -4,6 +4,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.9.0
 
+- Java 11 to launch the embedded Debug Adapter for Camel is now deprecated. In next version, Java 17 will be the minimal version required.
 - On `Step In` and `Step Out` actions, redirect to `Next Step` (as specified by Debug Adapter Protocol specification when no specific implementation is provided)
 
 ## 0.8.0

@@ -58,7 +58,9 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 
 ### Requirements
 
-- **Java Runtime Environment 11+** with `com.sun.tools.attach.VirtualMachine` (available in most JVMs such as Hotspot and OpenJDK).
+- **Java Runtime Environment 11+** with `com.sun.tools.attach.VirtualMachine` (available in most JVMs such as Hotspot and OpenJDK). The `java.home` VS Code preferences can be used to use a different version of JDK than the default one installed on the machine.
+**Java 17** will be the minimal required version in next release.
+
 - The Camel instance to debug must follow these requirements:
   - **Camel 3.16+**
   - Have `camel-debug` on the classpath
