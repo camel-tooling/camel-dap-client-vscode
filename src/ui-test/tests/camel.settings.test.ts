@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { Workbench, VSBrowser, EditorView, WebDriver, after, before, ActivityBar, SideBarView, BottomBarPanel } from 'vscode-uitests-tooling';
 import * as path from 'path';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, HELLO_CAMEL_MESSAGE, TEST_ARRAY_RUN, activateTerminalView, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, TEST_ARRAY_RUN, DEFAULT_MESSAGE, activateTerminalView, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 import * as fs from 'node:fs';
 import { storageFolder } from '../uitest_runner';
 
@@ -69,7 +69,7 @@ describe('Camel User Settings', function () {
 
             await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
             expect(await (await activateTerminalView()).getText()).to.contain(`Apache Camel ${customCamelVersion} (demo route) started`);
-            expect(await (await activateTerminalView()).getText()).to.contain(HELLO_CAMEL_MESSAGE);
+            expect(await (await activateTerminalView()).getText()).to.contain(DEFAULT_MESSAGE);
         });
 
     });
