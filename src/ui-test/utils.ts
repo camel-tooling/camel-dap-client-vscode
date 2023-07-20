@@ -13,12 +13,18 @@ import {
     until
 } from 'vscode-uitests-tooling';
 
-export const HELLO_CAMEL_MESSAGE = 'Hello Camel from yaml';
-export const HELLO_WORLD_MESSAGE = 'Hello World from yaml';
+export const DEFAULT_BODY = 'Hello Camel from yaml';
+export const DEFAULT_HEADER = 'YamlHeader';
+export const DEFAULT_MESSAGE = `${DEFAULT_HEADER}: ${DEFAULT_BODY}`;
+
+export const TEST_BODY = 'Hello World from yaml';
+export const TEST_HEADER = 'TestHeader';
+export const TEST_MESSAGE = `${TEST_HEADER}: ${TEST_BODY}`;
+
 export const DEBUGGER_ATTACHED_MESSAGE = 'debugger has been attached';
 export const TEST_ARRAY_RUN = [
     'Routes startup',
-    HELLO_CAMEL_MESSAGE
+    DEFAULT_MESSAGE
 ];
 export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
     'Enabling Camel debugger',

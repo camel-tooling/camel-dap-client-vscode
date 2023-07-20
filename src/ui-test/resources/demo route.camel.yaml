@@ -8,4 +8,8 @@
     steps:
       - setBody:
           constant: "Hello Camel from yaml"
-      - log: "${body}"
+      - setHeader:
+          name: "header"
+          constant: "YamlHeader"
+      - log: "${header.header}: ${body}"
+

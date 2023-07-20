@@ -16,12 +16,15 @@ import {
     TEST_ARRAY_RUN,
     executeCommand,
     killTerminal,
-    HELLO_CAMEL_MESSAGE,
+    TEST_MESSAGE,
     activateTerminalView,
     CAMEL_ROUTE_YAML_WITH_SPACE,
-    HELLO_WORLD_MESSAGE,
     CAMEL_ROUTE_YAML_WITH_SPACE_COPY,
     replaceTextInCodeEditor,
+    DEFAULT_BODY,
+    TEST_BODY,
+    DEFAULT_HEADER,
+    TEST_HEADER,
 } from '../utils';
 import { expect } from 'chai';
 
@@ -75,9 +78,10 @@ describe('Jbang commands with automatic reload', function () {
         await executeCommand(CAMEL_RUN_ACTION_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
 
-        await driver.wait(async () => { return await replaceTextInCodeEditor(HELLO_CAMEL_MESSAGE, HELLO_WORLD_MESSAGE); }, 60000);
-        await waitUntilTerminalHasText(driver, [HELLO_WORLD_MESSAGE]);
+        await driver.wait(async () => { return await replaceTextInCodeEditor(DEFAULT_BODY, TEST_BODY); }, 60000);
+        await driver.wait(async () => { return await replaceTextInCodeEditor(DEFAULT_HEADER, TEST_HEADER); }, 60000);
 
-        expect(await (await activateTerminalView()).getText()).to.contain(HELLO_WORLD_MESSAGE);
+        await waitUntilTerminalHasText(driver, [TEST_MESSAGE]);
+        expect(await (await activateTerminalView()).getText()).to.contain(TEST_MESSAGE);
     });
 });

@@ -14,7 +14,7 @@ import {
     CAMEL_RUN_ACTION_LABEL,
     CAMEL_RUN_DEBUG_ACTION_LABEL,
     DEBUGGER_ATTACHED_MESSAGE,
-    HELLO_CAMEL_MESSAGE,
+    DEFAULT_MESSAGE,
     TEST_ARRAY_RUN,
     TEST_ARRAY_RUN_DEBUG,
     activateTerminalView,
@@ -69,7 +69,7 @@ import {
     it(`Execute command '${CAMEL_RUN_ACTION_LABEL}' in context menu`, async function () {
         await selectContextMenuItem(CAMEL_RUN_ACTION_LABEL, await openContextMenu(CAMEL_ROUTE_YAML_WITH_SPACE));
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
-        expect(await (await activateTerminalView()).getText()).to.contain(HELLO_CAMEL_MESSAGE);
+        expect(await (await activateTerminalView()).getText()).to.contain(DEFAULT_MESSAGE);
         await killTerminal();
     });
 
@@ -78,7 +78,7 @@ import {
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG);
         const terminalLog = await (await activateTerminalView()).getText();
         expect(terminalLog).to.contain(DEBUGGER_ATTACHED_MESSAGE);
-        expect(terminalLog).to.contain(HELLO_CAMEL_MESSAGE);
+        expect(terminalLog).to.contain(DEFAULT_MESSAGE);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
         await disconnectDebugger(driver);
         await killTerminal();
