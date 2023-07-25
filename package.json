@@ -211,10 +211,10 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
+		"compile": "tsc -p ./ && npm run lint",
 		"watch": "tsc -watch -p ./",
 		"postinstall": "node ./scripts/postinstall.js",
-		"pretest": "npm run compile && npm run lint",
+		"pretest": "npm run compile",
 		"preui-test": "npm run compile",
 		"lint": "eslint src --ext ts",
 		"test": "node ./out/test/runTest.js",
