@@ -4,12 +4,14 @@
 - from:
     uri: "timer:yaml"
     parameters:
-      period: "1000"
+      period: "2000"
     steps:
-      - setBody:
-          constant: "Hello Camel from yaml"
       - setHeader:
           name: "header"
           constant: "YamlHeader"
-      - log: "${header.header}: ${body}"
-
+      - setProperty:
+          name: "from"
+          constant: "yaml-dsl"
+      - setBody:
+          constant: "Hello Camel from"
+      - log: "${header.header}: ${body} ${exchangeProperty.from}"

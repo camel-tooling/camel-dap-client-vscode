@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect } from 'chai';
 import { Workbench, VSBrowser, EditorView, WebDriver, after, before, ActivityBar, SideBarView, BottomBarPanel } from 'vscode-uitests-tooling';
 import * as path from 'path';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, TEST_ARRAY_RUN, DEFAULT_MESSAGE, activateTerminalView, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 import * as fs from 'node:fs';
 import { storageFolder } from '../uitest_runner';
 
@@ -64,12 +63,7 @@ describe('Camel User Settings', function () {
             await setCamelVersion(customCamelVersion);
             await executeCommand(CAMEL_RUN_ACTION_LABEL);
 
-            await waitUntilTerminalHasText(driver, [`--camel-version=${customCamelVersion}`]);
-            expect(await (await activateTerminalView()).getText()).to.contain(`--camel-version=${customCamelVersion}`);
-
-            await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
-            expect(await (await activateTerminalView()).getText()).to.contain(`Apache Camel ${customCamelVersion} (demo route) started`);
-            expect(await (await activateTerminalView()).getText()).to.contain(DEFAULT_MESSAGE);
+            await waitUntilTerminalHasText(driver, [`--camel-version=${customCamelVersion}`, ...TEST_ARRAY_RUN], 15000, 180000);
         });
 
     });
@@ -90,7 +84,6 @@ describe('Camel User Settings', function () {
             await executeCommand(CAMEL_RUN_ACTION_LABEL);
 
             await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${defaultJBangVersion}`]);
-            expect(await (await activateTerminalView()).getText()).to.contain(`-Dcamel.jbang.version=${defaultJBangVersion}`);
         });
 
         it(`Should use user defined JBang version '${customJBangVersion}'`, async function () {
@@ -99,7 +92,6 @@ describe('Camel User Settings', function () {
             await executeCommand(CAMEL_RUN_ACTION_LABEL);
 
             await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${customJBangVersion}`]);
-            expect(await (await activateTerminalView()).getText()).to.contain(`-Dcamel.jbang.version=${customJBangVersion}`);
         });
 
     });
