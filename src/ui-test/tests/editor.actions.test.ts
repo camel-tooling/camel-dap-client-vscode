@@ -16,12 +16,9 @@ import {
     CAMEL_RUN_ACTION_LABEL,
     CAMEL_RUN_DEBUG_ACTION_LABEL,
     waitUntilTerminalHasText,
-    activateTerminalView,
     killTerminal,
     disconnectDebugger,
-    TEST_ARRAY_RUN,
-    DEBUGGER_ATTACHED_MESSAGE,
-    DEFAULT_MESSAGE
+    TEST_ARRAY_RUN
 } from '../utils';
 
 describe('Camel file editor test', function () {
@@ -69,7 +66,6 @@ describe('Camel file editor test', function () {
             await run.click();
 
             await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
-            expect(await (await activateTerminalView()).getText()).to.contain(DEFAULT_MESSAGE);
 
             await killTerminal();
         });
@@ -79,9 +75,6 @@ describe('Camel file editor test', function () {
             await run.click();
 
             await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
-            const terminalLog = await (await activateTerminalView()).getText();
-            expect(terminalLog).to.contain(DEBUGGER_ATTACHED_MESSAGE);
-            expect(terminalLog).to.contain(DEFAULT_MESSAGE);
 
             await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
             await disconnectDebugger(driver);

@@ -17,7 +17,6 @@ import {
     executeCommand,
     killTerminal,
     TEST_MESSAGE,
-    activateTerminalView,
     CAMEL_ROUTE_YAML_WITH_SPACE,
     CAMEL_ROUTE_YAML_WITH_SPACE_COPY,
     replaceTextInCodeEditor,
@@ -25,8 +24,10 @@ import {
     TEST_BODY,
     DEFAULT_HEADER,
     TEST_HEADER,
+    DEFAULT_PROPERTY,
+    TEST_PROPERTY,
+    clearTerminal,
 } from '../utils';
-import { expect } from 'chai';
 
 describe('Jbang commands with automatic reload', function () {
     this.timeout(300000);
@@ -55,9 +56,13 @@ describe('Jbang commands with automatic reload', function () {
         await driver.wait(async function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
         }, 5000);
+
+        await executeCommand(CAMEL_RUN_ACTION_LABEL);
+        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
     });
 
     after(async function () {
+        await killTerminal();
         await new EditorView().closeAllEditors();
         // Necessary try block to avoid "EBUSY" error on windows instances 
         // File can be hold by the Java process for a bit more time
@@ -70,18 +75,25 @@ describe('Jbang commands with automatic reload', function () {
         }, 60000);
     });
 
-    afterEach(async function () {
-        await killTerminal();
+    beforeEach(async function () {
+        await clearTerminal();
     });
 
-    it(`Execute command '${CAMEL_RUN_ACTION_LABEL}' with automatic reload`, async function () {
-        await executeCommand(CAMEL_RUN_ACTION_LABEL);
-        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
-
+    it(`Replace body with automatic reload`, async function () {
         await driver.wait(async () => { return await replaceTextInCodeEditor(DEFAULT_BODY, TEST_BODY); }, 60000);
+
+        await waitUntilTerminalHasText(driver, [`${DEFAULT_HEADER}: ${TEST_BODY} ${DEFAULT_PROPERTY}`]);
+    });
+
+    it(`Replace header with automatic reload`, async function () {
         await driver.wait(async () => { return await replaceTextInCodeEditor(DEFAULT_HEADER, TEST_HEADER); }, 60000);
 
+        await waitUntilTerminalHasText(driver, [`${TEST_HEADER}: ${TEST_BODY} ${DEFAULT_PROPERTY}`]);
+    });
+
+    it(`Replace Exchange Property with automatic reload`, async function () {
+        await driver.wait(async () => { return await replaceTextInCodeEditor(DEFAULT_PROPERTY, TEST_PROPERTY); }, 60000);
+
         await waitUntilTerminalHasText(driver, [TEST_MESSAGE]);
-        expect(await (await activateTerminalView()).getText()).to.contain(TEST_MESSAGE);
     });
 });

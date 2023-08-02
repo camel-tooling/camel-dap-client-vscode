@@ -13,13 +13,17 @@ import {
     until
 } from 'vscode-uitests-tooling';
 
-export const DEFAULT_BODY = 'Hello Camel from yaml';
 export const DEFAULT_HEADER = 'YamlHeader';
-export const DEFAULT_MESSAGE = `${DEFAULT_HEADER}: ${DEFAULT_BODY}`;
+export const DEFAULT_PROPERTY = 'yaml-dsl';
+export const DEFAULT_BODY = 'Hello Camel from';
 
-export const TEST_BODY = 'Hello World from yaml';
+export const DEFAULT_MESSAGE = `${DEFAULT_HEADER}: ${DEFAULT_BODY} ${DEFAULT_PROPERTY}`;
+
 export const TEST_HEADER = 'TestHeader';
-export const TEST_MESSAGE = `${TEST_HEADER}: ${TEST_BODY}`;
+export const TEST_PROPERTY = 'test-dsl';
+export const TEST_BODY = 'Hello World from';
+
+export const TEST_MESSAGE = `${TEST_HEADER}: ${TEST_BODY} ${TEST_PROPERTY}`;
 
 export const DEBUGGER_ATTACHED_MESSAGE = 'debugger has been attached';
 export const TEST_ARRAY_RUN = [
@@ -88,15 +92,16 @@ export async function selectContextMenuItem(command: string, menu: ContextMenu):
  * Checks if the terminal view has the specified texts in the given textArray.
  * @param driver The WebDriver instance to use.
  * @param textArray An array of strings representing the texts to search for in the terminal view.
- * @param interval (Optional) The interval in milliseconds to wait between checks. Default is 500ms.
+ * @param interval (Optional) The interval in milliseconds to wait between checks. Default is 2000ms.
+ * @param timeout (Optional) The timout in milliseconds. Default is 60000ms.
  * @returns A Promise that resolves to a boolean indicating whether the terminal view has the texts or not.
  */
-export async function waitUntilTerminalHasText(driver: WebDriver, textArray: string[], interval = 500): Promise<void> {
+export async function waitUntilTerminalHasText(driver: WebDriver, textArray: string[], interval = 2000, timeout = 60000): Promise<void> {
     await driver.wait(async function () {
         try {
             const terminal = await activateTerminalView();
             const terminalText = await terminal.getText();
-            for (const text of textArray) {
+            for await (const text of textArray) {
                 if (!(terminalText.includes(text))) {
                     return false;
                 };
@@ -105,7 +110,15 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
         } catch (err) {
             return false;
         }
-    }, 220000, undefined, interval);
+    }, timeout, undefined, interval);
+}
+
+/**
+ * Click on button to clear output in Terminal View
+ */
+export async function clearTerminal(): Promise<void> {
+    await activateTerminalView();
+    await new Workbench().executeCommand('terminal: clear');
 }
 
 /**
