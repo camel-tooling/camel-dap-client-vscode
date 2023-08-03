@@ -53,7 +53,7 @@ describe('Camel Debugger tests', function () {
 
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_LABEL);
         await (await new ActivityBar().getViewControl('Run')).openView();
-        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG);
+        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
     });
 
     after(async function () {

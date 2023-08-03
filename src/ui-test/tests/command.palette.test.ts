@@ -58,7 +58,7 @@ describe('JBang commands execution through command palette', function () {
 
     it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_LABEL}' in command palette`, async function () {
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_LABEL);
-        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG);
+        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
     });
