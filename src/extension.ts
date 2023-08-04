@@ -19,7 +19,7 @@ import { CamelDebugAdapterDescriptorFactory } from './CamelDebugAdapterDescripto
 import { getRedHatService, TelemetryEvent, TelemetryService } from "@redhat-developer/vscode-redhat-telemetry";
 import { CamelApplicationLauncherTasksCompletionItemProvider } from './completion/CamelApplicationLauncherTasksCompletionItemProvider';
 import { CamelJBangTaskProvider } from './task/CamelJBangTaskProvider';
-import {CamelJBangCodelens} from './codelenses/CamelJBangCodelens';
+import { CamelJBangCodelens } from './codelenses/CamelJBangCodelens';
 
 let telemetryService: TelemetryService;
 
@@ -29,16 +29,16 @@ export const CAMEL_RUN_WITH_JBANG_COMMAND_ID = 'apache.camel.run.jbang';
 
 export async function activate(context: vscode.ExtensionContext) {
 	vscode.debug.registerDebugAdapterDescriptorFactory(CAMEL_DEBUG_ADAPTER_ID, new CamelDebugAdapterDescriptorFactory(context));
-	
-	const tasksJson:vscode.DocumentSelector = { scheme: 'file', language: 'jsonc', pattern: '**/tasks.json' };
+
+	const tasksJson: vscode.DocumentSelector = { scheme: 'file', language: 'jsonc', pattern: '**/tasks.json' };
 	vscode.languages.registerCompletionItemProvider(tasksJson, new CamelApplicationLauncherTasksCompletionItemProvider());
 
 	vscode.tasks.registerTaskProvider('camel.jbang', new CamelJBangTaskProvider());
 
-	const redhatService = await getRedHatService(context);  
+	const redhatService = await getRedHatService(context);
 	telemetryService = await redhatService.getTelemetryService();
-	telemetryService.sendStartupEvent();
-	
+	await telemetryService.sendStartupEvent();
+
 	vscode.commands.registerCommand(CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID, async (uri: vscode.Uri) => {
 		if (uri !== undefined) {
 			await vscode.window.showTextDocument(uri);
@@ -50,26 +50,26 @@ export async function activate(context: vscode.ExtensionContext) {
 			preLaunchTask: `camel: ${CamelJBangTaskProvider.labelProvidedTask}`,
 		};
 		await vscode.debug.startDebugging(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0] : undefined, debugConfiguration);
-		sendCommandTrackingEvent(telemetryService, CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID);
+		await sendCommandTrackingEvent(telemetryService, CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID);
 	});
 
 	vscode.commands.registerCommand(CAMEL_RUN_WITH_JBANG_COMMAND_ID, async function () {
 		const camelRunTask = (await vscode.tasks.fetchTasks()).find((t) => t.name === CamelJBangTaskProvider.labelProvidedRunTask);
-		if(camelRunTask) {
-			sendCommandTrackingEvent(telemetryService, CAMEL_RUN_WITH_JBANG_COMMAND_ID);
+		if (camelRunTask) {
+			await sendCommandTrackingEvent(telemetryService, CAMEL_RUN_WITH_JBANG_COMMAND_ID);
 			await vscode.tasks.executeTask(camelRunTask);
 		}
 	});
-	
+
 	vscode.debug.registerDebugAdapterTrackerFactory(CAMEL_DEBUG_ADAPTER_ID, {
 		createDebugAdapterTracker(session: vscode.DebugSession) {
-		  return {
-			onDidSendMessage: m => {
+			return {
+				onDidSendMessage: async m => {
 					if (m.type === 'event'
 						&& m.event === 'output'
 						&& m.body?.category === 'telemetry'
 						&& m.body?.data?.name !== undefined) {
-							telemetryService.send(m.body?.data);
+						await telemetryService.send(m.body?.data);
 					}
 				}
 			};
@@ -88,11 +88,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerCodeLensProvider(docSelector, new CamelJBangCodelens());
 }
 
-export function deactivate() {
-	telemetryService.sendShutdownEvent();
+export async function deactivate() {
+	await telemetryService.sendShutdownEvent();
 }
 
-function sendCommandTrackingEvent(telemetryService: TelemetryService, commandId: string) {
+async function sendCommandTrackingEvent(telemetryService: TelemetryService, commandId: string) {
 	const telemetryEvent: TelemetryEvent = {
 		type: 'track',
 		name: 'command',
@@ -100,5 +100,5 @@ function sendCommandTrackingEvent(telemetryService: TelemetryService, commandId:
 			identifier: commandId
 		}
 	};
-	telemetryService.send(telemetryEvent);
+	await telemetryService.send(telemetryEvent);
 }
