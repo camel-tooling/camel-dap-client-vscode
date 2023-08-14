@@ -1,12 +1,16 @@
 import {
+    ActivityBar,
     BottomBarPanel,
+    BreakpointSectionItem,
     ContextMenu,
     ContextMenuItem,
     DebugToolbar,
+    DebugView,
     InputBox,
     SideBarView,
     TerminalView,
     TextEditor,
+    VariableSectionItem,
     ViewItem,
     WebDriver,
     Workbench,
@@ -174,4 +178,60 @@ export async function replaceTextInCodeEditor(text: string, replacement: string)
     } catch (err) {
         return false;
     }
+}
+
+/**
+ * Retrieves a specific item from the debugger's variable section.
+ * @param driver The WebDriver instance to use for interaction.
+ * @param item The name or identifier of the item to retrieve.
+ * @param section The name of the section containing the item.
+ * @param subsection (Optional) The name of the subsection within the section containing the item.
+ * @returns A Promise that resolves to the retrieved VariableSectionItem or undefined if not found.
+ */
+export async function getDebuggerSectionItem(driver: WebDriver, item: string, section: string, subsection?: string): Promise<VariableSectionItem | undefined> {
+    const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
+    return await driver.wait(async function () {
+        try {
+            let variablesSection = await debugView.getVariablesSection();
+            if (subsection) {
+                await variablesSection?.openItem(section, subsection);
+            } else {
+                await variablesSection?.openItem(section);
+            }
+            const internalError = await variablesSection.findItem("");
+            const message = await internalError?.getVariableValue();
+            if (message === 'Internal error.') {
+                throw new Error(message);
+            } else {
+                return await variablesSection.findItem(item);
+            }
+        } catch (e) {
+            // Extra click to avoid the error: "Element is not clickable at point (x, y)"
+            // Issue is similar to https://issues.redhat.com/browse/FUSETOOLS2-2100
+            if (e instanceof Error && e.name === 'ElementClickInterceptedError') {
+                await driver.actions().click().perform();
+            } else if (e instanceof Error && e.message === 'Internal error.') {
+                throw e;
+            }
+            return undefined;
+        }
+    }, 120000, undefined, 500);
+}
+
+/**
+ * Retrieves the BreakpointSectionItem in the debugger section.
+ * @param driver The WebDriver instance to use for interaction.
+ * @param line The line number of the breakpoint to modify.
+ * @returns A Promise that resolves to the retrieved BreakpointSectionItem or undefined if not found.
+ */
+export async function getBreakpoint(driver: WebDriver, line: number): Promise<BreakpointSectionItem | undefined> {
+    const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
+    return await driver.wait(async function () {
+        try {
+            const breakpointSection = await debugView.getBreakpointSection();
+            return await breakpointSection.findItem(async (item: BreakpointSectionItem) => await item.getBreakpointLine() === line);
+        } catch (e) {
+            return undefined;
+        }
+    }, 5000, undefined, 500);
 }
