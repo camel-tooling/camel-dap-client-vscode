@@ -16,10 +16,10 @@
  */
 'use strict';
 
-import { workspace } from 'vscode';
+import { ShellQuotedString, workspace } from 'vscode';
 import { CamelJBangTaskProvider } from '../../task/CamelJBangTaskProvider';
 import { expect } from 'chai';
-import { getCamelTask, getTaskCommandLine } from './util';
+import { getCamelTask, getTaskCommandArguments } from './util';
 
 suite('Should run commands with Camel JBang version specified in settings', () => {
 
@@ -47,7 +47,7 @@ suite('Should run commands with Camel JBang version specified in settings', () =
 		await config.update(CAMEL_JBANG_VERSION_SETTINGS_ID, CAMEL_JBANG_VERSION);
 
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
-		expect(getTaskCommandLine(camelRunTask)).to.includes(CAMEL_JBANG_VERSION);
+		expect((getTaskCommandArguments(camelRunTask)![0] as ShellQuotedString).value).to.includes(CAMEL_JBANG_VERSION);
 	});
 
 	test('Updated Camel JBang version is correct in generated \'Run and Debug with JBang\' task', async function () {
@@ -57,7 +57,7 @@ suite('Should run commands with Camel JBang version specified in settings', () =
 		await config.update(CAMEL_JBANG_VERSION_SETTINGS_ID, CAMEL_JBANG_VERSION);
 
 		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
-		expect(getTaskCommandLine(camelRunAndDebugTask)).to.includes(CAMEL_JBANG_VERSION);
+		expect((getTaskCommandArguments(camelRunAndDebugTask)![0] as ShellQuotedString).value).to.includes(CAMEL_JBANG_VERSION);
 	});
 
 });

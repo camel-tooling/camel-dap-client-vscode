@@ -19,7 +19,7 @@
 import { workspace } from 'vscode';
 import { CamelJBangTaskProvider } from '../../task/CamelJBangTaskProvider';
 import { expect } from 'chai';
-import { getCamelTask, getTaskCommandLine } from './util';
+import { getCamelTask, getTaskCommandArguments } from './util';
 
 suite('Should run commands with Camel version specified in settings', () => {
 
@@ -40,14 +40,14 @@ suite('Should run commands with Camel version specified in settings', () => {
 		expect(workspace.getConfiguration().get(CAMEL_VERSION_SETTINGS_ID)).to.be.empty;
 	});
 
-    test('Default Camel version in commands is same as Camel JBang CLI default version', async function () {
-        const defaultJBangVersion = workspace.getConfiguration().get('camel.debugAdapter.JBangVersion') as string;
+	test('Default Camel version in commands is same as Camel JBang CLI default version', async function () {
+		const defaultJBangVersion = workspace.getConfiguration().get('camel.debugAdapter.JBangVersion') as string;
 
-        const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
-		expect(getTaskCommandLine(camelRunTask)).to.not.includes(`--camel-version=${defaultJBangVersion}`);
+		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
+		expect(getTaskCommandArguments(camelRunTask)).to.not.includes(`--camel-version=${defaultJBangVersion}`);
 
-        const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
-		expect(getTaskCommandLine(camelRunAndDebugTask)).to.not.includes(`--camel-version=${defaultJBangVersion}`);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.not.includes(`--camel-version=${defaultJBangVersion}`);
 	});
 
 	test('Updated Camel version is correct in generated \'Run with JBang\' task', async function () {
@@ -57,7 +57,7 @@ suite('Should run commands with Camel version specified in settings', () => {
 		await config.update(CAMEL_VERSION_SETTINGS_ID, CAMEL_VERSION);
 
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
-		expect(getTaskCommandLine(camelRunTask)).to.includes(`--camel-version=${CAMEL_VERSION}`);
+		expect(getTaskCommandArguments(camelRunTask)).to.includes(`--camel-version=${CAMEL_VERSION}`);
 	});
 
 	test('Updated Camel version is correct in generated \'Run and Debug with JBang\' task', async function () {
@@ -67,7 +67,7 @@ suite('Should run commands with Camel version specified in settings', () => {
 		await config.update(CAMEL_VERSION_SETTINGS_ID, CAMEL_VERSION);
 
 		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
-		expect(getTaskCommandLine(camelRunAndDebugTask)).to.includes(`--camel-version=${CAMEL_VERSION}`);
+		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.includes(`--camel-version=${CAMEL_VERSION}`);
 	});
 
 });
