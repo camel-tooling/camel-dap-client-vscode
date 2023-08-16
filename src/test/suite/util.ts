@@ -29,6 +29,6 @@ export async function getCamelTask(name: string): Promise<vscode.Task> {
 	return (await vscode.tasks.fetchTasks()).find((t) => t.name === name) as vscode.Task;
 }
 
-export function getTaskCommandLine(task: vscode.Task): string | undefined {
-	return (task.execution as vscode.ShellExecution).commandLine;
+export function getTaskCommandArguments(task: vscode.Task): (string | vscode.ShellQuotedString)[] | undefined {
+	return (task.execution as vscode.ShellExecution).args;
 }

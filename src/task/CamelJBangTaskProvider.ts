@@ -17,13 +17,13 @@
 import { CancellationToken, ProviderResult, ShellExecution, Task, TaskDefinition, TaskProvider, TaskRevealKind, TaskScope, workspace } from 'vscode';
 
 export class CamelJBangTaskProvider implements TaskProvider {
-	
-	public static labelProvidedTask :string = "Start Camel application with debug enabled with JBang";
+
+	public static labelProvidedTask: string = "Start Camel application with debug enabled with JBang";
 	public static labelProvidedRunTask: string = "Run Camel application with JBang";
-	
+
 	provideTasks(token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];
-		const taskDefinition :TaskDefinition = {
+		const taskDefinition: TaskDefinition = {
 			"label": CamelJBangTaskProvider.labelProvidedTask,
 			"type": "shell"
 		};
@@ -33,8 +33,28 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedTask,
 			'camel',
-			new ShellExecution(`jbang \'-Dorg.apache.camel.debugger.suspend=true\' \'-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}\' camel@apache/camel run \'\${relativeFile}\' --logging-level=info \'--dep=org.apache.camel:camel-debug\' ${this.getCamelVersion()}`),
-			'$camel.debug.problemMatcher');
+			new ShellExecution(
+				'jbang',
+				[
+					{
+						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
+						"quoting": 2
+					},
+					{
+						"value": '-Dorg.apache.camel.debugger.suspend=true',
+						"quoting": 2
+					},
+					'camel@apache/camel',
+					'run',
+					'${relativeFile}',
+					'--dev',
+					'--logging-level=info',
+					'--dep=org.apache.camel:camel-debug',
+					`${this.getCamelVersion()}`
+				]
+			),
+			'$camel.debug.problemMatcher'
+		);
 		task.isBackground = true;
 		task.presentationOptions.reveal = TaskRevealKind.Always;
 
@@ -46,7 +66,21 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			TaskScope.Workspace,
 			CamelJBangTaskProvider.labelProvidedRunTask,
 			'camel',
-			new ShellExecution(`jbang \'-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}\' camel@apache/camel run \'\${relativeFile}\' --dev --logging-level=info ${this.getCamelVersion()}`)
+			new ShellExecution(
+				'jbang',
+				[
+					{
+						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
+						"quoting": 2
+					},
+					'camel@apache/camel',
+					'run',
+					'${relativeFile}',
+					'--dev',
+					'--logging-level=info',
+					`${this.getCamelVersion()}`
+				]
+			)
 		);
 		runTask.isBackground = true;
 
@@ -54,7 +88,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		tasks.push(runTask);
 		return tasks;
 	}
-	
+
 	resolveTask(task: Task, token: CancellationToken): ProviderResult<Task> {
 		return undefined;
 	}
@@ -65,7 +99,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 
 	private getCamelVersion(): string {
 		const camelVersion = workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
-		if(camelVersion) {
+		if (camelVersion) {
 			return `--camel-version=${camelVersion}`;
 		} else {
 			return '';
