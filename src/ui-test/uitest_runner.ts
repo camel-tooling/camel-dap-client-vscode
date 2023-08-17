@@ -18,17 +18,18 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import * as variables from './variables';
 import { ExTester } from 'vscode-extension-tester';
 import { ReleaseQuality } from 'vscode-extension-tester/out/util/codeUtil';
 
-export const storageFolder = 'test-resources';
+export const storageFolder = variables.TEST_RESOURCES_DIR;
 const releaseType: ReleaseQuality = process.env.CODE_TYPE === 'insider' ? ReleaseQuality.Insider : ReleaseQuality.Stable;
 export const projectPath = path.resolve(__dirname, '..', '..');
-const extensionFolder = path.join(projectPath, '.test-extensions');
+const extensionFolder = variables.EXTENSION_DIR;
 
 async function main(): Promise<void> {
 	const tester = new ExTester(storageFolder, releaseType, extensionFolder);
-	await tester.setupAndRunTests('out/ui-test/tests/*.test.js',
+	await tester.setupAndRunTests('out/ui-test/tests/**/*.test.js',
 		process.env.CODE_VERSION,
 		{
 			'installDependencies': true

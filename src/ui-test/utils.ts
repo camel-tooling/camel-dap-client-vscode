@@ -2,6 +2,7 @@ import {
     ActivityBar,
     BottomBarPanel,
     BreakpointSectionItem,
+    CodeLens,
     ContextMenu,
     ContextMenuItem,
     DebugToolbar,
@@ -14,6 +15,9 @@ import {
     ViewItem,
     WebDriver,
     Workbench,
+    error,
+    errors,
+    repeat,
     until
 } from 'vscode-uitests-tooling';
 
@@ -234,4 +238,20 @@ export async function getBreakpoint(driver: WebDriver, line: number): Promise<Br
             return undefined;
         }
     }, 5000, undefined, 500);
+}
+
+/**
+ * Finds a specific CodeLens with the given title.
+ * @param title The title of the CodeLens to find.
+ * @returns A Promise that resolves to the found CodeLens.
+ */
+export async function findCodelens(title: string): Promise<CodeLens> {
+    return await repeat(async () => {
+        const editor = new TextEditor();
+        return await editor.getCodeLens(title);
+    }, {
+        timeout: 5000,
+        ignoreErrors: [...errors.INTERACTIVITY_ERRORS, error.TimeoutError],
+        message: `could not find codelens: ${title}`
+    });
 }
