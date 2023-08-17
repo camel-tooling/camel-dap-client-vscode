@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
-import * as path from 'path';
-import { repeat, TimeoutError } from '@theia-extension-tester/repeat';
+import * as path  from 'path';
 import {
     after,
     before,
@@ -12,7 +11,9 @@ import {
     ExtensionsViewItem,
     ExtensionsViewSection,
     InputBox,
+    repeat,
     SideBarView,
+    TimeoutError,
     ViewControl,
     VSBrowser,
     Workbench
