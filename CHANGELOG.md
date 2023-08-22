@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 0.10.0
+
 ## 0.9.0
 
 - Java 17+ is the minimal required version to launch the embedded Debug Adapter for Camel.
