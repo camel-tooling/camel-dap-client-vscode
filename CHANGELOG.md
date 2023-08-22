@@ -7,14 +7,14 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Java 17+ is the minimal required version to launch the embedded Debug Adapter for Camel.
 - On `Step In` and `Step Out` actions, redirect to `Next Step` (as specified by Debug Adapter Protocol specification when no specific implementation is provided)
 - Update default Camel version used for Camel JBang from 3.21.0 to 4.0.0
+- Provide settings for specifying the Red Hat Maven Repository
+  - the repository is automatically used when the Camel version contains `redhat`
 
 ## 0.8.0
 
 - Provide settings for specifying the Camel version to run integrations with Camel JBang CLI
 - Update default Camel version used for Camel JBang from 3.20.5 to 3.21.0
 - Upgrade Debug Adapter for Apache Camel to 0.8.0
-- Provide settings for specifying the Red Hat Maven Repository
-  - the repository is automatically used when the Camel version contains `redhat`
 
 ## 0.7.0
 
