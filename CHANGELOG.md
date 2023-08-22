@@ -9,6 +9,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Update default Camel version used for Camel JBang from 3.21.0 to 4.0.0
 - Provide settings for specifying the Red Hat Maven Repository
   - the repository is automatically used when the Camel version contains `redhat`
+- Upgrade Debug Adapter for Apache Camel to 0.9.0
 
 ## 0.8.0
 
