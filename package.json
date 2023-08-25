@@ -239,7 +239,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.4.1",
 		"@vscode/test-electron": "^2.3.4",
 		"async-wait-until": "^2.0.12",
-		"chai": "^4.3.7",
+		"chai": "^4.3.8",
 		"eslint": "^8.47.0",
 		"glob": "^10.3.3",
 		"mocha": "^10.2.0",
