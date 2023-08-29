@@ -87,7 +87,7 @@ describe('Camel User Settings', function () {
 
     });
 
-    describe.skip('Update Maven Repository', function () {
+    describe('Update Maven Repository', function () {
 
         const productizedCamelVersion = '3.20.1.redhat-00026';
 

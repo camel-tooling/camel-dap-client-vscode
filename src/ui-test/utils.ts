@@ -105,6 +105,7 @@ export async function selectContextMenuItem(command: string, menu: ContextMenu):
  * @returns A Promise that resolves to a boolean indicating whether the terminal view has the texts or not.
  */
 export async function waitUntilTerminalHasText(driver: WebDriver, textArray: string[], interval = 2000, timeout = 60000): Promise<void> {
+    await driver.sleep(interval);
     await driver.wait(async function () {
         try {
             const terminal = await activateTerminalView();

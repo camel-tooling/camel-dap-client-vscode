@@ -19,7 +19,7 @@ jobs:
         version: ["1.76.2", max] # ["x.x.x" | latest | max]
         type: [stable] # [stable | insider]
       fail-fast: false
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     env:
       CODE_VERSION: ${{ matrix.version }}
@@ -124,7 +124,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     name: Status Check
-    needs: [ main ]
+    needs: [main]
     steps:
       - name: Test Matrix Result
         run: |
