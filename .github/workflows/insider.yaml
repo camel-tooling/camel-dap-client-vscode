@@ -17,7 +17,7 @@ jobs:
         version: [latest] # [x.x.x | latest | max]
         type: [insider] # [stable | insider]
       fail-fast: false
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     env:
       CODE_VERSION: ${{ matrix.version }}
