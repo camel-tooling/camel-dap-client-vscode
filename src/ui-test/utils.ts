@@ -47,6 +47,7 @@ export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang an
 export const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
+export const CAMEL_ROUTE_YML = 'route.camel.yml';
 
 /**
  * Executes a command in the command prompt of the workbench.
