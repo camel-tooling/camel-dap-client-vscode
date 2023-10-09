@@ -41,6 +41,22 @@
 		"onLanguage:jsonc"
 	],
 	"contributes": {
+		"icons": {
+			"camel-run": {
+				"description": "Run Camel Application",
+				"default": {
+					"fontPath": "./icons/camel-run.woff",
+					"fontCharacter": "\\E900"
+				}
+			},
+			"camel-debug": {
+				"description": "Run Camel Application and Debug",
+				"default": {
+					"fontPath": "./icons/camel-debug.woff",
+					"fontCharacter": "\\E900"
+				}
+			}
+		},
 		"breakpoints": [
 			{
 				"language": "xml"
@@ -181,14 +197,14 @@
 				"command": "apache.camel.debug.jbang",
 				"category": "Camel",
 				"title": "Run Camel Application with JBang and Debug",
-				"icon": "$(run-view-icon)",
+				"icon": "$(camel-debug)",
 				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			},
 			{
 				"command": "apache.camel.run.jbang",
 				"category": "Camel",
 				"title": "Run Camel Application with JBang",
-				"icon": "$(run)",
+				"icon": "$(camel-run)",
 				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			}
 		],
