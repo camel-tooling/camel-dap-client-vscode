@@ -37,6 +37,7 @@ suite('Should run commands with Maven Repository specified in settings', () => {
 	});
 
 	teardown(async function () {
+		this.timeout(4000);
 		await workspace.getConfiguration().update(CAMEL_VERSION_SETTINGS_ID, initialCamelVersion);
 	});
 
