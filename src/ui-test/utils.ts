@@ -203,13 +203,7 @@ export async function getDebuggerSectionItem(driver: WebDriver, item: string, se
             } else {
                 await variablesSection?.openItem(section);
             }
-            const internalError = await variablesSection.findItem("");
-            const message = await internalError?.getVariableValue();
-            if (message === 'Internal error.') {
-                throw new Error(message);
-            } else {
-                return await variablesSection.findItem(item);
-            }
+            return await variablesSection.findItem(item);
         } catch (e) {
             // Extra click to avoid the error: "Element is not clickable at point (x, y)"
             // Issue is similar to https://issues.redhat.com/browse/FUSETOOLS2-2100
@@ -218,7 +212,6 @@ export async function getDebuggerSectionItem(driver: WebDriver, item: string, se
             } else if (e instanceof Error && e.message === 'Internal error.') {
                 throw e;
             }
-            return undefined;
         }
     }, 120000, undefined, 500);
 }
