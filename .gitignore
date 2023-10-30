@@ -7,3 +7,4 @@ jars/camel-dap-server.jar
 test-resources
 .camel-jbang
 .test-extensions
+*sbom.json
