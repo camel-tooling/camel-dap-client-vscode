@@ -16,7 +16,7 @@
  */
 import { expect } from "chai";
 import { activateEditor, closeEditor, getFileContent, openFileInEditor, selectFromCA } from "../utils";
-import { ActivityBar, TextEditor, VSBrowser, WebDriver } from "vscode-uitests-tooling";
+import { ActivityBar, TextEditor, VSBrowser, WebDriver, afterEach } from "vscode-uitests-tooling";
 import * as path from "path";
 import { RESOURCES_DIR, RESOURCES_TASK_EXAMPLES_DIR, TASKS_TEST_FILE } from "../variables";
 
@@ -32,13 +32,19 @@ describe('Completion inside tasks.json', function () {
         await (await new ActivityBar().getViewControl('Explorer')).openView();
     });
 
+    afterEach(async function () {
+        await closeEditor(TASKS_TEST_FILE, false);
+    });
+
     const PARAMS = [
         // command, filename 
         ['Launch Camel test with Maven with camel.debug profile', '01_launch_camel_debug_profile.json'],
         ['Run Camel application with JBang with camel-debug', '02_run_jbang_w_camel_debug.json'],
         ['Start Camel application with camel:debug Maven goal', '03_start_mvn_camel_debug_goal.json'],
         ['Start Camel application with Maven Quarkus Dev with camel.debug profile', '04_start_mvn_quarkus_dev_debug_profile.json'],
-        ['Start Camel application with Maven with camel.debug profile', '05_start_mvn_camel_debug_profile.json']
+        ['Start Camel application with Maven with camel.debug profile', '05_start_mvn_camel_debug_profile.json'],
+        ['Build a Camel Quarkus application as a Native executable debug-ready', '06_build_native_camel_quarkus_debug.json'],
+        ['Start Camel native application debug-ready', '07_start_native_camel_quarkus_debug.json']
     ];
 
     PARAMS.forEach(function (params) {
@@ -54,7 +60,6 @@ describe('Completion inside tasks.json', function () {
             await selectFromCA(command);
             const text = await textEditor?.getText();
             expect(text).equals(getFileContent(file, RESOURCES_TASK_EXAMPLES_DIR));
-            await closeEditor(TASKS_TEST_FILE, false);
         });
     });
 });

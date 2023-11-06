@@ -108,6 +108,46 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"isBackground": true // Must be set as background as the Maven commands doesn't return until the Camel application stops. 
 }`
 	};
+
+	private mavenQuarkusBuildNativeCompletion: vscode.CompletionItem = {
+		label: 'Build a Camel Quarkus application as a Native executable debug-ready',
+		documentation: 'Build a native Quarkus application with JMX and Camel Debugger enabled. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask.',
+		insertText:
+			`{
+	"label": "Build a Camel Quarkus application as a Native executable debug-ready",
+	"detail": "This task will build Camel Quarkus application with JMX and Camel Debugger enabled using GraalVM",
+	"type": "shell",
+	"command": "./mvnw",
+	"args": [
+		"install",
+		"-Dnative",
+		"'-Dquarkus.native.monitoring=jmxserver,jmxclient'",
+		"'-Dquarkus.camel.debug.enabled=true'",
+		"'-Pcamel.debug'" // This depends on your project
+	],
+	"problemMatcher": [],
+	"presentation": {
+		"reveal": "always"
+	}
+}`
+	};
+
+	private mavenQuarkusStartNativeCompletion: vscode.CompletionItem = {
+		label: 'Start Camel native application debug-ready',
+		documentation: 'Start Camel native application with Maven Quarkus Native and camel.debug profile. It provides extra-configuration required to combine with a Camel Debugger launch configuration as a preLaunchTask.',
+		insertText:
+			`{
+	"label": "Start Camel native application debug-ready",
+	"detail": "This task will start Camel native application with Maven Quarkus Native and camel.debug profile",
+	"type": "shell",
+	"command": "./target/*-runner",
+	"problemMatcher": "$camel.debug.problemMatcher",
+	"presentation": {
+		"reveal": "always"
+	},
+	"isBackground": true
+}`
+	};
 	
 	private jbangCompletion: vscode.CompletionItem = {
 		label: 'Run Camel application with JBang with camel-debug',
@@ -147,6 +187,8 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 					completions.push(this.mavenCompletion);
 					completions.push(this.mavenQuarkusCompletion);
 					completions.push(this.mavenCompletionToLaunchTest);
+					completions.push(this.mavenQuarkusBuildNativeCompletion);
+					completions.push(this.mavenQuarkusStartNativeCompletion);
 					completions.push(this.jbangCompletion);
 				}
 			}
