@@ -3,14 +3,19 @@ import {
     BottomBarPanel,
     BreakpointSectionItem,
     CodeLens,
+    ContentAssist,
+    ContentAssistItem,
     ContextMenu,
     ContextMenuItem,
     DebugToolbar,
     DebugView,
+    EditorView,
     InputBox,
+    ModalDialog,
     SideBarView,
     TerminalView,
     TextEditor,
+    VSBrowser,
     VariableSectionItem,
     ViewItem,
     WebDriver,
@@ -20,6 +25,8 @@ import {
     repeat,
     until
 } from 'vscode-uitests-tooling';
+import * as path from 'path';
+import * as fs from 'fs-extra';
 
 export const DEFAULT_HEADER = 'YamlHeader';
 export const DEFAULT_PROPERTY = 'yaml-dsl';
@@ -248,4 +255,128 @@ export async function findCodelens(title: string): Promise<CodeLens> {
         ignoreErrors: [...errors.INTERACTIVITY_ERRORS, error.TimeoutError],
         message: `could not find codelens: ${title}`
     });
+}
+
+/**
+* Switch to an editor tab with the given title.
+*
+* @param title Title of editor to activate
+*/
+export async function activateEditor(driver: WebDriver, title: string): Promise<TextEditor | null> {
+    // workaround for https://issues.redhat.com/browse/FUSETOOLS2-2099
+    let editor: TextEditor | null = null;
+    await driver.wait(async function () {
+        try {
+            editor = await new EditorView().openEditor(title) as TextEditor;
+            return true;
+        } catch (err) {
+            await driver.actions().click().perform();
+            return false;
+        }
+    }, 10000, undefined, 500);
+    return editor;
+}
+
+/**
+ * Wait until content assist contains specific item. 
+ * 
+ * @param expectedContentAssistItem Expected item.
+ * @param timeout Timeout for waiting.
+ * @returns Item from Content Assist.
+ */
+export async function waitUntilContentAssistContains(expectedContentAssistItem: string, timeout = 10000): Promise<ContentAssist | null> {
+    const editor = new TextEditor();
+    let contentAssist: ContentAssist | null = null;
+
+    await editor.getDriver().wait(async function () {
+        contentAssist = await editor.toggleContentAssist(true) as ContentAssist;
+        const hasItem = await contentAssist.hasItem(expectedContentAssistItem);
+        if (!hasItem) {
+            await editor.toggleContentAssist(false);
+        }
+        return hasItem;
+    }, timeout);
+
+    return contentAssist;
+}
+
+/**
+ * Workaround for issue with ContentAssistItem getText() method.
+ * For more details please see https://issues.redhat.com/browse/FUSETOOLS2-284
+ *
+ * @param item ContenAssistItem
+ */
+export async function getTextExt(item: ContentAssistItem): Promise<string> {
+    const name: string = await item.getText();
+    return name.split('\n')[0];
+}
+
+/**
+ * Close editor with handling of Save/Don't Save Modal dialog.
+ *
+ * @param title Title of opened active editor.
+ * @param save true/false
+ */
+export async function closeEditor(title: string, save?: boolean) {
+    const dirty = await new TextEditor().isDirty();
+    await new EditorView().closeEditor(title);
+    if (dirty) {
+        const dialog = new ModalDialog();
+        if (save) {
+            await dialog.pushButton('Save');
+        } else {
+            await dialog.pushButton('Don\'t Save');
+        }
+    }
+}
+
+/**
+ * Get content of specific file.
+ *
+ * @param filename Name of file.
+ * @param folder Folder with file.
+ * @returns File content as string.
+ */
+export function getFileContent(filename: string, folder: string): string {
+    return fs.readFileSync(path.resolve(folder, filename), { encoding: 'utf8', flag: 'r' });
+}
+
+/**
+* Select specific item from Content Assist proposals.
+* 
+* @param expectedItem Expected item in Content Assist.
+*/
+export async function selectFromCA(expectedItem: string, timeout = 15000): Promise<void> {
+    let contentAssist: ContentAssist | null = null;
+    contentAssist = await waitUntilContentAssistContains(expectedItem, timeout);
+    if (contentAssist !== null) {
+        const item = await contentAssist.getItem(expectedItem);
+        await item.click();
+    }
+}
+
+/** Opens file in editor.
+ *
+ * @param driver WebDriver.
+ * @param folder Folder with file.
+ * @param file Filename.
+ * @returns Instance of Text Editor.
+ */
+export async function openFileInEditor(driver: WebDriver, folder: string, file: string): Promise<TextEditor | null> {
+	await VSBrowser.instance.openResources(path.join(folder, file));
+	await waitUntilEditorIsOpened(driver, file);
+	return (await activateEditor(driver, file));
+}
+
+/**
+ * Wait until editor is opened.
+ *
+ * @param driver WebDriver.
+ * @param title Title of editor - filename.
+ * @param timeout Timeout for dynamic wait.
+ */
+export async function waitUntilEditorIsOpened(driver: WebDriver, title: string, timeout = 10000): Promise<void> {
+	await driver.wait(async function () {
+		return (await new EditorView().getOpenEditorTitles()).find(t => t === title);
+	}, timeout);
 }
