@@ -30,6 +30,18 @@ suite('Should do completion in tasks.json', () => {
 		const expectedCompletion = { label: 'Run Camel application with JBang with camel-debug' };
 		await testCompletion(docURiTasksJson, new vscode.Position(3, 7), expectedCompletion);
 	}).timeout(20000);
+
+	test('Completion for Build a native Camel Quarkus application', async () => {
+		const docURiTasksJson = getDocUri('.vscode/tasks.json');
+		const expectedCompletion = { label: 'Build a Camel Quarkus application as a Native executable debug-ready' };
+		await testCompletion(docURiTasksJson, new vscode.Position(3, 7), expectedCompletion);
+	}).timeout(20000);
+
+	test('Completion for Start Camel native application', async () => {
+		const docURiTasksJson = getDocUri('.vscode/tasks.json');
+		const expectedCompletion = { label: 'Start Camel native application debug-ready' };
+		await testCompletion(docURiTasksJson, new vscode.Position(3, 7), expectedCompletion);
+	}).timeout(20000);
 });
 
 async function testCompletion(

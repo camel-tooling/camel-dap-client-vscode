@@ -1,0 +1,18 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+{
+	"version": "2.0.0",
+	"tasks": [
+        {
+			"label": "Start Camel native application debug-ready",
+			"detail": "This task will start Camel native application with Maven Quarkus Native and camel.debug profile",
+			"type": "shell",
+			"command": "./target/*-runner",
+			"problemMatcher": "$camel.debug.problemMatcher",
+			"presentation": {
+				"reveal": "always"
+			},
+			"isBackground": true
+		}
+	]
+}
