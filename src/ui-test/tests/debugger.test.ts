@@ -170,10 +170,10 @@ describe('Camel Debugger tests', function () {
         }
         skip = true;
 
-        let sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Exchange', 'Properties');
+        let sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Message', 'Properties');
         await sectionItem?.setVariableValue(TEST_PROPERTY);
 
-        sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Exchange', 'Properties');
+        sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Message', 'Properties');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_PROPERTY);
         await clearTerminal();
         skip = false;
