@@ -28,7 +28,7 @@ import {
 } from "vscode-uitests-tooling";
 import {
     CAMEL_ROUTE_YAML_WITH_SPACE,
-    CAMEL_RUN_DEBUG_ACTION_LABEL,
+    CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL,
     TEST_BODY,
     TEST_HEADER,
     TEST_MESSAGE,
@@ -68,7 +68,7 @@ describe('Camel Debugger tests', function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
         }, 5000);
 
-        await executeCommand(CAMEL_RUN_DEBUG_ACTION_LABEL);
+        await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
         await (await new ActivityBar().getViewControl('Run')).openView();
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         textEditor = new TextEditor();

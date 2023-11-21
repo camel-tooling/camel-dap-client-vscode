@@ -16,7 +16,7 @@
  */
 import { Workbench, VSBrowser, EditorView, WebDriver, before, ActivityBar, SideBarView, BottomBarPanel, beforeEach, afterEach } from 'vscode-uitests-tooling';
 import * as path from 'path';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 import * as fs from 'node:fs';
 import { storageFolder } from '../uitest_runner';
 
@@ -52,7 +52,7 @@ describe('Camel User Settings', function () {
 
         it(`Should use '${customCamelVersion}' user defined Camel version`, async function () {
             await setCamelVersion(customCamelVersion);
-            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
 
             await waitUntilTerminalHasText(driver, [`--camel-version=${customCamelVersion}`, ...TEST_ARRAY_RUN.concat([`Apache Camel ${customCamelVersion}`])], 15000, 180000);
         });
@@ -73,14 +73,14 @@ describe('Camel User Settings', function () {
         });
 
         it(`Should use default JBang version`, async function () {
-            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
 
             await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${defaultJBangVersion}`, ...TEST_ARRAY_RUN.concat([`Apache Camel ${defaultJBangVersion}`])], 6000, 120000);
         });
 
         it(`Should use user defined JBang version '${customJBangVersion}'`, async function () {
             await setJBangVersion(customJBangVersion);
-            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
 
             await waitUntilTerminalHasText(driver, [`-Dcamel.jbang.version=${customJBangVersion}`, ...TEST_ARRAY_RUN.concat([`Apache Camel ${customJBangVersion}`])], 6000, 120000);
         });
@@ -103,7 +103,7 @@ describe('Camel User Settings', function () {
 
         it(`Should use '${productizedCamelVersion}' user defined Camel Version and Red Hat Maven Repository`, async function () {
             await setCamelVersion(productizedCamelVersion);
-            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
 
             await waitUntilTerminalHasText(driver, [`--camel-version=${productizedCamelVersion} --repos=#repos,${defaultMavenRepository}`, ...TEST_ARRAY_RUN], 6000, 120000);
         });
@@ -111,7 +111,7 @@ describe('Camel User Settings', function () {
         it(`Should not use '#repos' placeholder for global Camel JBang repository config`, async function () {
             await setCamelVersion(productizedCamelVersion);
             await setSettingsValue(false, 'Global', ['Camel', 'Debug Adapter', 'Red Hat Maven Repository']);
-            await executeCommand(CAMEL_RUN_ACTION_LABEL);
+            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
 
             await waitUntilTerminalHasText(driver, [`--camel-version=${productizedCamelVersion} --repos=${defaultMavenRepository}`, ...TEST_ARRAY_RUN], 6000, 120000);
         });

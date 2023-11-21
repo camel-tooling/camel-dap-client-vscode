@@ -27,7 +27,7 @@ import {
     workspaces
 } from 'vscode-uitests-tooling';
 import {
-    CAMEL_RUN_ACTION_LABEL,
+    CAMEL_RUN_ACTION_QUICKPICKS_LABEL,
     waitUntilTerminalHasText,
     TEST_ARRAY_RUN,
     executeCommand,
@@ -42,7 +42,7 @@ import {
     TEST_HEADER,
     DEFAULT_PROPERTY,
     TEST_PROPERTY,
-    clearTerminal,
+    clearTerminal
 } from '../utils';
 
 describe('Jbang commands with automatic reload', function () {
@@ -73,7 +73,7 @@ describe('Jbang commands with automatic reload', function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
         }, 5000);
 
-        await executeCommand(CAMEL_RUN_ACTION_LABEL);
+        await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
     });
 

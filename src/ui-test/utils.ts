@@ -68,6 +68,8 @@ export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
 
 export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
 export const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
+export const CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL = 'Camel: ' + CAMEL_RUN_DEBUG_ACTION_LABEL;
+export const CAMEL_RUN_ACTION_QUICKPICKS_LABEL = 'Camel: ' + CAMEL_RUN_ACTION_LABEL;
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
 
@@ -84,7 +86,7 @@ export async function executeCommand(command: string): Promise<void> {
     await input.setText(`>${command}`);
     const quickpicks = await input.getQuickPicks();
     for (let quickpick of quickpicks) {
-        if (await quickpick.getLabel() === `Camel: ${command}`) {
+        if (await quickpick.getLabel() === `${command}`) {
             await quickpick.select();
             return;
         }
@@ -394,4 +396,44 @@ export async function waitUntilEditorIsOpened(driver: WebDriver, title: string, 
 	await driver.wait(async function () {
 		return (await new EditorView().getOpenEditorTitles()).find(t => t === title);
 	}, timeout);
+}
+
+/**
+ * Creates empty file using fs. 
+ * 
+ * @param filename Name of file.
+ * @param folder Folder with location of newly created file.
+ */
+export async function createFile(filename: string, folder: string): Promise<void> {
+	try {
+		await fs.createFile(path.join(folder, filename));
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+/**
+ * Creates empty folder using fs. 
+ * 
+ * @param folder Path to newly created folder.
+ */
+export async function createFolder(folder: string): Promise<void> {
+	try {
+		await fs.mkdir(folder);
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+/**
+ * Removes resource using fs.
+ * 
+ * @param path Path of resource to remove.
+ */
+export async function deleteResource(path: string): Promise<void> {
+	try {
+		await fs.remove(path);
+	} catch (err) {
+		console.error(err);
+	}
 }

@@ -25,15 +25,15 @@ import {
     WebDriver,
 } from 'vscode-uitests-tooling';
 import {
-    CAMEL_RUN_ACTION_LABEL,
-    CAMEL_RUN_DEBUG_ACTION_LABEL,
+    CAMEL_RUN_ACTION_QUICKPICKS_LABEL,
+    CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL,
     waitUntilTerminalHasText,
     TEST_ARRAY_RUN,
     TEST_ARRAY_RUN_DEBUG,
     executeCommand,
     disconnectDebugger,
     killTerminal,
-    CAMEL_ROUTE_YAML_WITH_SPACE,
+    CAMEL_ROUTE_YAML_WITH_SPACE 
 } from '../utils';
 
 describe('JBang commands execution through command palette', function () {
@@ -67,13 +67,13 @@ describe('JBang commands execution through command palette', function () {
         await killTerminal();
     });
 
-    it(`Execute command '${CAMEL_RUN_ACTION_LABEL}' in command palette`, async function () {
-        await executeCommand(CAMEL_RUN_ACTION_LABEL);
+    it(`Execute command '${CAMEL_RUN_ACTION_QUICKPICKS_LABEL}' in command palette`, async function () {
+        await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
     });
 
-    it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_LABEL}' in command palette`, async function () {
-        await executeCommand(CAMEL_RUN_DEBUG_ACTION_LABEL);
+    it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL}' in command palette`, async function () {
+        await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
