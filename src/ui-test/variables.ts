@@ -22,6 +22,9 @@ export const WORKBENCH_DIR = path.join(TEST_RESOURCES_DIR, 'ui-workbench');
 export const RESOURCES_DIR = path.resolve('.', 'src', 'ui-test', 'resources');
 export const RESOURCES_TASK_EXAMPLES_DIR: string = path.join(RESOURCES_DIR, 'tasks-examples');
 export const RESOURCES_DOT_VSCODE_DIR = path.join(RESOURCES_DIR, ".vscode");
+export const CAMEL_EXAMPLES_DIR = path.join(RESOURCES_DIR, 'camel-examples');
+export const MAIN_CAMEL_EXAMPLE_DIR = path.join(CAMEL_EXAMPLES_DIR, 'main');
+export const MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR = path.join(MAIN_CAMEL_EXAMPLE_DIR, '.vscode');
 
 export const TASKS_TEST_FILE: string = "tasks.json";
 export const TASKS_TEST_FILE_CAMEL_XML: string = "tasks_test_file.camel.xml";
@@ -51,3 +54,7 @@ export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
 export const CAMEL_DEBUG_CODELENS = 'Camel Debug with JBang';
 export const CAMEL_RUN_CODELENS = 'Camel Run with JBang';
+
+export const MVN_COMPILE = 'mvn compile';
+export const MVN_CLEAN = 'mvn clean';
+export const MVN_BUILD_SUCCESS = 'BUILD SUCCESS';
