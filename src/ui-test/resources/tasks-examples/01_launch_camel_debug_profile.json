@@ -10,7 +10,7 @@
 			"args": [
 				"test",
 				"-Dtest=*", // If more than one test is present, a specific one must be specified as a single test can be Camel debugged per launch.
-				"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+				"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 			],
 			"options": {
 				"env": {

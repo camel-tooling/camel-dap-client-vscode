@@ -49,7 +49,10 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'${relativeFile}',
 					'--dev',
 					'--logging-level=info',
-					'--dep=org.apache.camel:camel-debug',
+					{
+						"value": '--dep=org.apache.camel:camel-debug',
+						"quoting": 2
+					},
 					`${this.getCamelVersion()}`,
 					`${this.getRedHatMavenRepository()}`
 				]
