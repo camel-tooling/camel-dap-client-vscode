@@ -9,7 +9,7 @@
 			"command": "mvn", // mvn binary of Maven must be available on command-line
 			"args": [
 				"camel:run",
-				"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+				"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 			],
 			"problemMatcher": "$camel.debug.problemMatcher",
 			"presentation": {

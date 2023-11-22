@@ -28,7 +28,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"command": "mvn", // mvn binary of Maven must be available on command-line
 	"args": [
 		"camel:run",
-		"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+		"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 	],
 	"problemMatcher": "$camel.debug.problemMatcher",
 	"presentation": {
@@ -49,7 +49,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"args": [
 		"test",
 		"-Dtest=*", // If more than one test is present, a specific one must be specified as a single test can be Camel debugged per launch.
-		"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+		"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 	],
 	"options": {
 		"env": {
@@ -99,7 +99,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"args": [
 		"compile",
 		"quarkus:dev",
-		"-Pcamel.debug" // This depends on your project. The goal here is to have camel-debug on the classpath.
+		"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 	],
 	"problemMatcher": "$camel.debug.problemMatcher",
 	"presentation": {
@@ -118,14 +118,14 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"type": "shell",
 	"command": "jbang", // jbang binary must be available on command-line
 	"args": [
-		"-Dorg.apache.camel.debugger.suspend=true", // requires Camel 3.18+ to take effect
-		"-Dcamel.jbang.version=4.0.0", // to adapt to your Camel version. 3.16+ is required
+		"'-Dorg.apache.camel.debugger.suspend=true'", // requires Camel 3.18+ to take effect
+		"'-Dcamel.jbang.version=4.0.0'", // to adapt to your Camel version. 3.16+ is required
 		"camel@apache/camel",
 		"run",
 		"\${relativeFile}", //to adapt to your workspace, using relativeFile means that the task must be launched when the file to start in debug in the active editor
 		"--logging-level=info",
 		"--reload",
-		"--dep=org.apache.camel:camel-debug"
+		"'--dep=org.apache.camel:camel-debug'"
 	],
 	"problemMatcher": "$camel.debug.problemMatcher",
 	"presentation": {
