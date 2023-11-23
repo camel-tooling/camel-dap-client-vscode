@@ -6,6 +6,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 - Update default Camel version used for Camel JBang from 4.0.0 to 4.2.0
 - Provide build and start tasks completion inside `.vscode/tasks.json` for a Camel Quarkus native application
+- The support of Exchange Properties in Variables of the debugger for Camel 4.1- has been removed to be able to support Camel 4.2+ in a timely and maintainable manner.
 
 ## 0.9.0
 
