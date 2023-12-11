@@ -28,8 +28,11 @@ export const CAMEL_EXAMPLES_DIR = path.join(RESOURCES_DIR, 'camel-examples');
 export const MAIN_CAMEL_EXAMPLE_DIR = path.join(CAMEL_EXAMPLES_DIR, 'main');
 export const MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR = path.join(MAIN_CAMEL_EXAMPLE_DIR, '.vscode');
 
+export const TASKS_COMMAND: string = "Tasks: Run Task"; 
 export const TASKS_TEST_FILE: string = "tasks.json";
 export const TASKS_TEST_FILE_CAMEL_XML: string = "tasks_test_file.camel.xml";
+
+export const LAUNCH_JSON: string = "launch.json";
 
 export const DEFAULT_HEADER = 'YamlHeader';
 export const DEFAULT_PROPERTY = 'yaml-dsl';
@@ -41,12 +44,14 @@ export const TEST_PROPERTY = 'test-dsl';
 export const TEST_BODY = 'Hello World from';
 export const TEST_MESSAGE = `${TEST_HEADER}: ${TEST_BODY} ${TEST_PROPERTY}`;
 
+export const ENABLING_CAMEL_DEBUGGER = "Enabling Camel debugger";
+
 export const TEST_ARRAY_RUN = [
     'Routes startup',
     DEFAULT_MESSAGE
 ];
 export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
-    'Enabling Camel debugger',
+    ENABLING_CAMEL_DEBUGGER,
     'debugger has been attached'
 ]);
 
@@ -57,6 +62,16 @@ export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
 export const CAMEL_DEBUG_CODELENS = 'Camel Debug with JBang';
 export const CAMEL_RUN_CODELENS = 'Camel Run with JBang';
 
+// maven
 export const MVN_COMPILE = 'mvn compile';
 export const MVN_CLEAN = 'mvn clean';
 export const MVN_BUILD_SUCCESS = 'BUILD SUCCESS';
+
+
+// tasks.json
+export const RUN_WITH_JBANG_WITH_CAMEL_DEBUG = 'Run Camel application with JBang with camel-debug';
+export const START_WITH_CAMEL_DEBUG_MVN_GOAL = 'Start Camel application with camel:debug Maven goal';
+export const ATTACH_DEBUGGER_USING_PRELAUNCH_TASK = 'Attach Camel Debugger after starting the Camel Application using the preLaunchTask specified';
+
+// launch.json
+export const LAUNCH_START_AND_ATTACH_DEBUGGER =  'Camel: Start Camel application and attach Camel debugger';
