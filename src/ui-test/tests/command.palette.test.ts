@@ -33,7 +33,7 @@ import {
     executeCommand,
     disconnectDebugger,
     killTerminal,
-    CAMEL_ROUTE_YAML_WITH_SPACE 
+    CAMEL_ROUTE_YAML_WITH_SPACE
 } from '../utils';
 
 describe('JBang commands execution through command palette', function () {

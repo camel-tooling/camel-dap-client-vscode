@@ -15,48 +15,94 @@
  * limitations under the License.
  */
 import { ActivityBar, EditorView, InputBox, TextEditor, VSBrowser, WebDriver } from "vscode-uitests-tooling";
-import { activateEditor, createFile, createFolder, deleteResource, executeCommand, getFileContent, killTerminal, openFileInEditor, selectFromCA, waitUntilTerminalHasText } from "../utils";
-import { RESOURCES_DIR, RESOURCES_DOT_VSCODE_DIR, TASKS_TEST_FILE, TASKS_TEST_FILE_CAMEL_XML } from "../variables";
+import { activateEditor, activateTerminalView, createFile, createFolder, deleteResource, executeCommand, executeCommandInTerminal, getFileContent, killTerminal, openFileInEditor, selectFromCA, waitUntilTerminalHasText } from "../utils";
+import { MAIN_CAMEL_EXAMPLE_DIR, MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR, MVN_BUILD_SUCCESS, MVN_CLEAN, MVN_COMPILE, RESOURCES_DIR, RESOURCES_DOT_VSCODE_DIR, TASKS_TEST_FILE, TASKS_TEST_FILE_CAMEL_XML } from "../variables";
+import * as path from 'path';
+import { assert } from "chai";
 
-describe('Camel Debugger launch configuration snippet using JBang', function () {
-    this.timeout(120000);
+describe('Launch configuration from tasks.json autocompletion', function () {
+    this.timeout(240000);
 
     let driver: WebDriver;
     let textEditor: TextEditor | null;
 
-    before(async function () {
+    async function setupEnvironment(resourceDir: string, vscodeDir: string) {
         driver = VSBrowser.instance.driver;
-        await VSBrowser.instance.openResources(RESOURCES_DIR);
+        await VSBrowser.instance.openResources(resourceDir);
         await (await new ActivityBar().getViewControl('Explorer')).openView();
 
-        // prevent failure
-        await deleteResource(RESOURCES_DOT_VSCODE_DIR); // folder
-        await createFolder(RESOURCES_DOT_VSCODE_DIR);
-        await createFile(TASKS_TEST_FILE, RESOURCES_DOT_VSCODE_DIR);
-    });
+        await deleteResource(vscodeDir);
+        await createFolder(vscodeDir);
+        await createFile(TASKS_TEST_FILE, vscodeDir);
+    }
 
-    after(async function () {
+    async function tearDownEnvironment(vscodeDir: string) {
         await killTerminal();
         await new EditorView().closeAllEditors();
-        await deleteResource(RESOURCES_DOT_VSCODE_DIR);
-    });
+        await deleteResource(vscodeDir);
+    }
 
-    it('Launch with tasks.json configuration', async function () {
-        await openFileInEditor(driver, RESOURCES_DOT_VSCODE_DIR, TASKS_TEST_FILE);
+    async function createTaksJsonConfiguration(taskName: string, resourceDir: string) {
+        await openFileInEditor(driver, resourceDir, TASKS_TEST_FILE);
         textEditor = await activateEditor(driver, TASKS_TEST_FILE);
         await textEditor?.setText(getFileContent(TASKS_TEST_FILE, RESOURCES_DIR));
         // workaround for https://github.com/redhat-developer/vscode-extension-tester/issues/931
         await textEditor?.setTextAtLine(6, "        ");
         await textEditor?.moveCursor(6, 9);
-        await selectFromCA('Run Camel application with JBang with camel-debug');
+        await selectFromCA(taskName);
         await textEditor?.save();
+    }
 
-        await openFileInEditor(driver, RESOURCES_DIR, TASKS_TEST_FILE_CAMEL_XML);
+    describe('Run Camel application with JBang with camel-debug', function () {
 
-        await executeCommand("Tasks: Run Task");
-        await selectTask(driver, "Run Camel application with JBang with camel-debug");
+        before(async function () {
+            await setupEnvironment(RESOURCES_DIR, RESOURCES_DOT_VSCODE_DIR);
+        });
 
-        await waitUntilTerminalHasText(driver, ["Enabling Camel debugger"], 2000, 90000);
+        after(async function () {
+            await tearDownEnvironment(RESOURCES_DOT_VSCODE_DIR);
+        });
+
+        it('Launch with tasks.json configuration', async function () {
+            await createTaksJsonConfiguration('Run Camel application with JBang with camel-debug', RESOURCES_DOT_VSCODE_DIR);
+
+            await openFileInEditor(driver, RESOURCES_DIR, TASKS_TEST_FILE_CAMEL_XML);
+
+            await executeCommand("Tasks: Run Task");
+            await selectTask(driver, "Run Camel application with JBang with camel-debug");
+            await waitUntilTerminalHasText(driver, ["Enabling Camel debugger"], 2000, 60000);
+        });
+    });
+
+    describe('Start Camel application with camel:debug Maven goal', function () {
+
+        let EXAMPLE_SRC_DIR = path.join(MAIN_CAMEL_EXAMPLE_DIR, 'src', 'main', 'java', 'org', 'apache', 'camel', 'example');
+        let EXAMPLE_FILE = 'MyApplication.java';
+
+        before(async function () {
+            await setupEnvironment(MAIN_CAMEL_EXAMPLE_DIR, MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR);
+        });
+
+        after(async function () {
+            await tearDownEnvironment(MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR);
+            await executeCommandInTerminal(MVN_CLEAN);
+            await waitUntilTerminalHasText(driver, [MVN_BUILD_SUCCESS], 1000, 60000);
+            await killTerminal();
+        });
+
+        it('Launch with tasks.json configuration', async function () {
+            await createTaksJsonConfiguration('Start Camel application with camel:debug Maven goal', MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR);
+
+            await openFileInEditor(driver, EXAMPLE_SRC_DIR, EXAMPLE_FILE);
+
+            await executeCommandInTerminal(MVN_COMPILE);
+            await waitUntilTerminalHasText(driver, [MVN_BUILD_SUCCESS], 1000, 60000);
+
+            await executeCommand("Tasks: Run Task");
+            await selectTask(driver, "Start Camel application with camel:debug Maven goal");
+            await waitUntilTerminalHasText(driver, ["Enabling Camel debugger"], 2000, 60000);
+            assert.isTrue((await (await activateTerminalView()).getText()).includes("Started foo (timer://foo)"));
+        });
     });
 });
 

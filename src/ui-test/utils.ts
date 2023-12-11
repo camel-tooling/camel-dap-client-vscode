@@ -437,3 +437,13 @@ export async function deleteResource(path: string): Promise<void> {
 		console.error(err);
 	}
 }
+
+/**
+ * Executes a command in current terminal.
+ *
+ * @param command The command to execute.
+ */
+export async function executeCommandInTerminal(command: string): Promise<void> {
+    const terminal = await activateTerminalView();
+    await terminal.executeCommand(command);
+}
