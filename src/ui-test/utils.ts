@@ -43,6 +43,7 @@ import {
 } from 'vscode-uitests-tooling';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { ENABLING_CAMEL_DEBUGGER } from './variables';
 
 export const DEFAULT_HEADER = 'YamlHeader';
 export const DEFAULT_PROPERTY = 'yaml-dsl';
@@ -62,7 +63,7 @@ export const TEST_ARRAY_RUN = [
     DEFAULT_MESSAGE
 ];
 export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
-    'Enabling Camel debugger',
+    ENABLING_CAMEL_DEBUGGER,
     DEBUGGER_ATTACHED_MESSAGE
 ]);
 
@@ -160,6 +161,17 @@ export async function clearTerminal(): Promise<void> {
  */
 export async function killTerminal(): Promise<void> {
     await (await activateTerminalView()).killTerminal();
+}
+
+/**
+ * Kill specific terminal.
+ *
+ * @param channelName Name of channel to be killed.
+ */
+export async function killTerminalChannel(channelName: string): Promise<void> {
+	const terminalView = await activateTerminalView();
+	await terminalView.selectChannel(channelName);
+	await terminalView.killTerminal();
 }
 
 /**
@@ -447,3 +459,28 @@ export async function executeCommandInTerminal(command: string): Promise<void> {
     const terminal = await activateTerminalView();
     await terminal.executeCommand(command);
 }
+
+/**
+ * Select specific task from list of available tasks.
+ * 
+ * @param driver WebDriver.
+ * @param task Task name to select.
+ */
+export async function selectTask(driver: WebDriver, task: string): Promise<void> {
+    let input: InputBox | undefined;
+
+    await driver.wait(async function () {
+        input = await InputBox.create();
+        return (await input.isDisplayed());
+    }, 30000);
+
+    const quickpicks = await input?.getQuickPicks();
+    if (quickpicks !== undefined) {
+        for (let quickpick of quickpicks) {
+            if (await quickpick.getLabel() === task) {
+                await quickpick.select();
+            }
+        }
+    }
+}
+
