@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as os from 'os';
 import * as path from 'path';
 
-export const TEST_RESOURCES_DIR = path.resolve('.', 'test-resources');
+// Enforce same default storage setup as ExTester - see https://github.com/redhat-developer/vscode-extension-tester/wiki/Test-Setup#useful-env-variables
+export const TEST_RESOURCES_DIR = process.env.TEST_RESOURCES ? process.env.TEST_RESOURCES : `${os.tmpdir()}/test-resources`;
 export const EXTENSION_DIR = path.join(TEST_RESOURCES_DIR, 'test-extensions');
 export const WORKBENCH_DIR = path.join(TEST_RESOURCES_DIR, 'ui-workbench');
 export const RESOURCES_DIR = path.resolve('.', 'src', 'ui-test', 'resources');
