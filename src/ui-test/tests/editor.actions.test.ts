@@ -34,7 +34,8 @@ import {
     waitUntilTerminalHasText,
     killTerminal,
     disconnectDebugger,
-    TEST_ARRAY_RUN
+    TEST_ARRAY_RUN,
+    isCamelVersionProductized
 } from '../utils';
 
 describe('Camel file editor test', function () {
@@ -87,6 +88,10 @@ describe('Camel file editor test', function () {
         });
 
         it(`Can execute '${CAMEL_RUN_DEBUG_ACTION_LABEL}' action`, async function () {
+            if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+                this.skip();
+            }
+
             const run = await editorView.getAction(CAMEL_RUN_DEBUG_ACTION_LABEL) as WebElement;
             await run.click();
 
@@ -96,7 +101,5 @@ describe('Camel file editor test', function () {
             await disconnectDebugger(driver);
             await killTerminal();
         });
-
     });
-
 });

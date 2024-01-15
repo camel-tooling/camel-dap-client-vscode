@@ -26,6 +26,13 @@ describe('Launch configuration from tasks.json autocompletion', function () {
     let driver: WebDriver;
     let textEditor: TextEditor | null;
 
+    before(async function () {
+        // Tested in main pipeline.
+        if (process.env.CAMEL_VERSION) {
+            this.skip();
+        }
+    });
+
     async function setupEnvironment(resourceDir: string, vscodeDir: string, launch: boolean = false) {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(resourceDir);

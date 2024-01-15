@@ -28,7 +28,12 @@ const extensionFolder = variables.EXTENSION_DIR;
 
 async function main(): Promise<void> {
 	const tester = new ExTester(storageFolder, releaseType, extensionFolder);
-	await tester.setupAndRunTests('out/ui-test/tests/**/*.test.js',
+	await tester.setupAndRunTests(
+		[
+			'out/ui-test/env/set.camel.version.js',
+			'out/ui-test/tests/*.test.js',
+			'out/ui-test/env/check.camel.version.js'
+		],
 		process.env.CODE_VERSION,
 		{
 			'installDependencies': true

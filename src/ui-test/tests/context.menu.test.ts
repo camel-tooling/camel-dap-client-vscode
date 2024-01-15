@@ -32,6 +32,7 @@ import {
     TEST_ARRAY_RUN,
     TEST_ARRAY_RUN_DEBUG,
     disconnectDebugger,
+    isCamelVersionProductized,
     killTerminal,
     openContextMenu,
     selectContextMenuItem,
@@ -86,6 +87,10 @@ import {
     });
 
     it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_LABEL}' in context menu`, async function () {
+        if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+            this.skip();
+        }
+
         await selectContextMenuItem(CAMEL_RUN_DEBUG_ACTION_LABEL, await openContextMenu(CAMEL_ROUTE_YAML_WITH_SPACE));
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();

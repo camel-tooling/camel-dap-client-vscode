@@ -44,6 +44,7 @@ import {
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { ENABLING_CAMEL_DEBUGGER } from './variables';
+import { storageFolder } from "./uitest_runner";
 
 export const DEFAULT_HEADER = 'YamlHeader';
 export const DEFAULT_PROPERTY = 'yaml-dsl';
@@ -73,6 +74,12 @@ export const CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL = 'Camel: ' + CAMEL_RUN_DEB
 export const CAMEL_RUN_ACTION_QUICKPICKS_LABEL = 'Camel: ' + CAMEL_RUN_ACTION_LABEL;
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
+
+// Identifiers of user preferences inside settings.json.
+export const JBANG_VERSION_ID = 'camel.debugAdapter.JBangVersion';
+export const CATALOG_VERSION_ID = 'camel.debugAdapter.CamelVersion';
+export const RH_MAVEN_REPOSITORY = "camel.debugAdapter.RedHatMavenRepository";
+export const RH_MAVEN_REPOSITORY_GLOBAL = "camel.debugAdapter.redHatMavenRepository.global";
 
 /**
  * Executes a command in the command prompt of the workbench.
@@ -484,3 +491,96 @@ export async function selectTask(driver: WebDriver, task: string): Promise<void>
     }
 }
 
+/**
+ * Reset user setting to default value by deleting item in settings.json.
+ *
+ * @param id ID of setting to reset.
+ */
+export function resetUserSettings(id: string): void {
+    const settingsPath = path.resolve(storageFolder, 'settings', 'User', 'settings.json');
+    const reset = fs.readFileSync(settingsPath, 'utf-8').replace(new RegExp(`"${id}.*`), '').replace(/,(?=[^,]*$)/, '');
+    fs.writeFileSync(settingsPath, reset, 'utf-8');
+}
+
+/**
+ * Read user settings value directly from settings.json
+ *
+ * @param id ID of setting to read.
+ */
+export function readUserSetting(id: string): string | null {
+    const settingsPath = path.resolve(storageFolder, 'settings', 'User', 'settings.json');
+    const settingsContent = fs.readFileSync(settingsPath, 'utf-8');
+
+    const regex = new RegExp(`"${id}":\\s*"(.*?)"`, 'i');
+    const match = settingsContent.match(regex);
+
+    if (match === null) {
+        return null;
+    } else {
+        return match[1];
+    }
+}
+
+/**
+ * Set user setting directly inside settings.json
+ * 
+ * @param id ID of setting.
+ * @param value Value of setting.
+ */
+export function setUserSettingsDirectly(id: string, value: string): void {
+    const settingsPath = path.resolve(storageFolder, 'settings', 'User', 'settings.json');
+    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+    settings[id] = value;
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 4), 'utf-8');
+}
+
+/**
+ * Checks if given Camel version is productized.
+ * 
+ * @param input Camel version as string.
+ * @returns true/false
+ */
+export function isCamelVersionProductized(input: string | undefined): boolean {
+    if(input !== undefined){
+        const pattern = /\.redhat-\d+$/;
+        return pattern.test(input);
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Extract Camel version number. Productized or non-productized version can be provided as input.
+ * 
+ * @param input Camel version in format "x.x.x.redhat-xxx" or "x.x.x".
+ * @returns Camel version in format "x.x.x".
+ */
+export function extractVersionNumber(input: string): string {
+    if (isCamelVersionProductized(input)) {
+        const regex = /^(.*?)\.[^.]*$/;
+        const match = regex.exec(input);
+        return match ? match[1] : '';
+    } else {
+        return input;
+    }
+}
+
+/**
+ * Compare two versions in format "^\d+(\.\d+)*$".
+ * @param base Base version.
+ * @param target Version to be compared with base version.
+ * @returns true if target is newer or same as base, false otherwise
+ */
+export function isVersionNewer(base: string, target: string): boolean {
+    const partsBase = base.split('.').map(Number);
+    const partsTarget = target.split('.').map(Number);
+    const maxLength = Math.max(partsBase.length, partsTarget.length);
+    for (let i = 0; i < maxLength; i++) {
+        const basePart = i < partsBase.length ? partsBase[i] : 0;
+        const comparatorPart = i < partsTarget.length ? partsTarget[i] : 0;
+
+        if (basePart < comparatorPart) { return true; };
+        if (basePart > comparatorPart) { return false; };
+    }
+    return true;
+}
