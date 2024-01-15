@@ -27,6 +27,11 @@ describe('Completion inside tasks.json', function () {
     let textEditor: TextEditor | null;
 
     before(async function () {
+        // Tested in main pipeline.
+        if (process.env.CAMEL_VERSION) {
+            this.skip();
+        }
+        
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
         await (await new ActivityBar().getViewControl('Explorer')).openView();

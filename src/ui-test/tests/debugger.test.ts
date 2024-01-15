@@ -41,7 +41,9 @@ import {
     clearTerminal,
     getDebuggerSectionItem,
     getBreakpoint,
-    DEFAULT_MESSAGE
+    DEFAULT_MESSAGE,
+    isCamelVersionProductized,
+    isVersionNewer
 } from '../utils';
 
 describe('Camel Debugger tests', function () {
@@ -54,6 +56,10 @@ describe('Camel Debugger tests', function () {
     let breakpointToggled: boolean = false;
 
     before(async function () {
+        if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+            this.skip();
+        }
+
         driver = VSBrowser.instance.driver;
 
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
@@ -75,10 +81,15 @@ describe('Camel Debugger tests', function () {
     });
 
     after(async function () {
-        await disconnectDebugger(driver);
-        await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
-        await killTerminal();
-        await new EditorView().closeAllEditors();
+        if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+            // do nothing - after is executed even if skip is called in before
+        }
+        else {
+            await disconnectDebugger(driver);
+            await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+            await killTerminal();
+            await new EditorView().closeAllEditors();
+        }     
     });
 
     it('Toggle breakpoint on line (17)', async function () {
@@ -168,13 +179,21 @@ describe('Camel Debugger tests', function () {
         if (skip) {
             this.test?.skip();
         }
-        skip = true;
 
+        // not available in older versions than 4.2.0
+        // https://github.com/camel-tooling/camel-debug-adapter/pull/256#issuecomment-1821200978
+        if(process.env.CAMEL_VERSION !== undefined && !isVersionNewer("4.2.0", process.env.CAMEL_VERSION)){
+            skip = true;
+            this.skip();
+        }
+
+        skip = true;
         let sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Message', 'Properties');
         await sectionItem?.setVariableValue(TEST_PROPERTY);
 
         sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Message', 'Properties');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_PROPERTY);
+
         await clearTerminal();
         skip = false;
     });
@@ -198,5 +217,4 @@ describe('Camel Debugger tests', function () {
             return !await textEditor.toggleBreakpoint(17);
         }, 5000);
     });
-
 });

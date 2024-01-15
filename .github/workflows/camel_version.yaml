@@ -1,8 +1,6 @@
-name: Main CI
+name: Camel Version CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -12,21 +10,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  main:
+  camel:
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, macos-13, windows-latest ]
-        version: [ "1.82.3", max ] # [ "x.x.x" | latest | max ]
-        type: [ stable ] # [ stable | insider ]
-      fail-fast: false
+        camel-version: [ "4.0.0",  "4.0.0.redhat-00036" ]
     timeout-minutes: 25
 
     env:
-      CODE_VERSION: ${{ matrix.version }}
-      CODE_TYPE: ${{ matrix.type }}
+      CODE_VERSION: max
+      CODE_TYPE: stable
       TEST_RESOURCES: test-resources
+      CAMEL_VERSION: ${{ matrix.camel-version }}
 
     runs-on: ${{ matrix.os }}
+    name: ${{ matrix.camel-version }} / ${{ matrix.os }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -36,7 +36,10 @@ jobs:
         with:
           java-version: 17
           distribution: "temurin"
-
+      
+      - name: Test java
+        run: java --version
+      
       - name: Install JBang (ubuntu, macOS)
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-13'
         run: |
@@ -62,18 +65,6 @@ jobs:
       - name: npm-ci
         run: npm ci
 
-      - name: npm-compile
-        run: npm run compile
-
-      - name: test (ubuntu)
-        id: test_Ubuntu
-        if: matrix.os == 'ubuntu-latest'
-        run: xvfb-run --auto-servernum npm test
-
-      - name: test (macos, windows)
-        if: matrix.os != 'ubuntu-latest'
-        run: npm test
-
       - name: ui test (ubuntu)
         id: uiTest_Ubuntu
         if: matrix.os == 'ubuntu-latest'
@@ -87,48 +78,6 @@ jobs:
       - name: vsce package
         run: vsce package
 
-      - name: get-npm-version
-        id: package-version
-        if: matrix.os == 'ubuntu-latest'
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-
-      - name: Generate SBOM
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          npm install --global @cyclonedx/cyclonedx-npm
-          cyclonedx-npm --omit dev --output-file node-sbom.json
-          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.25.0/cyclonedx-linux-x64
-          chmod +x cyclonedx-linux-x64
-          ./cyclonedx-linux-x64 merge --hierarchical --group com.github.camel-tooling --name vscode-debug-adapter-apache-camel --version ${{ steps.package-version.outputs.current-version}} --input-files node-sbom.json camel-dap-sbom.json --output-file manifest.json
-
-      - name: Store SBOM
-        uses: actions/upload-artifact@v4
-        if: matrix.os == 'ubuntu-latest' && matrix.version == 'max'
-        with:
-          name: sbom
-          path: manifest.json
-
-      - name: Store VS Code Logs (Ubuntu)
-        uses: actions/upload-artifact@v4
-        if: failure() && matrix.os == 'ubuntu-latest'
-        with:
-          name: ${{ matrix.os }}-${{ matrix.version }}-vscode-logs
-          path: ~/.config/Code/logs/*
-
-      - name: Store VS Code Logs (Macos)
-        uses: actions/upload-artifact@v4
-        if: failure() && matrix.os == 'macos-13'
-        with:
-          name: ${{ matrix.os }}-${{ matrix.version }}-vscode-logs
-          path: ~/Library/Application Support/Code/logs/*
-
-      - name: Store VS Code Logs (Windows)
-        uses: actions/upload-artifact@v4
-        if: failure() && matrix.os == 'windows-latest'
-        with:
-          name: ${{ matrix.os }}-${{ matrix.version }}-vscode-logs
-          path: $env:USERPROFILE\AppData\Code\logs\*
-
       - name: Store UI test log
         uses: actions/upload-artifact@v4
         if: |
@@ -138,7 +87,7 @@ jobs:
           steps.uiTest_Ubuntu.outcome == 'cancelled' ||
           steps.uiTest_MacOS_Windows.outcome == 'cancelled')
         with:
-          name: ${{ matrix.os }}-${{ matrix.version }}-ui-test-logs
+          name: ${{ matrix.os }}-ui-test-logs
           path: test-resources/settings/logs/*
 
       - name: Store UI Test Screenshots
@@ -150,25 +99,25 @@ jobs:
           steps.uiTest_Ubuntu.outcome == 'cancelled' ||
           steps.uiTest_MacOS_Windows.outcome == 'cancelled')
         with:
-          name: ${{ matrix.os }}-${{ matrix.version }}-ui-test-screenshots
+          name: ${{ matrix.os }}-ui-test-screenshots
           path: test-resources/screenshots/*.png
 
   check:
     if: always()
     runs-on: ubuntu-latest
     name: Status Check
-    needs: [ main ]
+    needs: [ camel ]
     steps:
       - name: Test Matrix Result
         run: |
-          echo result = ${{ needs.main.result }}
+          echo result = ${{ needs.camel.result }}
       - name: Status Check - success
-        if: ${{ needs.main.result == 'success' }}
+        if: ${{ needs.camel.result == 'success' }}
         run: |
           echo "All tests successfully completed!"
           exit 0
       - name: Status Check - failure
-        if: ${{ needs.main.result != 'success' }}
+        if: ${{ needs.camel.result != 'success' }}
         run: |
           echo "Status Check failed!"
           exit 1

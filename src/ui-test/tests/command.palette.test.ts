@@ -33,7 +33,8 @@ import {
     executeCommand,
     disconnectDebugger,
     killTerminal,
-    CAMEL_ROUTE_YAML_WITH_SPACE
+    CAMEL_ROUTE_YAML_WITH_SPACE,
+    isCamelVersionProductized
 } from '../utils';
 
 describe('JBang commands execution through command palette', function () {
@@ -73,6 +74,10 @@ describe('JBang commands execution through command palette', function () {
     });
 
     it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL}' in command palette`, async function () {
+        if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+            this.skip();
+        }
+
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         await disconnectDebugger(driver);

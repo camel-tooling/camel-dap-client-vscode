@@ -16,9 +16,10 @@
  */
 import { Workbench, VSBrowser, EditorView, WebDriver, before, ActivityBar, SideBarView, BottomBarPanel, beforeEach, afterEach } from 'vscode-uitests-tooling';
 import * as path from 'path';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 import * as fs from 'node:fs';
 import { storageFolder } from '../uitest_runner';
+import { Context } from 'mocha';
 
 describe('Camel User Settings', function () {
     this.timeout(240000);
@@ -29,7 +30,13 @@ describe('Camel User Settings', function () {
 
     const RESOURCES = path.resolve('src', 'ui-test', 'resources');
 
-    before(async function () {
+    before(async function (this: Context) {
+        // Tested in main pipeline.
+        if (process.env.CAMEL_VERSION) {
+            console.log("Camel Env variable value = " + process.env.CAMEL_VERSION);
+            this.skip();
+        }
+
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(path.join(RESOURCES));
 
@@ -47,7 +54,7 @@ describe('Camel User Settings', function () {
 
         afterEach(async function () {
             await cleanEnvironment();
-            resetUserSettings('camel.debugAdapter.CamelVersion');
+            resetUserSettings(CATALOG_VERSION_ID);
         });
 
         it(`Should use '${customCamelVersion}' user defined Camel version`, async function () {
@@ -69,7 +76,7 @@ describe('Camel User Settings', function () {
 
         afterEach(async function () {
             await cleanEnvironment();
-            resetUserSettings('camel.debugAdapter.JBangVersion');
+            resetUserSettings(JBANG_VERSION_ID);
         });
 
         it(`Should use default JBang version`, async function () {
@@ -97,8 +104,8 @@ describe('Camel User Settings', function () {
 
         afterEach(async function () {
             await cleanEnvironment();
-            resetUserSettings('camel.debugAdapter.CamelVersion');
-            resetUserSettings('camel.debugAdapter.redHatMavenRepository.global');
+            resetUserSettings(CATALOG_VERSION_ID);
+            resetUserSettings(RH_MAVEN_REPOSITORY_GLOBAL);
         });
 
         it(`Should use '${productizedCamelVersion}' user defined Camel Version and Red Hat Maven Repository`, async function () {
