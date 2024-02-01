@@ -12,6 +12,11 @@ node('rhel8'){
 		env.PATH="${env.PATH}:${nodeHome}/bin"
 		sh "node --version"
 		sh "npm install -g typescript"
+		//install cyclonedx-npm
+		sh "npm install --global @cyclonedx/cyclonedx-npm"
+		//install cyclonedx-cli:
+		sh "wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.25.0/cyclonedx-linux-x64"
+		sh "chmod +x cyclonedx-linux-x64"
 	}
 
 	stage('Build') {
@@ -48,6 +53,19 @@ node('rhel8'){
             sh "sftp -C ${UPLOAD_LOCATION}/snapshots/vscode-debug-adapter-apache-camel/ <<< \$'put -p -r ${tgzFilesToPush[0].path}'"
 		}
     }
+	stage('Generate SBOM'){
+		packageVersion = sh(script: 'jq -rcM .version < package.json', returnStdout: true ).trim()
+		sh "cyclonedx-npm --omit dev --output-file node-sbom.json"
+		sh """./cyclonedx-linux-x64 merge \
+		--hierarchical \
+		--group com.github.camel-tooling \
+		--name vscode-debug-adapter-apache-camel \
+		--version ${packageVersion} \
+		--input-files node-sbom.json camel-dap-sbom.json \
+		--output-file manifest.json
+		"""
+		archiveArtifacts artifacts:"manifest.json"
+	}
 }
 
 node('rhel8'){
