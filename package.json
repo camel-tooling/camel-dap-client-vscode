@@ -259,7 +259,7 @@
 		"chai": "^4.3.10",
 		"eslint": "^8.56.0",
 		"glob": "^10.3.10",
-		"mocha": "^10.2.0",
+		"mocha": "^10.3.0",
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.1.1",
 		"typescript": "^5.3.3",
