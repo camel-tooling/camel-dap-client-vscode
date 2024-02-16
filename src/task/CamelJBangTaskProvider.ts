@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CancellationToken, ProviderResult, ShellExecution, Task, TaskDefinition, TaskProvider, TaskRevealKind, TaskScope, workspace } from 'vscode';
+import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, Task, TaskDefinition, TaskProvider, TaskRevealKind, TaskScope, workspace } from 'vscode';
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
@@ -26,6 +26,14 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		const taskDefinition: TaskDefinition = {
 			"label": CamelJBangTaskProvider.labelProvidedTask,
 			"type": "shell"
+		};
+
+		const shellExecOptions: ShellExecutionOptions = {
+			// see https://issues.apache.org/jira/browse/CAMEL-20431
+			env: {
+				// eslint-disable-next-line @typescript-eslint/naming-convention
+				'CAMEL_DEBUGGER_SUSPEND': 'true'
+			}
 		};
 
 		const task = new Task(
@@ -55,7 +63,8 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					},
 					`${this.getCamelVersion()}`,
 					`${this.getRedHatMavenRepository()}`
-				]
+				],
+				shellExecOptions
 			),
 			'$camel.debug.problemMatcher'
 		);
