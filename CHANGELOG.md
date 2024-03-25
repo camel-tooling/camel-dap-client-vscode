@@ -5,6 +5,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 0.12.0
 
 - Update default Camel version used for Camel JBang from 4.3.0 to 4.4.0
+- Upgrade Debug Adapter for Apache Camel to 0.12.0
 
 ## 0.11.0
 
