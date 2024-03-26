@@ -20,6 +20,7 @@ import {
     ActivityBar,
     Breakpoint,
     DebugToolbar,
+    DebugView,
     EditorView,
     SideBarView,
     TextEditor,
@@ -165,7 +166,10 @@ describe('Camel Debugger tests', function () {
             this.test?.skip();
         }
         skip = true;
-
+        const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
+        await (await debugView.getContent().getSection('Watch')).collapse();
+        await (await debugView.getContent().getSection('Call Stack')).collapse();
+        
         const sectionItem = await getDebuggerSectionItem(driver, 'header:', 'Message', 'Headers');
 
         await sectionItem?.setVariableValue(TEST_HEADER);
