@@ -80,6 +80,7 @@ export const JBANG_VERSION_ID = 'camel.debugAdapter.JBangVersion';
 export const CATALOG_VERSION_ID = 'camel.debugAdapter.CamelVersion';
 export const RH_MAVEN_REPOSITORY = "camel.debugAdapter.RedHatMavenRepository";
 export const RH_MAVEN_REPOSITORY_GLOBAL = "camel.debugAdapter.redHatMavenRepository.global";
+export const EXTRA_LAUNCH_PARAMETER_ID = 'camel.debugAdapter.ExtraLaunchParameter';
 
 /**
  * Executes a command in the command prompt of the workbench.
