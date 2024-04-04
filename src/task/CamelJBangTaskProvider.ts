@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, Task, TaskDefinition, TaskProvider, TaskRevealKind, TaskScope, workspace } from 'vscode';
+import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, TaskScope, workspace } from 'vscode';
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
@@ -46,11 +46,11 @@ export class CamelJBangTaskProvider implements TaskProvider {
 				[
 					{
 						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
-						"quoting": 2
+						"quoting": ShellQuoting.Strong
 					},
 					{
 						"value": '-Dorg.apache.camel.debugger.suspend=true',
-						"quoting": 2
+						"quoting": ShellQuoting.Strong
 					},
 					'camel@apache/camel',
 					'run',
@@ -59,10 +59,14 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'--logging-level=info',
 					{
 						"value": '--dep=org.apache.camel:camel-debug',
-						"quoting": 2
+						"quoting": ShellQuoting.Strong
 					},
 					`${this.getCamelVersion()}`,
-					`${this.getRedHatMavenRepository()}`
+					`${this.getRedHatMavenRepository()}`,
+					{
+						"value": `${this.getExtraLaunchParameter()}`,
+						"quoting": ShellQuoting.Weak
+					},
 				],
 				shellExecOptions
 			),
@@ -84,7 +88,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 				[
 					{
 						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
-						"quoting": 2
+						"quoting": ShellQuoting.Strong
 					},
 					'camel@apache/camel',
 					'run',
@@ -92,7 +96,11 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'--dev',
 					'--logging-level=info',
 					`${this.getCamelVersion()}`,
-					`${this.getRedHatMavenRepository()}`
+					`${this.getRedHatMavenRepository()}`,
+					{
+						"value": `${this.getExtraLaunchParameter()}`,
+						"quoting": ShellQuoting.Weak
+					}
 				]
 			)
 		);
@@ -134,6 +142,15 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			const url = workspace.getConfiguration().get('camel.debugAdapter.RedHatMavenRepository') as string;
 			const reposPlaceholder = this.getCamelGlobalRepos();
 			return url ? `--repos=${reposPlaceholder}${url}` : '';
+		} else {
+			return '';
+		}
+	}
+
+	private getExtraLaunchParameter(): string{
+		const extraLaunchParameter = workspace.getConfiguration().get('camel.debugAdapter.ExtraLaunchParameter') as string;
+		if(extraLaunchParameter){
+			return extraLaunchParameter;
 		} else {
 			return '';
 		}
