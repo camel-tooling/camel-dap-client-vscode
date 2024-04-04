@@ -53,6 +53,7 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
   - It requires a valid Camel file defined in Yaml DSL (`.yaml|.yml`) opened in editor.
   - Contextual menu in File explorer. It is visible to all `*.yaml` and `*.yml`.
   - Codelens at the top of a Camel file.
+- Supports adding extra parameters provided by the `JBang camel run` command. (For both running and debugging the application)
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang, Maven with Camel maven plugin or Quarkus Devs
 
