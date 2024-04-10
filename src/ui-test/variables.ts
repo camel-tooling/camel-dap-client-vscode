@@ -67,7 +67,6 @@ export const MVN_COMPILE = 'mvn compile';
 export const MVN_CLEAN = 'mvn clean';
 export const MVN_BUILD_SUCCESS = 'BUILD SUCCESS';
 
-
 // tasks.json
 export const RUN_WITH_JBANG_WITH_CAMEL_DEBUG = 'Run Camel application with JBang with camel-debug';
 export const START_WITH_CAMEL_DEBUG_MVN_GOAL = 'Start Camel application with camel:debug Maven goal';
@@ -75,3 +74,6 @@ export const ATTACH_DEBUGGER_USING_PRELAUNCH_TASK = 'Attach Camel Debugger after
 
 // launch.json
 export const LAUNCH_START_AND_ATTACH_DEBUGGER =  'Camel: Start Camel application and attach Camel debugger';
+
+// variablesTest.java
+export const VARIABLESTEST_JAVA = 'VariablesTest.java';
