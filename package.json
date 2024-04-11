@@ -262,7 +262,7 @@
 		"mocha": "^10.4.0",
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.1.1",
-		"typescript": "^5.4.4",
+		"typescript": "^5.4.5",
 		"vscode-uitests-tooling": "^4.0.12"
 	},
 	"dependencies": {
