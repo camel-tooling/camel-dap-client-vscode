@@ -16,7 +16,7 @@
  */
 import { Workbench, VSBrowser, EditorView, WebDriver, before, ActivityBar, SideBarView, BottomBarPanel, beforeEach, afterEach } from 'vscode-uitests-tooling';
 import * as path from 'path';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, EXTRA_LAUNCH_PARAMETER_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 import * as fs from 'node:fs';
 import { storageFolder } from '../uitest_runner';
 import { Context } from 'mocha';
@@ -27,7 +27,6 @@ describe('Camel User Settings', function () {
     let driver: WebDriver;
     let defaultJBangVersion: string;
     let defaultMavenRepository: string;
-    let defaultExtraLaunchParameter: string;
 
     const RESOURCES = path.resolve('src', 'ui-test', 'resources');
 
@@ -43,7 +42,6 @@ describe('Camel User Settings', function () {
 
         defaultJBangVersion = await getSettingsValue('JBang Version') as string;
         defaultMavenRepository = await getSettingsValue('Red Hat Maven Repository') as string;
-        defaultExtraLaunchParameter = await getSettingsValue('Extra Launch Parameter') as string;
     });
 
     describe('Update Camel Version', function () {
@@ -127,34 +125,6 @@ describe('Camel User Settings', function () {
 
     });
 
-    describe('Update Extra Launch Parameter', function () {
-
-        const customExtraLaunchParameter = '--fresh';
-
-        beforeEach(async function () {
-            await prepareEnvironment();
-        });
-
-        afterEach(async function () {
-            await cleanEnvironment();
-            resetUserSettings(EXTRA_LAUNCH_PARAMETER_ID);
-        });
-
-        it('Should use default extra launch parameter', async function () {
-            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
-
-            await waitUntilTerminalHasText(driver, [`${defaultExtraLaunchParameter}`], 6000, 120000);
-        });
-
-        it(`Should use user defined extra launch parameter'${customExtraLaunchParameter}'`, async function () {
-            await setExtraLaunchParameter(customExtraLaunchParameter);
-            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
-
-            await waitUntilTerminalHasText(driver, [`${customExtraLaunchParameter}`], 6000, 120000);
-        });
-
-    });
-
     async function prepareEnvironment(): Promise<void> {
         await (await new ActivityBar().getViewControl('Explorer')).openView();
         const section = await new SideBarView().getContent().getSection('resources');
@@ -177,10 +147,6 @@ describe('Camel User Settings', function () {
 
     async function setJBangVersion(version: string): Promise<void> {
         await setSettingsValue(version, 'JBang Version');
-    }
-
-    async function setExtraLaunchParameter(parameter: string): Promise<void>{
-        await setSettingsValue(parameter, 'Extra Launch Parameter');
     }
 
     async function setSettingsValue(value: string | boolean, title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<void> {
