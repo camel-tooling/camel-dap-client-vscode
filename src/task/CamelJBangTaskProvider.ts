@@ -63,10 +63,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					},
 					`${this.getCamelVersion()}`,
 					`${this.getRedHatMavenRepository()}`,
-					{
-						"value": `${this.getExtraLaunchParameter()}`,
-						"quoting": ShellQuoting.Weak
-					},
+					...this.getExtraLaunchParameter(),
 				],
 				shellExecOptions
 			),
@@ -97,10 +94,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'--logging-level=info',
 					`${this.getCamelVersion()}`,
 					`${this.getRedHatMavenRepository()}`,
-					{
-						"value": `${this.getExtraLaunchParameter()}`,
-						"quoting": ShellQuoting.Weak
-					}
+					...this.getExtraLaunchParameter()
 				]
 			)
 		);
@@ -147,12 +141,12 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		}
 	}
 
-	private getExtraLaunchParameter(): string{
-		const extraLaunchParameter = workspace.getConfiguration().get('camel.debugAdapter.ExtraLaunchParameter') as string;
+	private getExtraLaunchParameter(): string[]{
+		const extraLaunchParameter = workspace.getConfiguration().get('camel.debugAdapter.ExtraLaunchParameter') as string[];
 		if(extraLaunchParameter){
 			return extraLaunchParameter;
 		} else {
-			return '';
+			return [];
 		}
 	}
 }

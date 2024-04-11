@@ -16,20 +16,20 @@
  */
 'use strict';
 
-import { ShellQuotedString, workspace } from 'vscode';
+import { workspace } from 'vscode';
 import { CamelJBangTaskProvider } from '../../task/CamelJBangTaskProvider';
 import { expect } from 'chai';
 import { getCamelTask, getTaskCommandArguments } from './util';
 
 suite('Should run commands with the extra launch parameter specified in settings', () => {
 
-	const EXTRA_LAUNCH_PARAMETER = '--fresh';
+	const EXTRA_LAUNCH_PARAMETER = ['--fresh'];
 	const EXTRA_LAUNCH_PARAMETER_ID = 'camel.debugAdapter.ExtraLaunchParameter';
 
-	let defaultExtraLaunchParameter = '';
+	let defaultExtraLaunchParameter = [''];
 
 	suiteSetup(function () {
-		defaultExtraLaunchParameter = workspace.getConfiguration().get(EXTRA_LAUNCH_PARAMETER_ID) as string;
+		defaultExtraLaunchParameter = workspace.getConfiguration().get(EXTRA_LAUNCH_PARAMETER_ID) as string[];
 	});
 
 	teardown(async function () {
@@ -48,7 +48,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
 		const extraLaunchParameterPosition = 8;
-		expect((getTaskCommandArguments(camelRunTask)![extraLaunchParameterPosition] as ShellQuotedString).value).to.includes(EXTRA_LAUNCH_PARAMETER);
+		expect((getTaskCommandArguments(camelRunTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
 	});
 
 	test('Updated extra launch parameter is correct in generated \'Run and Debug with JBang\' task', async function () {
@@ -59,7 +59,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
 		const extraLaunchParameterPosition = 10;
-		expect((getTaskCommandArguments(camelRunAndDebugTask)![extraLaunchParameterPosition] as ShellQuotedString).value).to.includes(EXTRA_LAUNCH_PARAMETER);
+		expect((getTaskCommandArguments(camelRunAndDebugTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
 	});
 
 });
