@@ -32,16 +32,17 @@ import {
     getDebuggerSectionItem,
     isCamelVersionProductized,
     isVersionNewer,
+    DEBUGGER_ATTACHED_MESSAGE,
 } from '../utils';
 import { RESOURCES_DIR, VARIABLESTEST_JAVA } from '../variables';
 
 describe('Display exchange variables values test', function () {
-   this.timeout(300000);
+    this.timeout(300000);
 
-   let driver: WebDriver;
-   let textEditor: TextEditor;
+    let driver: WebDriver;
+    let textEditor: TextEditor;
 
-   before(async function () {
+    before(async function () {
 
     if (isCamelVersionProductized(process.env.CAMEL_VERSION) || (process.env.CAMEL_VERSION !== undefined && !isVersionNewer("4.4.0", process.env.CAMEL_VERSION))){ // available since Camel 4.4
         this.skip();
@@ -61,7 +62,7 @@ describe('Display exchange variables values test', function () {
 
     await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
     await (await new ActivityBar().getViewControl('Run')).openView();
-    await waitUntilTerminalHasText(driver, ['A debugger has been attached'], 4000, 120000);
+    await waitUntilTerminalHasText(driver, [DEBUGGER_ATTACHED_MESSAGE], 4000, 120000);
 
     textEditor = new TextEditor();
     });

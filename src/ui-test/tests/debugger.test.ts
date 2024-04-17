@@ -152,11 +152,13 @@ describe('Camel Debugger tests', function () {
         }
         skip = true;
 
-        const sectionItem = await getDebuggerSectionItem(driver, 'Body:', 'Message');
-
+        let sectionItem = await getDebuggerSectionItem(driver, 'Body:', 'Message');
         await sectionItem?.setVariableValue(TEST_BODY);
         await waitUntilTerminalHasText(driver, [TEST_BODY]);
+
+        sectionItem = await getDebuggerSectionItem(driver, 'Body:', 'Message');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_BODY);
+
         await clearTerminal();
         skip = false;
     });
@@ -170,11 +172,13 @@ describe('Camel Debugger tests', function () {
         await (await debugView.getContent().getSection('Watch')).collapse();
         await (await debugView.getContent().getSection('Call Stack')).collapse();
         
-        const sectionItem = await getDebuggerSectionItem(driver, 'header:', 'Message', 'Headers');
-
+        let sectionItem = await getDebuggerSectionItem(driver, 'header:', 'Message', 'Headers');
         await sectionItem?.setVariableValue(TEST_HEADER);
         await waitUntilTerminalHasText(driver, [TEST_HEADER]);
+
+        sectionItem = await getDebuggerSectionItem(driver, 'header:', 'Message', 'Headers');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_HEADER);
+
         await clearTerminal();
         skip = false;
     });

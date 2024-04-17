@@ -18,6 +18,7 @@ import {
     ActivityBar,
     BottomBarPanel,
     BreakpointSectionItem,
+    By,
     CodeLens,
     ContentAssist,
     ContentAssistItem,
@@ -139,6 +140,12 @@ export async function selectContextMenuItem(command: string, menu: ContextMenu):
  * @returns A Promise that resolves to a boolean indicating whether the terminal view has the texts or not.
  */
 export async function waitUntilTerminalHasText(driver: WebDriver, textArray: string[], interval = 2000, timeout = 60000): Promise<void> {
+    if(VSBrowser.instance.version > '1.86.2' && textArray.includes(DEBUGGER_ATTACHED_MESSAGE)) {
+        // for newer VS Code versions, the Debug Bar has default floating position in collision with command palette
+        // which leads to problems when trying to click on quick picks
+        // solution is to move a Debug Bar a bit
+        await moveDebugBar();
+    }
     await driver.sleep(interval);
     await driver.wait(async function () {
         try {
@@ -584,4 +591,14 @@ export function isVersionNewer(base: string, target: string): boolean {
         if (basePart > comparatorPart) { return false; };
     }
     return true;
+}
+
+/**
+ * Move Debug bar to avoid collision with opened command palette
+ * @param time delay to wait till debug bar is displayed
+ */
+export async function moveDebugBar(time: number = 60_000): Promise<void> {
+    const debugBar = await DebugToolbar.create(time);
+    const dragArea = await debugBar.findElement(By.className('drag-area'));
+    await dragArea.getDriver().actions().dragAndDrop(dragArea, { x: 150, y: 0}).perform();
 }

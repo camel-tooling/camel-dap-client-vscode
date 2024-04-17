@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { ActivityBar, DebugView, EditorView, TextEditor, VSBrowser, WebDriver } from "vscode-uitests-tooling";
-import { activateEditor, activateTerminalView, createFile, createFolder, deleteResource, disconnectDebugger, executeCommand, executeCommandInTerminal, getFileContent, killTerminal, openFileInEditor, selectFromCA, selectTask, waitUntilTerminalHasText } from "../utils";
+import { DEBUGGER_ATTACHED_MESSAGE, activateEditor, activateTerminalView, createFile, createFolder, deleteResource, disconnectDebugger, executeCommand, executeCommandInTerminal, getFileContent, killTerminal, openFileInEditor, selectFromCA, selectTask, waitUntilTerminalHasText } from "../utils";
 import { ATTACH_DEBUGGER_USING_PRELAUNCH_TASK, ENABLING_CAMEL_DEBUGGER, LAUNCH_JSON, LAUNCH_START_AND_ATTACH_DEBUGGER, MAIN_CAMEL_EXAMPLE_DIR, MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR, MVN_BUILD_SUCCESS, MVN_CLEAN, MVN_COMPILE, RESOURCES_DIR, RESOURCES_DOT_VSCODE_DIR, RUN_WITH_JBANG_WITH_CAMEL_DEBUG, START_WITH_CAMEL_DEBUG_MVN_GOAL, TASKS_COMMAND, TASKS_TEST_FILE, TASKS_TEST_FILE_CAMEL_XML } from "../variables";
 import * as path from 'path';
 import { assert } from "chai";
@@ -154,7 +154,7 @@ describe('Launch configuration from tasks.json autocompletion', function () {
             await killTerminal(); // prevent failure
             await debugView.selectLaunchConfiguration(ATTACH_DEBUGGER_USING_PRELAUNCH_TASK);
             await debugView.start();
-            await waitUntilTerminalHasText(driver, [ENABLING_CAMEL_DEBUGGER, "A debugger has been attached", "Hello Camel from route1"], 2500, 20000);
+            await waitUntilTerminalHasText(driver, [ENABLING_CAMEL_DEBUGGER, DEBUGGER_ATTACHED_MESSAGE, "Hello Camel from route1"], 2500, 20000);
         });
     });
 });
