@@ -77,10 +77,9 @@ describe('JBang commands execution through command codelens', function () {
         if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
             this.skip();
         }
-        
-        await (await findCodelens(variables.CAMEL_DEBUG_CODELENS)).click(); 
+
+        await (await findCodelens(variables.CAMEL_DEBUG_CODELENS)).click();
         await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN_DEBUG, 4000, 250000);
-       
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
 
