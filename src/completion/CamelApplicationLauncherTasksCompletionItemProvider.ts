@@ -178,7 +178,7 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	
 	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
 		const globalNode = jsonparser.parseTree(document.getText());
-		let completions: vscode.CompletionItem[] = [];
+		const completions: vscode.CompletionItem[] = [];
 		if(globalNode !== undefined) {
 			const node = jsonparser.findNodeAtOffset(globalNode, document.offsetAt(position), false);
 			if (node) {

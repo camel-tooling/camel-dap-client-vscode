@@ -95,8 +95,8 @@ describe('Launch configuration from tasks.json autocompletion', function () {
 
     describe(START_WITH_CAMEL_DEBUG_MVN_GOAL, function () {
 
-        let EXAMPLE_SRC_DIR = path.join(MAIN_CAMEL_EXAMPLE_DIR, 'src', 'main', 'java', 'org', 'apache', 'camel', 'example');
-        let EXAMPLE_FILE = 'MyApplication.java';
+        const EXAMPLE_SRC_DIR = path.join(MAIN_CAMEL_EXAMPLE_DIR, 'src', 'main', 'java', 'org', 'apache', 'camel', 'example');
+        const EXAMPLE_FILE = 'MyApplication.java';
 
         before(async function () {
             await setupEnvironment(MAIN_CAMEL_EXAMPLE_DIR, MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR);
