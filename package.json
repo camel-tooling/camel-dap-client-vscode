@@ -101,14 +101,16 @@
 					"default": true
 				},
 				"camel.debugAdapter.ExtraLaunchParameter": {
-						"type": "array",
-						"uniqueItems": true,
-						"items": {
-							"type": "string"
-							},
-						"additionalProperties": false,
-						"markdownDescription": "User defined parameter to be applied at every launch. In case of spaces, the values needs to be enclosed with quotes. Default value is `[\"--local-kamelet-dir=.\"]`\n\n**Note**: Excluding `--dev`, `--logging-level`, `--dep`, `--camel-version` and `--repos` which are already being used\n\nFor possible values see:\n\n camel run --help\n\nor\n\njbang camel@apache/camel run --help",
-						"default": ["--local-kamelet-dir=."]
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "string"
+					},
+					"additionalProperties": false,
+					"markdownDescription": "User defined parameter to be applied at every launch. In case of spaces, the values needs to be enclosed with quotes. Default value is `[\"--local-kamelet-dir=.\"]`\n\n**Note**: Excluding `--dev`, `--logging-level`, `--dep`, `--camel-version` and `--repos` which are already being used\n\nFor possible values see:\n\n camel run --help\n\nor\n\njbang camel@apache/camel run --help",
+					"default": [
+						"--local-kamelet-dir=."
+					]
 				}
 			}
 		},
@@ -257,6 +259,7 @@
 		"ui-test": "node --unhandled-rejections=warn-with-error-code out/ui-test/uitest_runner.js"
 	},
 	"devDependencies": {
+		"@stylistic/eslint-plugin": "^1.7.2",
 		"@types/chai": "^4.3.11",
 		"@types/fs-extra": "^11.0.4",
 		"@types/glob": "^8.1.0",
@@ -268,6 +271,7 @@
 		"async-wait-until": "^2.0.12",
 		"chai": "^4.3.10",
 		"eslint": "^8.57.0",
+		"eslint-plugin-import": "^2.29.1",
 		"glob": "^10.3.12",
 		"mocha": "^10.4.0",
 		"mocha-jenkins-reporter": "^0.4.8",
