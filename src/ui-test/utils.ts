@@ -95,7 +95,7 @@ export async function executeCommand(command: string): Promise<void> {
     const input = await InputBox.create();
     await input.setText(`>${command}`);
     const quickpicks = await input.getQuickPicks();
-    for (let quickpick of quickpicks) {
+    for (const quickpick of quickpicks) {
         if (await quickpick.getLabel() === `${command}`) {
             await quickpick.select();
             return;
@@ -249,7 +249,7 @@ export async function getDebuggerSectionItem(driver: WebDriver, item: string, se
     const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
     return await driver.wait(async function () {
         try {
-            let variablesSection = await debugView.getVariablesSection();
+            const variablesSection = await debugView.getVariablesSection();
             if (subsection) {
                 await variablesSection?.openItem(section, subsection);
             } else {
@@ -491,7 +491,7 @@ export async function selectTask(driver: WebDriver, task: string): Promise<void>
 
     const quickpicks = await input?.getQuickPicks();
     if (quickpicks !== undefined) {
-        for (let quickpick of quickpicks) {
+        for (const quickpick of quickpicks) {
             if (await quickpick.getLabel() === task) {
                 await quickpick.select();
             }
