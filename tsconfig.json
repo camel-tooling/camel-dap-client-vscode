@@ -1,20 +1,20 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "Node16",		
+		"moduleResolution": "Node16",
 		"target": "ES2022",
-		"outDir": "out",
 		"lib": [
-			"ES2022"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"skipLibCheck": true,
-		"strict": true   /* enable all strict type-checking options */
-		/* Additional Checks */
-		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
-		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
+            "ES2022"
+        ],
+		"outDir": "out",
+		"resolveJsonModule": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true, // don't know how to fix it
 	},
+	"include": [
+		"src"
+	],
 	"exclude": [
 		"node_modules",
 		".vscode-test",
