@@ -154,7 +154,7 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
             for await (const text of textArray) {
                 if (!(terminalText.includes(text))) {
                     return false;
-                };
+                }
             }
             return true;
         } catch (err) {
@@ -587,8 +587,8 @@ export function isVersionNewer(base: string, target: string): boolean {
         const basePart = i < partsBase.length ? partsBase[i] : 0;
         const comparatorPart = i < partsTarget.length ? partsTarget[i] : 0;
 
-        if (basePart < comparatorPart) { return true; };
-        if (basePart > comparatorPart) { return false; };
+        if (basePart < comparatorPart) { return true; }
+        if (basePart > comparatorPart) { return false; }
     }
     return true;
 }
