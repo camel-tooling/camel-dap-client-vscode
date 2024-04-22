@@ -62,7 +62,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.debug.registerDebugAdapterTrackerFactory(CAMEL_DEBUG_ADAPTER_ID, {
-		createDebugAdapterTracker(session: vscode.DebugSession) {
+		createDebugAdapterTracker(_session: vscode.DebugSession) {
 			return {
 				onDidSendMessage: async m => {
 					if (m.type === 'event'
