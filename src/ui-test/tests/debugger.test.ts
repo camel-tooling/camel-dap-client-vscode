@@ -190,7 +190,7 @@ describe('Camel Debugger tests', function () {
 
         // not available in older versions than 4.2.0
         // https://github.com/camel-tooling/camel-debug-adapter/pull/256#issuecomment-1821200978
-        if(process.env.CAMEL_VERSION !== undefined && !isVersionNewer("4.2.0", process.env.CAMEL_VERSION)){
+        if(process.env.CAMEL_VERSION !== undefined && !isVersionNewer("4.2.0", process.env.CAMEL_VERSION)){
             skip = true;
             this.skip();
         }
