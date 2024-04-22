@@ -162,4 +162,4 @@ async function openExtensionPage(name: string, timeout: number): Promise<[Market
         message: 'Page was not rendered'
     });
     return [marketplace!, item!];
-};
+}
