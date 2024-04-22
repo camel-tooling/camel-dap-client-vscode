@@ -21,7 +21,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	public static labelProvidedTask: string = "Start Camel application with debug enabled with JBang";
 	public static labelProvidedRunTask: string = "Run Camel application with JBang";
 
-	provideTasks(token: CancellationToken): ProviderResult<Task[]> {
+	provideTasks(_token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];
 		const taskDefinition: TaskDefinition = {
 			"label": CamelJBangTaskProvider.labelProvidedTask,
@@ -105,7 +105,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		return tasks;
 	}
 
-	resolveTask(task: Task, token: CancellationToken): ProviderResult<Task> {
+	resolveTask(_task: Task, _token: CancellationToken): ProviderResult<Task> {
 		return undefined;
 	}
 
