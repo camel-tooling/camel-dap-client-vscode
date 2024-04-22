@@ -281,6 +281,7 @@
 	},
 	"dependencies": {
 		"@redhat-developer/vscode-redhat-telemetry": "^0.7.1",
+		"fs-extra": "^11.2.0",
 		"jsonc-parser": "^3.2.1"
 	}
 }
