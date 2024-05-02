@@ -26,6 +26,7 @@ let telemetryService: TelemetryService;
 const CAMEL_DEBUG_ADAPTER_ID = 'apache.camel';
 export const CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID = 'apache.camel.debug.jbang';
 export const CAMEL_RUN_WITH_JBANG_COMMAND_ID = 'apache.camel.run.jbang';
+export const WORKSPACE_WARNING_MESSAGE = `The action requires an opened folder/workspace to complete successfully.`;
 
 export async function activate(context: vscode.ExtensionContext) {
 	vscode.debug.registerDebugAdapterDescriptorFactory(CAMEL_DEBUG_ADAPTER_ID, new CamelDebugAdapterDescriptorFactory(context));
@@ -40,6 +41,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	await telemetryService.sendStartupEvent();
 
 	vscode.commands.registerCommand(CAMEL_RUN_AND_DEBUG_WITH_JBANG_COMMAND_ID, async (uri: vscode.Uri) => {
+		if (!vscode.workspace.workspaceFolders) {
+			await vscode.window.showWarningMessage(WORKSPACE_WARNING_MESSAGE);
+			return;
+		}
 		if (uri !== undefined) {
 			await vscode.window.showTextDocument(uri);
 		}
@@ -54,6 +59,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand(CAMEL_RUN_WITH_JBANG_COMMAND_ID, async function () {
+		if (!vscode.workspace.workspaceFolders) {
+			await vscode.window.showWarningMessage(WORKSPACE_WARNING_MESSAGE);
+			return;
+		}
 		const camelRunTask = (await vscode.tasks.fetchTasks()).find((t) => t.name === CamelJBangTaskProvider.labelProvidedRunTask);
 		if (camelRunTask) {
 			await sendCommandTrackingEvent(telemetryService, CAMEL_RUN_WITH_JBANG_COMMAND_ID);
