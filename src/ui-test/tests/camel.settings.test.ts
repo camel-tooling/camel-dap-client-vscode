@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Workbench, VSBrowser, EditorView, WebDriver, before, ActivityBar, SideBarView, BottomBarPanel, beforeEach, afterEach } from 'vscode-uitests-tooling';
-import * as path from 'path';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
-import * as fs from 'node:fs';
-import { storageFolder } from '../uitest_runner';
+import { expect } from 'chai';
 import { Context } from 'mocha';
+import * as fs from 'node:fs';
+import * as path from 'path';
+import { ActivityBar, ArraySetting, ArraySettingItem, BottomBarPanel, EditorView, SideBarView, VSBrowser, WebDriver, Workbench, afterEach, before, beforeEach } from 'vscode-uitests-tooling';
+import { storageFolder } from '../uitest_runner';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 
 describe('Camel User Settings', function () {
     this.timeout(240000);
@@ -27,6 +28,7 @@ describe('Camel User Settings', function () {
     let driver: WebDriver;
     let defaultJBangVersion: string;
     let defaultMavenRepository: string;
+    let defaultExtraLaunchParameterSetting: string;
 
     const RESOURCES = path.resolve('src', 'ui-test', 'resources');
 
@@ -42,6 +44,7 @@ describe('Camel User Settings', function () {
 
         defaultJBangVersion = await getSettingsValue('JBang Version') as string;
         defaultMavenRepository = await getSettingsValue('Red Hat Maven Repository') as string;
+        defaultExtraLaunchParameterSetting = await getArraySettingsValueAtRow(0, 'Extra Launch Parameter', ['Camel', 'Debug Adapter']) as string;
     });
 
     describe('Update Camel Version', function () {
@@ -125,6 +128,47 @@ describe('Camel User Settings', function () {
 
     });
 
+    describe('Update Extra Launch Parameter setting', function () {
+        const newParameter = '--trace';
+
+        it('Should add another parameter', async function () {
+            this.timeout(15000);
+            const arraySetting = await (await new Workbench().openSettings()).findSetting('Extra Launch Parameter', 'Camel', 'Debug Adapter') as ArraySetting;
+            const add1 = await arraySetting.add();
+            await add1.setValue(newParameter);
+            await add1.ok();
+            await waitUntilItemExists(newParameter, arraySetting);
+
+            const newValue = await arraySetting.getItem(newParameter);
+            expect(await newValue?.getValue()).is.equal(newParameter);
+
+            const items = await arraySetting.getItems();
+            expect(items).is.not.empty;
+            expect(items.length).is.equal(2);
+        });
+
+        it('Should influence result of "run with JBang" task', async function () {
+            await prepareEnvironment();
+
+            await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
+            await waitUntilTerminalHasText(driver, [defaultExtraLaunchParameterSetting, newParameter, `Tracing is enabled on CamelContext`], 15000, 180000);
+
+        });
+
+        it('Should remove parameter', async function () {
+            this.timeout(15000);
+            const arraySetting = await (await new Workbench().openSettings()).findSetting('Extra Launch Parameter', 'Camel', 'Debug Adapter') as ArraySetting;
+            const toRemove = await arraySetting.getItem(newParameter);
+            await toRemove?.remove();
+            await waitUntilItemNotExists(newParameter, arraySetting);
+
+            const values = await arraySetting.getValues();
+            expect(values.length).is.lessThan(2);
+            expect(values).not.includes(newParameter);
+            await cleanEnvironment();
+        });
+    });
+
     async function prepareEnvironment(): Promise<void> {
         await (await new ActivityBar().getViewControl('Explorer')).openView();
         const section = await new SideBarView().getContent().getSection('resources');
@@ -163,9 +207,33 @@ describe('Camel User Settings', function () {
         return value;
     }
 
+    async function getArraySettingsValueAtRow(row: number, title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<string | boolean> {
+        const arraySetting = await (await new Workbench().openSettings()).findSetting(title, ...path) as ArraySetting;
+        const arrayItem = await arraySetting.getItem(row) as ArraySettingItem;
+        const itemValue = await arrayItem.getValue() as string;
+        await new EditorView().closeEditor('Settings');
+        return itemValue;
+    }
+
     function resetUserSettings(id: string): void {
         const settingsPath = path.resolve(storageFolder, 'settings', 'User', 'settings.json');
         const reset = fs.readFileSync(settingsPath, 'utf-8').replace(new RegExp(`"${id}.*`), '');
         fs.writeFileSync(settingsPath, reset, 'utf-8');
+    }
+
+    async function waitUntilItemExists(item: string, setting: ArraySetting, timeout: number = 10_000): Promise<void> {
+        let values: string[] = [];
+        await setting.getDriver().wait(async function () {
+            values = await setting.getValues();
+            return values.includes(item);
+        }, timeout, `Expected item - '${item}' was not found in list of: ${values}`);
+    }
+
+    async function waitUntilItemNotExists(item: string, setting: ArraySetting, timeout: number = 10_000): Promise<void> {
+        let values: string[] = [];
+        await setting.getDriver().wait(async function () {
+            values = await setting.getValues();
+            return !values.includes(item);
+        }, timeout, `Expected item - '${item}' was found in list of: ${values}`);
     }
 });
