@@ -16,9 +16,9 @@
  */
 'use strict';
 
+import { expect } from 'chai';
 import { workspace } from 'vscode';
 import { CamelJBangTaskProvider } from '../../task/CamelJBangTaskProvider';
-import { expect } from 'chai';
 import { getCamelTask, getTaskCommandArguments } from './util';
 
 suite('Should run commands with the extra launch parameter specified in settings', () => {
@@ -48,6 +48,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
 		const extraLaunchParameterPosition = 8;
+		
 		expect((getTaskCommandArguments(camelRunTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
 	});
 
