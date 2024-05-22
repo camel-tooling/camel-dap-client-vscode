@@ -47,7 +47,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 		await config.update(EXTRA_LAUNCH_PARAMETER_ID, EXTRA_LAUNCH_PARAMETER);
 
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
-		const extraLaunchParameterPosition = 8;
+		const extraLaunchParameterPosition = 6;
 		
 		expect((getTaskCommandArguments(camelRunTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
 	});
@@ -59,7 +59,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 		await config.update(EXTRA_LAUNCH_PARAMETER_ID, EXTRA_LAUNCH_PARAMETER);
 
 		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
-		const extraLaunchParameterPosition = 10;
+		const extraLaunchParameterPosition = 8;
 		expect((getTaskCommandArguments(camelRunAndDebugTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
 	});
 
