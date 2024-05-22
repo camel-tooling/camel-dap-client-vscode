@@ -4,6 +4,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 0.14.0
 
+- Update default Camel version used for Camel JBang from 4.5.0 to 4.6.0
 - Added warning notification when users are trying to run or debug integration without opened folder/workspace
 
 ## 0.13.0
