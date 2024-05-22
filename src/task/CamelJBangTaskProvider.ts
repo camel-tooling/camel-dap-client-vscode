@@ -61,10 +61,10 @@ export class CamelJBangTaskProvider implements TaskProvider {
 						"value": '--dep=org.apache.camel:camel-debug',
 						"quoting": ShellQuoting.Strong
 					},
-					`${this.getCamelVersion()}`,
-					`${this.getRedHatMavenRepository()}`,
-					...this.getExtraLaunchParameter(),
-				],
+					this.getCamelVersion(),
+					this.getRedHatMavenRepository(),
+					...this.getExtraLaunchParameter()
+				].filter(function (arg) { return arg; }), // remove ALL empty values ("", null, undefined and 0)
 				shellExecOptions
 			),
 			'$camel.debug.problemMatcher'
@@ -92,10 +92,10 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					'${relativeFile}',
 					'--dev',
 					'--logging-level=info',
-					`${this.getCamelVersion()}`,
-					`${this.getRedHatMavenRepository()}`,
+					this.getCamelVersion(),
+					this.getRedHatMavenRepository(),
 					...this.getExtraLaunchParameter()
-				]
+				].filter(function (arg) { return arg; }) // remove ALL empty values ("", null, undefined and 0)
 			)
 		);
 		runTask.isBackground = true;
@@ -141,9 +141,9 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		}
 	}
 
-	private getExtraLaunchParameter(): string[]{
+	private getExtraLaunchParameter(): string[] {
 		const extraLaunchParameter = workspace.getConfiguration().get('camel.debugAdapter.ExtraLaunchParameter') as string[];
-		if(extraLaunchParameter){
+		if (extraLaunchParameter) {
 			return extraLaunchParameter;
 		} else {
 			return [];
