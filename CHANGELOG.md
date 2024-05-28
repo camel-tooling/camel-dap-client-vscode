@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 1.2.0
+
 ## 1.1.0
 
 - Update Red Hat telemetry dependency to reduce number of event sent (startup information will be sent one time per day per user)
