@@ -35,8 +35,17 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
   - the message body
   - a message header of type String
   - an exchange property of type String
-- One-click Run and Camel debug via command `Run Camel Application with JBang and Debug`
-- One-click Run Camel via command `Run Camel Application with JBang` with [automatic reloading](https://camel.apache.org/manual/camel-jbang.html#_dev_mode_with_live_reload)
+- Commands `Run with JBang and Debug Opened Camel Integration`, `Run with JBang and Debug All Camel Integrations from workspace root` and `Run with JBang and Debug All Camel Integrations from containing folder`. It allows a one-click start and Camel debug in simple cases. This command is available through:
+  - Command Palette. It requires a valid Camel file opened in current editor.
+  - Contextual menu in File explorer. It is visible to all `*.xml`, `*.java`, `*.yaml` and `*.yml`.
+  - Codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
+  - `Run or debug...` quick action editor
+- Commands `Run with JBang and Debug Opened Camel Integration`, `Run with JBang Opened Camel Integration` and `Run with JBang All Camel Integrations from workspace root`
+  - Support automatic reload mode `--dev` by default
+  - It requires a valid Camel file defined in Yaml DSL (`.yaml|.yml`) opened in editor.
+  - Contextual menu in File explorer. It is visible to all `*.yaml` and `*.yml`.
+  - Codelens at the top of a Camel file.
+  - `Run or debug...` quick action editor
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using
   - JBang

@@ -55,8 +55,8 @@ export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
     'debugger has been attached'
 ]);
 
-export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run Camel Application with JBang and Debug';
-export const CAMEL_RUN_ACTION_LABEL = 'Run Camel Application with JBang';
+export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run with JBang and Debug Opened Camel Integration';
+export const CAMEL_RUN_ACTION_LABEL = 'Run with JBang Opened Camel Integration';
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
 export const CAMEL_DEBUG_CODELENS = 'Camel Debug with JBang';
