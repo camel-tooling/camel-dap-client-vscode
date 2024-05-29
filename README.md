@@ -46,16 +46,18 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
   - the message body
   - a message header of type String
   - an exchange property of type String
-- Command `Run Camel Application with JBang and Debug`. It allows a one-click start and Camel debug in simple cases. This command is available through:
+- Commands `Run with JBang and Debug Opened Camel Integration`, `Run with JBang and Debug All Camel Integrations from workspace root` and `Run with JBang and Debug All Camel Integrations from containing folder`. It allows a one-click start and Camel debug in simple cases. This command is available through:
   - Command Palette. It requires a valid Camel file opened in current editor.
   - Contextual menu in File explorer. It is visible to all `*.xml`, `*.java`, `*.yaml` and `*.yml`.
   - Codelens at the top of a Camel file (the heuristic for the codelens is checking that there is a `from` and a `to` or a `log` on `java`, `xml` and `yaml` files).
-- Command `Run Camel application with JBang`.
+  - `Run or debug...` quick action editor
+- Commands `Run with JBang and Debug Opened Camel Integration`, `Run with JBang Opened Camel Integration` and `Run with JBang All Camel Integrations from workspace root`
   - Support automatic reload mode `--dev` by default
   - It requires a valid Camel file defined in Yaml DSL (`.yaml|.yml`) opened in editor.
   - Contextual menu in File explorer. It is visible to all `*.yaml` and `*.yml`.
   - Codelens at the top of a Camel file.
-- Supports adding extra parameters provided by the `JBang camel run` command. (For both running and debugging the application)
+  - `Run or debug...` quick action editor
+- Supports adding extra parameters provided by the `Run with JBang *` commands. (For both running and debugging the application)
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang, Maven with Camel maven plugin or Quarkus Devs
 
@@ -73,7 +75,7 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 
 1. Ensure `jbang` is available on system command-line
 2. Open a Camel route which can be started with JBang
-3. Call command Palette (`Ctrl + Shift + P`), and pick command `Run Camel Application with JBang and Debug` or click on codelens `Camel Debug with JBang` which appears on top of the file.
+3. Call command Palette (`Ctrl + Shift + P`), and pick command `Run with JBang and Debug Opened Camel Integration` or click on codelens `Camel Debug with JBang` which appears on top of the file or use the quick editor action
 4. Wait until the route is started and debugger is connected
 5. Put a breakpoint on the Camel route
 6. Debug! 🔥

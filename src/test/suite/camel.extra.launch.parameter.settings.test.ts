@@ -58,7 +58,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 		await config.update(EXTRA_LAUNCH_PARAMETER_ID, EXTRA_LAUNCH_PARAMETER);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		const extraLaunchParameterPosition = 8;
 		expect((getTaskCommandArguments(camelRunAndDebugTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
 	});

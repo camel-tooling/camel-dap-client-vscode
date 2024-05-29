@@ -208,14 +208,43 @@
 			{
 				"command": "apache.camel.debug.jbang",
 				"category": "Camel",
-				"title": "Run Camel Application with JBang and Debug",
+				"title": "Run with JBang and Debug Opened Camel Integration",
+				"shortTitle": "Camel JBang: Debug current integration",
 				"icon": "$(camel-debug)",
 				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			},
 			{
 				"command": "apache.camel.run.jbang",
 				"category": "Camel",
-				"title": "Run Camel Application with JBang",
+				"title": "Run with JBang Opened Camel Integration",
+				"icon": "$(camel-run)",
+				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
+			},
+			{
+				"command": "apache.camel.debug.jbang.all.root",
+				"category": "Camel",
+				"title": "Run with JBang and Debug All Camel Integrations from workspace root",
+				"icon": "$(camel-debug)",
+				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
+			},
+			{
+				"command": "apache.camel.run.jbang.all.root",
+				"category": "Camel",
+				"title": "Run with JBang All Camel Integrations from workspace root",
+				"icon": "$(camel-run)",
+				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
+			},
+			{
+				"command": "apache.camel.debug.jbang.all.containingfolder",
+				"category": "Camel",
+				"title": "Run with JBang and Debug All Camel Integrations from containing folder",
+				"icon": "$(camel-debug)",
+				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
+			},
+			{
+				"command": "apache.camel.run.jbang.all.containingfolder",
+				"category": "Camel",
+				"title": "Run with JBang All Camel Integrations from containing folder ",
 				"icon": "$(camel-run)",
 				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			}
@@ -233,16 +262,36 @@
 					"group": "camel.group"
 				}
 			],
-			"editor/title": [
+			"editor/title/run": [
 				{
 					"command": "apache.camel.debug.jbang",
 					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
-					"group": "navigation"
+					"group": "4_cameldebug@1"
 				},
 				{
 					"command": "apache.camel.run.jbang",
 					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
-					"group": "navigation"
+					"group": "3_camelrun@1"
+				},
+				{
+					"command": "apache.camel.debug.jbang.all.root",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
+					"group": "4_cameldebug@2"
+				},
+				{
+					"command": "apache.camel.run.jbang.all.root",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
+					"group": "3_camelrun@2"
+				},
+				{
+					"command": "apache.camel.debug.jbang.all.containingfolder",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
+					"group": "4_cameldebug@3"
+				},
+				{
+					"command": "apache.camel.run.jbang.all.containingfolder",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
+					"group": "3_camelrun@3"
 				}
 			]
 		}
