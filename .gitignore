@@ -8,3 +8,4 @@ test-resources
 .camel-jbang
 .test-extensions
 *sbom.json
+coverage

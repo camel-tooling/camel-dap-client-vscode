@@ -11,6 +11,7 @@
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true, // don't know how to fix it
+		"sourceMap": true,
 	},
 	"include": [
 		"src"
