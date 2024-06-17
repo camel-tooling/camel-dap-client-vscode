@@ -15,3 +15,10 @@ sonar-project.properties
 test Fixture with speci@l chars
 test-resources
 .test-extensions
+test-extensions
+camel-ls-sbom.json
+docs
+coverage
+.camel-jbang
+out/src/ui-test
+out/src/test
