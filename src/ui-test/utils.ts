@@ -602,3 +602,38 @@ export async function moveDebugBar(time: number = 60_000): Promise<void> {
     const dragArea = await debugBar.findElement(By.className('drag-area'));
     await dragArea.getDriver().actions().dragAndDrop(dragArea, { x: 150, y: 0}).perform();
 }
+
+/**
+ * Checks if Notification Center contains notification with required text.
+ * 
+ * @param notificationText Text of notification. 
+ * @returns true if notification is present, false otherwise
+ */
+export async function notificationCenterContains(notificationText: string): Promise <boolean> {
+    const notifications = await new Workbench().getNotifications();
+    for(const notification of notifications) {
+      const message = await notification.getMessage();
+      if(message === notificationText){
+          return true;
+      }
+    }
+    return false;
+}
+
+/**
+ * Wait until notification with required text is present in Notification Center. 
+ * @param driver The WebDriver instance to use.
+ * @param notificationText Text of notification. 
+ * @param interval (Optional) The interval in milliseconds to wait between checks. Default is 1000ms.
+ * @param timeout (Optional) The timeout in milliseconds. Default is 10000ms.
+ */
+export async function waitUntilNotificationShows(driver: WebDriver, notificationText: string, interval = 1000, timeout = 10000): Promise<void> {
+    await driver.sleep(interval);
+    await driver.wait(async function () {
+        try {
+            return (await notificationCenterContains(notificationText));
+        } catch (err) {
+            return false;
+        }
+    }, timeout, "Required notification not available", interval);
+}
