@@ -259,7 +259,7 @@
 		"ui-test": "node --unhandled-rejections=warn-with-error-code out/ui-test/uitest_runner.js"
 	},
 	"devDependencies": {
-		"@stylistic/eslint-plugin": "^2.2.0",
+		"@stylistic/eslint-plugin": "^2.2.1",
 		"@types/chai": "^4.3.11",
 		"@types/fs-extra": "^11.0.4",
 		"@types/glob": "^8.1.0",
