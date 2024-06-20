@@ -45,7 +45,7 @@ suite('Should run commands with Maven Repository specified in settings', () => {
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
 		expect(getTaskCommandArguments(camelRunTask)).to.not.includes(`--repos`);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.not.includes(`--repos`);
 	});
 
@@ -59,7 +59,7 @@ suite('Should run commands with Maven Repository specified in settings', () => {
 	test('Productized Camel version is using RH Maven Repository in generated \'Run and Debug with JBang\' task', async function () {
 		await workspace.getConfiguration().update(CAMEL_VERSION_SETTINGS_ID, RH_CAMEL_VERSION);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.includes(`--repos=#repos,${defaultMavenRepository}`);
 	});
 
@@ -67,7 +67,7 @@ suite('Should run commands with Maven Repository specified in settings', () => {
 		await workspace.getConfiguration().update(CAMEL_VERSION_SETTINGS_ID, RH_CAMEL_VERSION);
 		await workspace.getConfiguration().update(GLOBAL_CAMEL_MAVEN_CONFIG_ID, false);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.not.includes(`--repos=#repos`);
 	});
 

@@ -47,7 +47,7 @@ suite('Should run commands with Camel version specified in settings', () => {
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
 		expect(getTaskCommandArguments(camelRunTask)).to.not.includes(`--camel-version=${defaultJBangVersion}`);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.not.includes(`--camel-version=${defaultJBangVersion}`);
 	});
 
@@ -67,7 +67,7 @@ suite('Should run commands with Camel version specified in settings', () => {
 
 		await config.update(CAMEL_VERSION_SETTINGS_ID, CAMEL_VERSION);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.includes(`--camel-version=${CAMEL_VERSION}`);
 	});
 

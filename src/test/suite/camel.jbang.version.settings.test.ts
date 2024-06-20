@@ -56,7 +56,7 @@ suite('Should run commands with Camel JBang version specified in settings', () =
 
 		await config.update(CAMEL_JBANG_VERSION_SETTINGS_ID, CAMEL_JBANG_VERSION);
 
-		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedTask);
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect((getTaskCommandArguments(camelRunAndDebugTask)![0] as ShellQuotedString).value).to.includes(CAMEL_JBANG_VERSION);
 	});
 
