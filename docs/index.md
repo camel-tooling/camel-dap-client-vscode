@@ -27,6 +27,7 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
 - Support conditional breakpoint with `simple` language.
 - Inspect variable values on suspended breakpoints
 - Resume a single route instance and resume all route instances
+- Pause/resume route definition. Technically, it suspend/stop and resume/start Camel routes depending on the kind of consumer. Note that there is a single Camel route there is no thread visible in the Call stack due to VS Code implementation choice.
 - Stepping when the route definition is in the same file
 - Allow to update values of variables:
   - in the `Debugger` scope
