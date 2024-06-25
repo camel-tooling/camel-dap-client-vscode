@@ -38,6 +38,7 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 - Support conditional breakpoints with `simple` language. See How to write condition with [simple language](https://camel.apache.org/components/latest/languages/simple-language.html) for details.
 - Inspect variable values on suspended breakpoints
 - Resume a single route instance and resume all route instances
+- Pause/resume route definition. Technically, it suspend/stop and resume/start Camel routes depending on the kind of consumer.
 - Stepping when the route definition is in the same file
 - Allow to update variables:
   - in scope `Debugger`
