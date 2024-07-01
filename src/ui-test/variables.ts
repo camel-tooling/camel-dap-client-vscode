@@ -75,8 +75,8 @@ export const ATTACH_DEBUGGER_USING_PRELAUNCH_TASK = 'Attach Camel Debugger after
 // launch.json
 export const LAUNCH_START_AND_ATTACH_DEBUGGER =  'Camel: Start Camel application and attach Camel debugger';
 
-// variablesTest.java
-export const VARIABLESTEST_JAVA = 'VariablesTest.java';
+// VariablesTest.camel.yaml
+export const VARIABLESTEST_YAML = 'VariablesTest.camel.yaml';
 
 // pause test
 export const SINGLEROUTE_YAML = 'SingleRoute.camel.yaml';

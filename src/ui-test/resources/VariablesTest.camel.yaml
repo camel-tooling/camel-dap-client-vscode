@@ -1,0 +1,10 @@
+- from:
+    uri: "timer:foo"
+    steps:
+      - setVariable:
+          name: item
+          constant: world
+      - setVariable:
+          name: name
+          constant: Camel
+      - log: Hello ${variable.item} from ${variable.name}
