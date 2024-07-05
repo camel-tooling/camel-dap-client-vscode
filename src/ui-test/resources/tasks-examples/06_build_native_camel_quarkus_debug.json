@@ -12,6 +12,8 @@
 				"install",
 				"-Dnative",
 				"'-Dquarkus.native.monitoring=jmxserver,jmxclient'",
+				"'-Dcamel.main.shutdownTimeout=30'",
+				"'-Dquarkus.camel.source-location-enabled=true'",
 				"'-Dquarkus.camel.debug.enabled=true'",
 				"'-Pcamel.debug'" // This depends on your project
 			],

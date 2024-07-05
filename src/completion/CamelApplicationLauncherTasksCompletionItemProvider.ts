@@ -99,6 +99,8 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 	"args": [
 		"compile",
 		"quarkus:dev",
+		"'-Dcamel.main.shutdownTimeout=30'",
+		"'-Dquarkus.camel.source-location-enabled=true'",
 		"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 	],
 	"problemMatcher": "$camel.debug.problemMatcher",
@@ -122,6 +124,8 @@ export class CamelApplicationLauncherTasksCompletionItemProvider implements vsco
 		"install",
 		"-Dnative",
 		"'-Dquarkus.native.monitoring=jmxserver,jmxclient'",
+		"'-Dcamel.main.shutdownTimeout=30'",
+		"'-Dquarkus.camel.source-location-enabled=true'",
 		"'-Dquarkus.camel.debug.enabled=true'",
 		"'-Pcamel.debug'" // This depends on your project
 	],
