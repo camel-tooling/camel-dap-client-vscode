@@ -10,6 +10,8 @@
 			"args": [
 				"compile",
 				"quarkus:dev",
+				"'-Dcamel.main.shutdownTimeout=30'",
+				"'-Dquarkus.camel.source-location-enabled=true'",
 				"'-Pcamel.debug'" // This depends on your project. The goal here is to have camel-debug on the classpath.
 			],
 			"problemMatcher": "$camel.debug.problemMatcher",
