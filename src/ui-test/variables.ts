@@ -77,3 +77,7 @@ export const LAUNCH_START_AND_ATTACH_DEBUGGER =  'Camel: Start Camel application
 
 // variablesTest.java
 export const VARIABLESTEST_JAVA = 'VariablesTest.java';
+
+// pause test
+export const SINGLEROUTE_YAML = 'SingleRoute.camel.yaml';
+export const MULTIPLEROUTES_YAML = 'MultipleRoutes.camel.yaml';

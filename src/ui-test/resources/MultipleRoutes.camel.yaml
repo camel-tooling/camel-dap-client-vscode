@@ -1,0 +1,24 @@
+- from: 
+    uri: "timer:yaml1"
+    parameters:
+      period: "1000"
+    steps:
+      - setBody: 
+          simple: "Hello 1 from ${routeId}"
+      - log: "${body}"
+- from: 
+    uri: "timer:yaml2"
+    parameters:
+      period: "1000"
+    steps:
+      - setBody: 
+          simple: "Hello 2 from ${routeId}"
+      - log: "${body}"
+- from: 
+    uri: "timer:yaml3"
+    parameters:
+      period: "1000"
+    steps:
+      - setBody: 
+          simple: "Hello 3 from ${routeId}"
+      - log: "${body}"
