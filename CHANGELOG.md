@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 1.2.0
 
+- Update default Camel version used for Camel JBang from 4.6.0 to 4.7.0
+
 ## 1.1.0
 
 - Update Red Hat telemetry dependency to reduce number of event sent (startup information will be sent one time per day per user)
