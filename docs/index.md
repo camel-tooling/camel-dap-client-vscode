@@ -22,8 +22,9 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
 - Add/Remove breakpoints
 - Support a single Camel context
 - `Camel Main` mode for XML only
-  - Supports the use of Camel debugger
-  - Supports the local use of Camel debugger
+- Supports the use of Camel debugger
+- Supports the local use of Camel debugger
+- Support remote debug through http (when using Jolokia on server-side)
 - Support conditional breakpoint with `simple` language.
 - Inspect variable values on suspended breakpoints
 - Resume a single route instance and resume all route instances
