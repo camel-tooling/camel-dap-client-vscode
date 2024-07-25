@@ -31,8 +31,9 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 ### Features
 
 - `Camel Main` mode for XML only (It implies that it is not working with Camel context specified in Camel XML file.)
-  - Support use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML using the JMX Url
-  - Support local use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML using the PID
+- Support use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML using the JMX Url
+- Support local use of Camel debugger by attaching to a running Camel route written in Java, Yaml or XML using the PID
+- Support remote debug through http (when using Jolokia on server-side)
 - Support a single Camel context
 - Add/Remove breakpoints
 - Support conditional breakpoints with `simple` language. See How to write condition with [simple language](https://camel.apache.org/components/latest/languages/simple-language.html) for details.
