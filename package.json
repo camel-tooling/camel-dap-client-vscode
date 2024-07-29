@@ -260,7 +260,7 @@
 		"ui-coverage": "npm run ui-test -- coverage"
 	},
 	"devDependencies": {
-		"@stylistic/eslint-plugin": "^2.3.0",
+		"@stylistic/eslint-plugin": "^2.4.0",
 		"@types/chai": "^4.3.16",
 		"@types/fs-extra": "^11.0.4",
 		"@types/glob": "^8.1.0",
