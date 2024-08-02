@@ -44,7 +44,8 @@ import {
     getBreakpoint,
     DEFAULT_MESSAGE,
     isCamelVersionProductized,
-    isVersionNewer
+    isVersionNewer,
+    DEBUG_ITEM_OPERATOR
 } from '../utils';
 
 describe('Camel Debugger tests', function () {
@@ -152,11 +153,11 @@ describe('Camel Debugger tests', function () {
         }
         skip = true;
 
-        let sectionItem = await getDebuggerSectionItem(driver, 'Body:', 'Message');
+        let sectionItem = await getDebuggerSectionItem(driver, 'Body' + DEBUG_ITEM_OPERATOR, 'Message');
         await sectionItem?.setVariableValue(TEST_BODY);
         await waitUntilTerminalHasText(driver, [TEST_BODY]);
 
-        sectionItem = await getDebuggerSectionItem(driver, 'Body:', 'Message');
+        sectionItem = await getDebuggerSectionItem(driver, 'Body' + DEBUG_ITEM_OPERATOR, 'Message');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_BODY);
 
         await clearTerminal();
@@ -172,11 +173,11 @@ describe('Camel Debugger tests', function () {
         await (await debugView.getContent().getSection('Watch')).collapse();
         await (await debugView.getContent().getSection('Call Stack')).collapse();
         
-        let sectionItem = await getDebuggerSectionItem(driver, 'header:', 'Message', 'Headers');
+        let sectionItem = await getDebuggerSectionItem(driver, 'header' + DEBUG_ITEM_OPERATOR, 'Message', 'Headers');
         await sectionItem?.setVariableValue(TEST_HEADER);
         await waitUntilTerminalHasText(driver, [TEST_HEADER]);
 
-        sectionItem = await getDebuggerSectionItem(driver, 'header:', 'Message', 'Headers');
+        sectionItem = await getDebuggerSectionItem(driver, 'header' + DEBUG_ITEM_OPERATOR, 'Message', 'Headers');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_HEADER);
 
         await clearTerminal();
@@ -196,10 +197,10 @@ describe('Camel Debugger tests', function () {
         }
 
         skip = true;
-        let sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Message', 'Properties');
+        let sectionItem = await getDebuggerSectionItem(driver, 'from' + DEBUG_ITEM_OPERATOR, 'Message', 'Properties');
         await sectionItem?.setVariableValue(TEST_PROPERTY);
 
-        sectionItem = await getDebuggerSectionItem(driver, 'from:', 'Message', 'Properties');
+        sectionItem = await getDebuggerSectionItem(driver, 'from' + DEBUG_ITEM_OPERATOR, 'Message', 'Properties');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_PROPERTY);
 
         await clearTerminal();

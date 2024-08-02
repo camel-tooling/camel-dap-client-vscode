@@ -47,6 +47,9 @@ import * as fs from 'fs-extra';
 import { ENABLING_CAMEL_DEBUGGER } from './variables';
 import { storageFolder } from "./uitest_runner";
 
+// the changes in debug side bar view were presented for new VS Code versions
+export const DEBUG_ITEM_OPERATOR = VSBrowser.instance.version > '1.90.0' ? ' =' : ':';
+
 export const DEFAULT_HEADER = 'YamlHeader';
 export const DEFAULT_PROPERTY = 'yaml-dsl';
 export const DEFAULT_BODY = 'Hello Camel from';
@@ -296,7 +299,7 @@ export async function findCodelens(title: string): Promise<CodeLens> {
         const editor = new TextEditor();
         return await editor.getCodeLens(title);
     }, {
-        timeout: 5000,
+        timeout: 10000,
         ignoreErrors: [...errors.INTERACTIVITY_ERRORS, error.TimeoutError],
         message: `could not find codelens: ${title}`
     });
