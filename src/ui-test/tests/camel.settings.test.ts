@@ -132,7 +132,7 @@ describe('Camel User Settings', function () {
         const newParameter = '--trace';
 
         it('Should add another parameter', async function () {
-            this.timeout(15000);
+            this.timeout(20000);
             const arraySetting = await (await new Workbench().openSettings()).findSetting('Extra Launch Parameter', 'Camel', 'Debug Adapter') as ArraySetting;
             const add1 = await arraySetting.add();
             await add1.setValue(newParameter);

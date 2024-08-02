@@ -34,6 +34,7 @@ import {
     isCamelVersionProductized,
     isVersionNewer,
     DEBUGGER_ATTACHED_MESSAGE,
+    DEBUG_ITEM_OPERATOR,
 } from '../utils';
 import { RESOURCES_DIR, VARIABLESTEST_YAML } from '../variables';
 
@@ -84,10 +85,10 @@ describe('Display exchange variables values test', function () {
             return await textEditor.toggleBreakpoint(10);
         }, 5000);
 
-        const sectionItem = await getDebuggerSectionItem(driver, 'item:', 'Message', 'Variables');
+        const sectionItem = await getDebuggerSectionItem(driver, 'item' + DEBUG_ITEM_OPERATOR, 'Message', 'Variables');
         expect(await sectionItem?.getVariableValue()).to.be.equal("world");
 
-        const sectionItem2 = await getDebuggerSectionItem(driver, 'name:', 'Message', 'Variables');
+        const sectionItem2 = await getDebuggerSectionItem(driver, 'name' + DEBUG_ITEM_OPERATOR, 'Message', 'Variables');
         expect(await sectionItem2?.getVariableValue()).to.be.equal("Camel");
     });
 
@@ -100,7 +101,7 @@ describe('Display exchange variables values test', function () {
         if(process.env.CAMEL_VERSION !== undefined && !isVersionNewer("4.4.1", process.env.CAMEL_VERSION)) {
             this.skip();
         }
-        const sectionItem = await getDebuggerSectionItem(driver, 'item:', 'Message', 'Variables');
+        const sectionItem = await getDebuggerSectionItem(driver, 'item' + DEBUG_ITEM_OPERATOR, 'Message', 'Variables');
         await sectionItem?.setVariableValue(EXCHANGED_VALUE);
         const debugBar = await DebugToolbar.create();
         await debugBar.continue();

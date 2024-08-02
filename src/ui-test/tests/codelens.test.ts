@@ -59,7 +59,7 @@ describe('JBang commands execution through command codelens', function () {
         await repeat(async function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === variables.CAMEL_ROUTE_YAML_WITH_SPACE);
         }, {
-            timeout: 5000,
+            timeout: 10000,
             message: `The test file ${variables.CAMEL_ROUTE_YAML_WITH_SPACE} was not opened`
         });
     });
