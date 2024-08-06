@@ -17,13 +17,16 @@
 
 import {
   ActivityBar,
+  DebugCallStackSection,
   DebugToolbar,
+  DebugView,
   EditorView,
   SideBarView,
   VSBrowser,
   WebDriver,
+  Workbench,
 } from "vscode-uitests-tooling";
-import { RESOURCES_DIR, SINGLEROUTE_YAML } from "../variables";
+import { MULTIPLEROUTES_YAML, RESOURCES_DIR, SINGLEROUTE_YAML } from "../variables";
 import {
   executeCommand,
   CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL,
@@ -32,15 +35,17 @@ import {
   disconnectDebugger,
   killTerminal,
   isCamelVersionProductized,
-
 } from "../utils";
+import { assert } from "chai";
 
 describe("Support pause of Camel debugger", function () {
   this.timeout(300000);
 
   let driver: WebDriver;
+  let callStack: DebugCallStackSection;
+  let view: DebugView;
 
-  before(async function () {
+  beforeEach(async function () {
     if (isCamelVersionProductized(process.env.CAMEL_VERSION)) {
       this.skip();
     }
@@ -49,8 +54,8 @@ describe("Support pause of Camel debugger", function () {
     await (await new ActivityBar().getViewControl('Explorer')).openView();
   });
 
-  after(async function () {
-    if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+  afterEach(async function () {
+    if (isCamelVersionProductized(process.env.CAMEL_VERSION)) {
       // do nothing - after is executed even if skip is called in before
     }
     else {
@@ -74,10 +79,59 @@ describe("Support pause of Camel debugger", function () {
     await waitUntilTerminalHasText(driver, ["Hello Camel from route1"], 4000, 120000);
   });
 
-  // Skip test: Call Stack is not supported by DebugView yet.
-  // https://github.com/redhat-developer/vscode-extension-tester/issues/1398
-  it.skip("Multiple routes pause", async function () {
+  const EXPECTED_BUTTONS = ['Pause', 'Step Over', 'Step Into', 'Step Out'];
+  const routeSuspendMessages = [
+    'Suspended route3 (timer://yaml3)',
+    'Suspended route2 (timer://yaml2)',
+    'Suspended route1 (timer://yaml1)'
+  ];
+  const routeMessages = [
+    'Hello 3 from route3',
+    'Hello 2 from route2',
+    'Hello 1 from route1'
+  ];
+  const PAUSED_ON_PAUSE = 'PAUSED ON PAUSE';
+  const RUNNING = 'running';
 
+  it("Multiple routes pause", async function () {
+    await prepareEnvironment(MULTIPLEROUTES_YAML);
+
+    // call stack has all 3 routes
+    view = (await (await new ActivityBar().getViewControl('Run'))?.openView()) as DebugView;
+    callStack = await view.getCallStackSection();
+    const items = await callStack.getVisibleItems();
+    assert.lengthOf(items, 3);
+
+    // each route has 4 action buttons
+    for (let i = 0; i < items.length; i++) {
+      const buttons = await items.at(i)?.getActionButtons();
+      assert.equal(buttons?.length, 4);
+
+      // all expected buttons available
+      for (let j = 0; j < EXPECTED_BUTTONS.length; j++) {
+        assert(await buttons?.at(j)?.getLabel(), EXPECTED_BUTTONS[j]);
+      }
+    }
+
+    // stop all routes    
+    const routes = items.slice(0, 3);
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
+      await (await route?.getActionButtons())?.at(0)?.click();
+      await waitUntilTerminalHasText(driver, [routeSuspendMessages[i]], 1000, 15000);
+      assert(await route?.getText(), PAUSED_ON_PAUSE);
+    }
+
+    // clear terminal
+    await new Workbench().executeCommand('Terminal: Clear');
+
+    // start all routes
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
+      await (await route?.getActionButtons())?.at(0)?.click();
+      await waitUntilTerminalHasText(driver, [routeMessages[i]], 1000, 15000);
+      assert(await route?.getText(), RUNNING);
+    }
   });
 
   async function prepareEnvironment(file: string): Promise<void> {
