@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 1.3.0
+
 ## 1.2.0
 
 - Support remote debug through http (when using Jolokia on server-side)
