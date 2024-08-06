@@ -6,6 +6,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 - Support remote debug through http (when using Jolokia on server-side)
 - Update default Camel version used for Camel JBang from 4.6.0 to 4.7.0
+- Upgrade embedded Debug Adapter for Apache Camel to 1.2.0
 
 ## 1.1.0
 
