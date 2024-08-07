@@ -18,13 +18,84 @@ import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOption
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
-	public static labelProvidedTask: string = "Start Camel application with debug enabled with JBang";
-	public static labelProvidedRunTask: string = "Run Camel application with JBang";
+	public static readonly labelProvidedRunWithDebugActivatedTask: string = "Start Opened Camel application with debug enabled with JBang";
+	public static readonly labelProvidedRunTask: string = "Run with JBang Opened Camel Application";
+	public static readonly labelProvidedRunAllWithDebugActivatedTask: string = "Start All Camel applications with debug enabled with JBang";
+	public static readonly labelProvidedRunAllTask: string = "Run with JBang All Camel Applications";
+	public static readonly labelProvidedRunAllFromContainingFolderWithDebugActivatedTask: string = "Start All Camel applications from containing folder with debug enabled with JBang";
+	public static readonly labelProvidedRunAllFromContainingFolderTask: string = "Run with JBang All Camel Applications from containing folder";
 
 	provideTasks(_token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];
+
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllWithDebugActivatedTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderWithDebugActivatedTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask));
+		return tasks;
+	}
+
+	createTask(taskLabel: string) :Task{
+		switch (taskLabel) {
+			case CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask:
+				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask, '${relativeFile}', undefined);
+			case CamelJBangTaskProvider.labelProvidedRunTask:
+				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunTask, '${relativeFile}', undefined);
+			case CamelJBangTaskProvider.labelProvidedRunAllWithDebugActivatedTask:
+				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunAllWithDebugActivatedTask, '*', undefined);
+			case CamelJBangTaskProvider.labelProvidedRunAllTask:
+				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunAllTask, '*', undefined);
+			case CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderWithDebugActivatedTask:
+				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderWithDebugActivatedTask, '*','${fileDirname}');
+			case CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask:
+				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask, '*', '${fileDirname}');
+			default:
+				break;
+		}
+		throw new Error('Method not implemented.');
+	}
+
+	private createRunTask(taskLabel :string, patternForCamelFiles :string, cwd :string | undefined) {
+		const shellExecOptions: ShellExecutionOptions = {
+			cwd: cwd
+		};
+		const runTask = new Task(
+			{
+				"label": taskLabel,
+				"type": "shell"
+			},
+			TaskScope.Workspace,
+			taskLabel,
+			'camel',
+			new ShellExecution(
+				'jbang',
+				[
+					{
+						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
+						"quoting": ShellQuoting.Strong
+					},
+					'camel@apache/camel',
+					'run',
+					patternForCamelFiles,
+					'--dev',
+					'--logging-level=info',
+					this.getCamelVersion(),
+					this.getRedHatMavenRepository(),
+					...this.getExtraLaunchParameter()
+				].filter(function (arg) { return arg; }), // remove ALL empty values ("", null, undefined and 0)
+				shellExecOptions
+			)
+		);
+		runTask.isBackground = true;
+		return runTask;
+	}
+
+	private createRunWithDebugTask(taskLabel :string, patternForCamelFiles :string, cwd : string | undefined) {
+		console.log(`cwd : ${cwd}`);
 		const taskDefinition: TaskDefinition = {
-			"label": CamelJBangTaskProvider.labelProvidedTask,
+			"label": taskLabel,
 			"type": "shell"
 		};
 
@@ -33,13 +104,14 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			env: {
 				// eslint-disable-next-line @typescript-eslint/naming-convention
 				'CAMEL_DEBUGGER_SUSPEND': 'true'
-			}
+			},
+			cwd: cwd
 		};
 
-		const task = new Task(
+		const runWithDebugActivatedTask = new Task(
 			taskDefinition,
 			TaskScope.Workspace,
-			CamelJBangTaskProvider.labelProvidedTask,
+			taskLabel,
 			'camel',
 			new ShellExecution(
 				'jbang',
@@ -54,7 +126,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 					},
 					'camel@apache/camel',
 					'run',
-					'${relativeFile}',
+					patternForCamelFiles,
 					'--dev',
 					'--logging-level=info',
 					{
@@ -69,40 +141,9 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			),
 			'$camel.debug.problemMatcher'
 		);
-		task.isBackground = true;
-		task.presentationOptions.reveal = TaskRevealKind.Always;
-
-		const runTask = new Task(
-			{
-				"label": CamelJBangTaskProvider.labelProvidedRunTask,
-				"type": "shell"
-			},
-			TaskScope.Workspace,
-			CamelJBangTaskProvider.labelProvidedRunTask,
-			'camel',
-			new ShellExecution(
-				'jbang',
-				[
-					{
-						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
-						"quoting": ShellQuoting.Strong
-					},
-					'camel@apache/camel',
-					'run',
-					'${relativeFile}',
-					'--dev',
-					'--logging-level=info',
-					this.getCamelVersion(),
-					this.getRedHatMavenRepository(),
-					...this.getExtraLaunchParameter()
-				].filter(function (arg) { return arg; }) // remove ALL empty values ("", null, undefined and 0)
-			)
-		);
-		runTask.isBackground = true;
-
-		tasks.push(task);
-		tasks.push(runTask);
-		return tasks;
+		runWithDebugActivatedTask.isBackground = true;
+		runWithDebugActivatedTask.presentationOptions.reveal = TaskRevealKind.Always;
+		return runWithDebugActivatedTask;
 	}
 
 	resolveTask(_task: Task, _token: CancellationToken): ProviderResult<Task> {

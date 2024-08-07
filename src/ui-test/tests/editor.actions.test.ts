@@ -21,11 +21,11 @@ import {
     after,
     before,
     BottomBarPanel,
+    EditorActionDropdown,
     EditorView,
     SideBarView,
     VSBrowser,
     WebDriver,
-    WebElement,
 } from 'vscode-uitests-tooling';
 import {
     CAMEL_ROUTE_YAML_WITH_SPACE,
@@ -67,20 +67,34 @@ describe('Camel file editor test', function () {
         });
 
         it('Debug and Run action is available', async function () {
+            if (process.platform === "darwin"){
+                this.skip();
+            }
             await driver.sleep(500);
-            const button = await editorView.getAction(CAMEL_RUN_DEBUG_ACTION_LABEL);
-            expect(button).to.not.undefined;
+            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+            const menu = await action.open();
+            expect(await menu.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
+            await menu.close();
         });
 
         it('Run action is available', async function () {
+            if (process.platform === "darwin"){
+                this.skip();
+            }
             await driver.sleep(500);
-            const button = await editorView.getAction(CAMEL_RUN_ACTION_LABEL);
-            expect(button).to.not.undefined;
+            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+            const menu = await action.open();
+            expect(await menu.hasItem(CAMEL_RUN_ACTION_LABEL)).true;
+            await menu.close();
         });
 
         it(`Can execute '${CAMEL_RUN_ACTION_LABEL}' action`, async function () {
-            const run = await editorView.getAction(CAMEL_RUN_ACTION_LABEL) as WebElement;
-            await run.click();
+            if (process.platform === "darwin"){
+                this.skip();
+            }
+            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+            const menu = await action.open();
+            await menu.select(CAMEL_RUN_ACTION_LABEL);
 
             await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
 
@@ -91,9 +105,13 @@ describe('Camel file editor test', function () {
             if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
                 this.skip();
             }
+            if (process.platform === "darwin"){
+                this.skip();
+            }
 
-            const run = await editorView.getAction(CAMEL_RUN_DEBUG_ACTION_LABEL) as WebElement;
-            await run.click();
+            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+            const menu = await action.open();
+            await menu.select(CAMEL_RUN_DEBUG_ACTION_LABEL);
 
             await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
 

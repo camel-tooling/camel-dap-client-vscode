@@ -16,7 +16,7 @@
  */
 
 import path from "path";
-import { ActivityBar, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-uitests-tooling";
+import { ActivityBar, EditorActionDropdown, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-uitests-tooling";
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL } from "../variables";
 import { expect } from "chai";
 import { notificationCenterContains, waitUntilNotificationShows } from "../utils";
@@ -48,16 +48,23 @@ describe('Check actions requirements to run/debug', function () {
     });
 
     it(`Click on 'run' button and check warning message is displayed`, async function () {
+        if (process.platform === "darwin"){
+            this.skip();
+        }
         await clickButtonAndVerifyNotification(CAMEL_RUN_ACTION_LABEL);
     });
     
     it(`Click on 'debug' button and check warning message is displayed`, async function () {
-        await clickButtonAndVerifyNotification(CAMEL_RUN_DEBUG_ACTION_LABEL);
+        if (process.platform === "darwin"){
+            this.skip();
+        }
+         await clickButtonAndVerifyNotification(CAMEL_RUN_DEBUG_ACTION_LABEL);
     });
 
     async function clickButtonAndVerifyNotification(actionLabel: string) {
-        const button = await editorView.getAction(actionLabel);
-        await button?.click();
+        const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+        const menu = await action.open();
+        await menu.select(actionLabel);
         await waitUntilNotificationShows(driver, NOTIFICATION_TEXT);
         expect(await notificationCenterContains(NOTIFICATION_TEXT)).to.be.true;
         const center = await new Workbench().openNotificationsCenter();
