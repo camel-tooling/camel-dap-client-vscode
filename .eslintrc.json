@@ -22,7 +22,8 @@
 	"plugins": [
 		"@typescript-eslint",
 		"eslint-plugin-import", //  required by no-extraneous-dependencies
-		"@stylistic"
+		"@stylistic",
+		"chai-friendly"
 	],
     "rules": {
 		"@typescript-eslint/no-var-requires": "off", /** allows require statements outside of imports **/
@@ -52,6 +53,8 @@
 				"optionalDependencies": false,
 				"peerDependencies": false
 			}
-		]
+		],
+		"no-unused-expressions": 0, // disable original rule, use the chai friendly one
+        "chai-friendly/no-unused-expressions": 2
 	}
 }
