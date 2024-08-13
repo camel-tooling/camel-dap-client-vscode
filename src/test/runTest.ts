@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { downloadAndUnzipVSCode, resolveCliArgsFromVSCodeExecutablePath, runTests } from '@vscode/test-electron';
-const cp = require('child_process');
+import { spawnSync } from 'node:child_process';
 
 async function main() {
 	try {
@@ -22,7 +22,7 @@ async function main() {
 
 		const vscodeExecutablePath = await downloadAndUnzipVSCode(vscodeVersion);
 		const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
-		cp.spawnSync(cli, [...args, '--install-extension', 'redhat.vscode-yaml'], {
+		spawnSync(cli, [...args, '--install-extension', 'redhat.vscode-yaml'], {
 			encoding: 'utf-8',
 			stdio: 'inherit'
 		});
