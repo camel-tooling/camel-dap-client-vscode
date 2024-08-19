@@ -244,7 +244,7 @@
 			{
 				"command": "apache.camel.run.jbang.all.containingfolder",
 				"category": "Camel",
-				"title": "Run with JBang All Camel Integrations from containing folder ",
+				"title": "Run with JBang All Camel Integrations from containing folder",
 				"icon": "$(camel-run)",
 				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
 			}

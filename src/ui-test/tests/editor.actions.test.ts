@@ -18,8 +18,6 @@ import { expect } from 'chai';
 import * as path from 'path';
 import {
     ActivityBar,
-    after,
-    before,
     BottomBarPanel,
     EditorActionDropdown,
     EditorView,
@@ -28,56 +26,44 @@ import {
     WebDriver,
 } from 'vscode-uitests-tooling';
 import {
-    CAMEL_ROUTE_YAML_WITH_SPACE,
     CAMEL_RUN_ACTION_LABEL,
     CAMEL_RUN_DEBUG_ACTION_LABEL,
     waitUntilTerminalHasText,
     killTerminal,
     disconnectDebugger,
-    TEST_ARRAY_RUN,
-    isCamelVersionProductized
+    isCamelVersionProductized,
 } from '../utils';
+import { CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL, TOP_ROUTE_1 } from '../variables';
 
 describe('Camel file editor test', function () {
 
     describe('Camel Actions', function () {
-        this.timeout(240000);
+        this.timeout(300000);
 
         let driver: WebDriver;
         let editorView: EditorView;
 
-        before(async function () {
+        beforeEach(async function () {
             driver = VSBrowser.instance.driver;
-            await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
+            await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources', 'actions'));
 
             await (await new ActivityBar().getViewControl('Explorer')).openView();
 
-            const section = await new SideBarView().getContent().getSection('resources');
-            await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
+            const section = await new SideBarView().getContent().getSection('actions');
+            await section.openItem('top', TOP_ROUTE_1);
 
             editorView = new EditorView();
             await driver.wait(async function () {
-                return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
+                return (await editorView.getOpenEditorTitles()).find(title => title === TOP_ROUTE_1);
             }, 5000);
         });
 
-        after(async function () {
+        afterEach(async function () {
             await editorView.closeAllEditors();
             await new BottomBarPanel().toggle(false);
         });
 
-        it('Debug and Run action is available', async function () {
-            if (process.platform === "darwin"){
-                this.skip();
-            }
-            await driver.sleep(500);
-            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-            const menu = await action.open();
-            expect(await menu.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
-            await menu.close();
-        });
-
-        it('Run action is available', async function () {
+        it('Run actions are available', async function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
@@ -85,39 +71,67 @@ describe('Camel file editor test', function () {
             const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
             const menu = await action.open();
             expect(await menu.hasItem(CAMEL_RUN_ACTION_LABEL)).true;
+            expect(await menu.hasItem(CAMEL_RUN_WORKSPACE_ACTION_LABEL)).true;
+            expect(await menu.hasItem(CAMEL_RUN_FOLDER_ACTION_LABEL)).true;
             await menu.close();
         });
 
-        it(`Can execute '${CAMEL_RUN_ACTION_LABEL}' action`, async function () {
+        it('Debug and Run actions are available', async function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
+            await driver.sleep(500);
             const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
             const menu = await action.open();
-            await menu.select(CAMEL_RUN_ACTION_LABEL);
-
-            await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
-
-            await killTerminal();
+            expect(await menu.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
+            expect(await menu.hasItem(CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL)).true;
+            expect(await menu.hasItem(CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL)).true;
+            await menu.close();
         });
 
-        it(`Can execute '${CAMEL_RUN_DEBUG_ACTION_LABEL}' action`, async function () {
-            if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
-                this.skip();
-            }
-            if (process.platform === "darwin"){
-                this.skip();
-            }
+        const runActionLabels = [
+            { label: CAMEL_RUN_ACTION_LABEL, terminalText: ['Hello Camel from top-route1'] },
+            { label: CAMEL_RUN_WORKSPACE_ACTION_LABEL, terminalText:  ['Hello Camel from route1', 'Hello Camel from route2'],},
+            { label: CAMEL_RUN_FOLDER_ACTION_LABEL, terminalText: ['Hello Camel from top-route1', 'Hello Camel from top-route2'] }
+        ];
 
-            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-            const menu = await action.open();
-            await menu.select(CAMEL_RUN_DEBUG_ACTION_LABEL);
+        runActionLabels.forEach(runActionLabels => {
+            it(`Can execute '${runActionLabels.label}' action`, async function () {
+                if (process.platform === "darwin") {
+                    this.skip();
+                }
+                const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+                const menu = await action.open();
+                await menu.select(runActionLabels.label);
+                await waitUntilTerminalHasText(driver, runActionLabels.terminalText, 2000, 120000);
+                await killTerminal();
+            });
+        });
 
-            await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
+        const debugActionLabels = [
+            { label: CAMEL_RUN_DEBUG_ACTION_LABEL, terminalText: ['Hello Camel from top-route1']},
+            { label: CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, terminalText: ['Hello Camel from route1', 'Hello Camel from route2'],},
+            { label: CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, terminalText: ['Hello Camel from top-route1', 'Hello Camel from top-route2']}
+        ];
 
-            await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
-            await disconnectDebugger(driver);
-            await killTerminal();
+        debugActionLabels.forEach(debugActionLabels => {
+            it(`Can execute '${debugActionLabels.label}' action`, async function () {
+                if (isCamelVersionProductized(process.env.CAMEL_VERSION)){
+                    this.skip();
+                }
+                if (process.platform === "darwin"){
+                    this.skip();
+                }
+                const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
+                const menu = await action.open();
+                await menu.select(debugActionLabels.label);
+
+                await waitUntilTerminalHasText(driver, debugActionLabels.terminalText, 2000, 120000);
+
+                await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+                await disconnectDebugger(driver);
+                await killTerminal();
+            });
         });
     });
 });

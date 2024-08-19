@@ -17,12 +17,12 @@
 
 import path from "path";
 import { ActivityBar, EditorActionDropdown, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-uitests-tooling";
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL } from "../variables";
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL, CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL } from "../variables";
 import { expect } from "chai";
 import { notificationCenterContains, waitUntilNotificationShows } from "../utils";
 
 describe('Check actions requirements to run/debug', function () {
-    this.timeout(30000);
+    this.timeout(90000);
     
     let driver: WebDriver;
     let editorView: EditorView;
@@ -47,18 +47,32 @@ describe('Check actions requirements to run/debug', function () {
         expect (await noFolderOpened()).to.be.true;
     });
 
-    it(`Click on 'run' button and check warning message is displayed`, async function () {
-        if (process.platform === "darwin"){
-            this.skip();
-        }
-        await clickButtonAndVerifyNotification(CAMEL_RUN_ACTION_LABEL);
+    (process.platform === "darwin" ? describe.skip : describe)('Click on Run button and check warning message is displayed', function() {
+        const runActionLabels = [
+            { label: CAMEL_RUN_ACTION_LABEL},
+            { label: CAMEL_RUN_WORKSPACE_ACTION_LABEL},
+            { label: CAMEL_RUN_FOLDER_ACTION_LABEL}
+        ];
+
+        runActionLabels.forEach(({ label }) => {
+            it(`${label} button}`, async function () {
+                await clickButtonAndVerifyNotification(label);
+            });
+        });
     });
-    
-    it(`Click on 'debug' button and check warning message is displayed`, async function () {
-        if (process.platform === "darwin"){
-            this.skip();
-        }
-         await clickButtonAndVerifyNotification(CAMEL_RUN_DEBUG_ACTION_LABEL);
+
+    (process.platform === "darwin" ? describe.skip : describe)('Click on Debug and Run button and check warning message is displayed', function() {
+        const debugActionLabels = [
+            { label: CAMEL_RUN_DEBUG_ACTION_LABEL},
+            { label: CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL},
+            { label: CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL}
+        ];
+
+        debugActionLabels.forEach(({ label }) => {
+            it(`${label} button}`, async function () {
+                await clickButtonAndVerifyNotification(label);
+            });     
+        });
     });
 
     async function clickButtonAndVerifyNotification(actionLabel: string) {
