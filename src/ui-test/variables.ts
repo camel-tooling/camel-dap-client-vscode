@@ -56,11 +56,16 @@ export const TEST_ARRAY_RUN_DEBUG = TEST_ARRAY_RUN.concat([
 ]);
 
 export const CAMEL_RUN_DEBUG_ACTION_LABEL = 'Run with JBang and Debug Opened Camel Integration';
+export const CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL = 'Run with JBang and Debug All Camel Integrations from workspace root';
+export const CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL = 'Run with JBang and Debug All Camel Integrations from containing folder';
 export const CAMEL_RUN_ACTION_LABEL = 'Run with JBang Opened Camel Integration';
+export const CAMEL_RUN_WORKSPACE_ACTION_LABEL = 'Run with JBang All Camel Integrations from workspace root';
+export const CAMEL_RUN_FOLDER_ACTION_LABEL = 'Run with JBang All Camel Integrations from containing folder';
 export const CAMEL_ROUTE_YAML_WITH_SPACE = 'demo route.camel.yaml';
 export const CAMEL_ROUTE_YAML_WITH_SPACE_COPY = 'demo route copy.camel.yaml';
 export const CAMEL_DEBUG_CODELENS = 'Camel Debug with JBang';
 export const CAMEL_RUN_CODELENS = 'Camel Run with JBang';
+export const TOP_ROUTE_1 = 'top-route1.camel.yaml';
 
 // maven
 export const MVN_COMPILE = 'mvn compile';

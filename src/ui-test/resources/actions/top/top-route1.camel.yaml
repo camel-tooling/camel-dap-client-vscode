@@ -1,0 +1,17 @@
+# camel-k: language=yaml
+
+# Write your routes here, for example:
+- from:
+    uri: "timer:yaml"
+    parameters:
+      period: "2000"
+    steps:
+      - setHeader:
+          name: "header"
+          constant: "YamlHeader"
+      - setProperty:
+          name: "from"
+          constant: "top-route1"
+      - setBody:
+          constant: "Hello Camel from"
+      - log: "${header.header}: ${body} ${exchangeProperty.from}"
