@@ -87,7 +87,7 @@ jobs:
           steps.uiTest_Ubuntu.outcome == 'cancelled' ||
           steps.uiTest_MacOS_Windows.outcome == 'cancelled')
         with:
-          name: ${{ matrix.os }}-ui-test-logs
+          name: ${{ matrix.os }}-${{ matrix.camel-version }}-ui-test-logs
           path: test-resources/settings/logs/*
 
       - name: Store UI Test Screenshots
@@ -99,7 +99,7 @@ jobs:
           steps.uiTest_Ubuntu.outcome == 'cancelled' ||
           steps.uiTest_MacOS_Windows.outcome == 'cancelled')
         with:
-          name: ${{ matrix.os }}-ui-test-screenshots
+          name: ${{ matrix.os }}-${{ matrix.camel-version }}-ui-test-screenshots
           path: test-resources/screenshots/*.png
 
   check:
