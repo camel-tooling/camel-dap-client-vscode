@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 1.4.0
+
 ## 1.3.0
 
 - Provide command and quick action to run with JBang from paretn folder of current opened file
