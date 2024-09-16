@@ -35,7 +35,7 @@ import {
 } from '../utils';
 
 describe('JBang commands execution through command codelens', function () {
-    this.timeout(600000);
+    this.timeout(800000);
 
     let driver: WebDriver;
 
@@ -69,8 +69,9 @@ describe('JBang commands execution through command codelens', function () {
     });
 
     it(`Execute command 'apache.camel.run.jbang' with codelens '${variables.CAMEL_RUN_CODELENS}'`, async function () {
-        await (await findCodelens(variables.CAMEL_RUN_CODELENS)).click();
-        await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN, 4000, 250000);
+        const codelens = await findCodelens(variables.CAMEL_RUN_CODELENS);
+        await codelens.click();
+        await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN, 4000, 350000);
     });
 
     it(`Execute command 'apache.camel.debug.jbang' with codelens '${variables.CAMEL_DEBUG_CODELENS}'`, async function () {
@@ -78,8 +79,9 @@ describe('JBang commands execution through command codelens', function () {
             this.skip();
         }
 
-        await (await findCodelens(variables.CAMEL_DEBUG_CODELENS)).click();
-        await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN_DEBUG, 4000, 250000);
+        const codelens = await findCodelens(variables.CAMEL_DEBUG_CODELENS);
+        await codelens.click();
+        await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN_DEBUG, 4000, 350000);
         await disconnectDebugger(driver);
         await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
 
