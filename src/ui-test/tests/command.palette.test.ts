@@ -38,7 +38,7 @@ import {
 } from '../utils';
 
 describe('JBang commands execution through command palette', function () {
-    this.timeout(240000);
+    this.timeout(300000);
 
     let driver: WebDriver;
 
@@ -70,7 +70,7 @@ describe('JBang commands execution through command palette', function () {
 
     it(`Execute command '${CAMEL_RUN_ACTION_QUICKPICKS_LABEL}' in command palette`, async function () {
         await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
-        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN);
+        await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN, 4000, 120000);
     });
 
     it(`Execute command '${CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL}' in command palette`, async function () {

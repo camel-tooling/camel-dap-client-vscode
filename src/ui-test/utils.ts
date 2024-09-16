@@ -299,7 +299,8 @@ export async function findCodelens(title: string): Promise<CodeLens> {
         const editor = new TextEditor();
         return await editor.getCodeLens(title);
     }, {
-        timeout: 10000,
+        timeout: 10_000,
+        threshold: 750,
         ignoreErrors: [...errors.INTERACTIVITY_ERRORS, error.TimeoutError],
         message: `could not find codelens: ${title}`
     });

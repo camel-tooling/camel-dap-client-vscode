@@ -35,7 +35,6 @@ describe('Camel User Settings', function () {
     before(async function (this: Context) {
         // Tested in main pipeline.
         if (process.env.CAMEL_VERSION) {
-            console.log("Camel Env variable value = " + process.env.CAMEL_VERSION);
             this.skip();
         }
 
