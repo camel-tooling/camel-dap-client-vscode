@@ -1,12 +1,12 @@
 'use strict';
 
-const dapServerVersion = '1.4.0-SNAPSHOT';
+const dapServerVersion = '1.4.0';
 
 const download = require('mvn-artifact-download').default;
 const fs = require('fs');
 const path = require('path');
 
-const MAVEN_REPO_URL = 'https://oss.sonatype.org/content/repositories/snapshots/';
+const MAVEN_REPO_URL = 'https://oss.sonatype.org/content/repositories/releases/';
 
 download('com.github.camel-tooling:camel-dap-server:' + dapServerVersion, './jars/', MAVEN_REPO_URL).then((filename)=>{
 	fs.renameSync(filename, path.join('.', 'jars', 'camel-dap-server.jar'));

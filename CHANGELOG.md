@@ -4,9 +4,11 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 1.4.0
 
+- Upgrade embedded Debug Adapter for Apache Camel to 1.3.0
+
 ## 1.3.0
 
-- Provide command and quick action to run with JBang from paretn folder of current opened file
+- Provide command and quick action to run with JBang from parent folder of current opened file
 - Grouped run and debug quick editor action in the `Run or debug...` quick editor action
 - Upgrade embedded Debug Adapter for Apache Camel to 1.3.0
 
