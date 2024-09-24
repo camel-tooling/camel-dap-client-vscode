@@ -7,10 +7,11 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Update default Camel version used for Camel JBang from 4.7.0 to 4.8.1
 - Provide command for a deployment of Camel standalone file using Camel JBang Kubernetes plugin. It is available for Camel JBang version 4.8+.
 - Include `*.xsl` files by default when launching with Camel JBang
+- Upgrade embedded Debug Adapter for Apache Camel to 1.4.0
 
 ## 1.3.0
 
-- Provide command and quick action to run with JBang from paretn folder of current opened file
+- Provide command and quick action to run with JBang from parent folder of current opened file
 - Grouped run and debug quick editor action in the `Run or debug...` quick editor action
 - Upgrade embedded Debug Adapter for Apache Camel to 1.3.0
 
