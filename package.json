@@ -316,7 +316,7 @@
 		"@types/mocha": "^10.0.9",
 		"@types/node": "14.x",
 		"@types/vscode": "^1.82.0",
-		"@typescript-eslint/eslint-plugin": "^7.17.0",
+		"@typescript-eslint/eslint-plugin": "^8.8.1",
 		"@vscode/test-electron": "^2.3.9",
 		"async-wait-until": "^2.0.12",
 		"chai": "^4.5.0",
