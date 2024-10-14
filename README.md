@@ -60,6 +60,10 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 - Supports adding extra parameters provided by the `Run with JBang *` commands. (For both running and debugging the application)
 - Configuration snippets for Camel debugger launch configuration
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang, Maven with Camel maven plugin or Quarkus Devs
+- Deploy Integration (standalone Camel file) with [Apache Camel Kubernetes](https://camel.apache.org/manual/camel-jbang-kubernetes.html) plugin.
+  - It allows **one-click deployment into OpenShift** by default
+  - requires Camel JBang 4.8+
+  - for deployment into Kubernetes cluster see [how to deploy into local Kubernetes cluster](./docs/content/kubernetes-deploy.md)
 
 ### Requirements
 
@@ -92,7 +96,7 @@ Something is not working properly? In that case, feel free to [open issues, add 
 
 ### Get Involved
 
-If you'd like to help us get better, we appriciate it! Check out our [Contribution Guide](Contributing.md) on how to do that.
+If you'd like to help us get better, we appreciate it! Check out our [Contribution Guide](Contributing.md) on how to do that.
 
 ### Data and Telemetry
 

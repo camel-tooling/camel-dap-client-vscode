@@ -26,15 +26,18 @@ const releaseType: ReleaseQuality = process.env.CODE_TYPE === 'insider' ? Releas
 export const projectPath = path.resolve(__dirname, '..', '..');
 const extensionFolder = variables.EXTENSION_DIR;
 const coverage = process.argv[2] === 'coverage';
+const deploy = process.argv[2] === 'deploy';
 
 async function main(): Promise<void> {
 	const tester = new ExTester(storageFolder, releaseType, extensionFolder, coverage);
+	const tests = deploy ? 'out/ui-test/tests/deploy*.test.js' : [
+		'out/ui-test/env/set.camel.version.js',
+		'out/ui-test/tests/!(deploy)*.test.js', // run everything, except deployment tests
+		'out/ui-test/env/check.camel.version.js'
+	];
+
 	await tester.setupAndRunTests(
-		[
-			'out/ui-test/env/set.camel.version.js',
-			'out/ui-test/tests/*.test.js',
-			'out/ui-test/env/check.camel.version.js'
-		],
+		tests,
 		process.env.CODE_VERSION,
 		{
 			'installDependencies': true

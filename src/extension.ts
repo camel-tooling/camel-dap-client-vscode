@@ -20,6 +20,7 @@ import { getRedHatService, TelemetryEvent, TelemetryService } from "@redhat-deve
 import { CamelApplicationLauncherTasksCompletionItemProvider } from './completion/CamelApplicationLauncherTasksCompletionItemProvider';
 import { CamelJBangTaskProvider } from './task/CamelJBangTaskProvider';
 import { CamelJBangCodelens } from './codelenses/CamelJBangCodelens';
+import { execSync } from 'child_process';
 
 let telemetryService: TelemetryService;
 
@@ -30,6 +31,7 @@ export const CAMEL_RUN_AND_DEBUG_WITH_JBANG_ROOT_COMMAND_ID = 'apache.camel.debu
 export const CAMEL_RUN_WITH_JBANG_ROOT_COMMAND_ID = 'apache.camel.run.jbang.all.root';
 export const CAMEL_RUN_AND_DEBUG_WITH_JBANG_CONTAININGFOLDER_COMMAND_ID = 'apache.camel.debug.jbang.all.containingfolder';
 export const CAMEL_RUN_WITH_JBANG_CONTAININGFOLDER_COMMAND_ID = 'apache.camel.run.jbang.all.containingfolder';
+export const CAMEL_JBANG_KUBERNETES_DEPLOY_COMMAND_ID = 'apache.camel.kubernetes.deploy';
 export const WORKSPACE_WARNING_MESSAGE = `The action requires an opened folder/workspace to complete successfully.`;
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -52,6 +54,19 @@ export async function activate(context: vscode.ExtensionContext) {
 	registerRunCommand(CAMEL_RUN_WITH_JBANG_COMMAND_ID, CamelJBangTaskProvider.labelProvidedRunTask, taskProvider);
 	registerRunCommand(CAMEL_RUN_WITH_JBANG_ROOT_COMMAND_ID, CamelJBangTaskProvider.labelProvidedRunAllTask, taskProvider);
 	registerRunCommand(CAMEL_RUN_WITH_JBANG_CONTAININGFOLDER_COMMAND_ID, CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask, taskProvider);
+
+	vscode.commands.registerCommand(CAMEL_JBANG_KUBERNETES_DEPLOY_COMMAND_ID, async function () {
+		const camelAddKubernetesPluginTask = taskProvider.createTask(CamelJBangTaskProvider.labelAddKubernetesPluginTask);
+		if (camelAddKubernetesPluginTask && !(await isCamelPluginInstalled('kubernetes'))) {
+			await vscode.tasks.executeTask(camelAddKubernetesPluginTask);
+			await taskProvider.waitForTaskEnd(CamelJBangTaskProvider.labelAddKubernetesPluginTask);
+		}
+		const camelDeployTask = taskProvider.createTask(CamelJBangTaskProvider.labelProvidedDeployTask);
+		if (camelDeployTask) {
+			await vscode.tasks.executeTask(camelDeployTask);
+			await sendCommandTrackingEvent(telemetryService, CAMEL_JBANG_KUBERNETES_DEPLOY_COMMAND_ID);
+		}
+	});
 
 	vscode.debug.registerDebugAdapterTrackerFactory(CAMEL_DEBUG_ADAPTER_ID, {
 		createDebugAdapterTracker(_session: vscode.DebugSession) {
@@ -80,7 +95,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerCodeLensProvider(docSelector, new CamelJBangCodelens());
 }
 
-function registerDebugCommand(commandId :string, taskLabel :string) {
+function registerDebugCommand(commandId: string, taskLabel: string) {
 	vscode.commands.registerCommand(commandId, async (uri: vscode.Uri) => {
 		if (!vscode.workspace.workspaceFolders) {
 			await vscode.window.showWarningMessage(WORKSPACE_WARNING_MESSAGE);
@@ -100,7 +115,7 @@ function registerDebugCommand(commandId :string, taskLabel :string) {
 	});
 }
 
-function registerRunCommand(commandId :string, taskLabel :string, taskProvider :CamelJBangTaskProvider) {
+function registerRunCommand(commandId: string, taskLabel: string, taskProvider: CamelJBangTaskProvider) {
 	vscode.commands.registerCommand(commandId, async function () {
 		if (!vscode.workspace.workspaceFolders) {
 			await vscode.window.showWarningMessage(WORKSPACE_WARNING_MESSAGE);
@@ -127,4 +142,20 @@ async function sendCommandTrackingEvent(telemetryService: TelemetryService, comm
 		}
 	};
 	await telemetryService.send(telemetryEvent);
+}
+
+async function isCamelPluginInstalled(plugin: string): Promise<boolean> {
+	let output = '';
+	// it takes always few seconds to compute after click on deploy button
+	//  - can be confusing for user without any UI feedback, it looks like nothing is happening after click on a button..
+	await vscode.window.withProgress({
+		location: vscode.ProgressLocation.Window,
+		cancellable: false,
+		title: 'Checking Camel JBang Kubernetes plugin...'
+	}, async (progress) => {
+		progress.report({ increment: 0 });
+		output = execSync('jbang camel@apache/camel plugin get', { stdio: 'pipe' }).toString();
+		progress.report({ increment: 100 });
+	});
+	return output.includes(plugin);
 }

@@ -14,5 +14,9 @@
     "window.title": "${dirty}${activeEditorLong}${separator}${rootPath}${separator}${appName}",
     "redhat.telemetry.enabled": false,
     "terminal.integrated.sendKeybindingsToShell": true,
-    "git.autoRepositoryDetection": false
+    "git.autoRepositoryDetection": false,
+    "camel.debugAdapter.KubernetesRunParameters": [
+        "--cluster-type=minikube",
+        "--build-property=quarkus.kubernetes.image-pull-policy=Never"
+    ]
 }
