@@ -102,7 +102,6 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		const shellExecOptions: ShellExecutionOptions = {
 			// see https://issues.apache.org/jira/browse/CAMEL-20431
 			env: {
-				// eslint-disable-next-line @typescript-eslint/naming-convention
 				'CAMEL_DEBUGGER_SUSPEND': 'true'
 			},
 			cwd: cwd
