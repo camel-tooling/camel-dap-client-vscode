@@ -111,6 +111,19 @@
 					"default": [
 						"--local-kamelet-dir=."
 					]
+				},
+				"camel.debugAdapter.KubernetesRunParameters": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "string"
+					},
+					"additionalProperties": false,
+					"markdownDescription": "User defined parameters to be applied at every deploy (See [Camel JBang Kubernetes](https://camel.apache.org/manual/camel-jbang-kubernetes.html)). In case of spaces, the values needs to be enclosed with quotes. Default value is `[\"--cluster-type=openshift\", \"--dev\"]`\n\n**Note**: Excluding `--camel-version` which is already being set in `#camel.debugAdapter.CamelVersion#`.\n\nFor more possible values see: `camel kubernetes run --help` or `jbang camel@apache/camel kubernetes run --help`",
+					"default": [
+						"--cluster-type=openshift",
+						"--dev"
+					]
 				}
 			}
 		},
@@ -247,6 +260,11 @@
 				"title": "Run with JBang All Camel Integrations from containing folder",
 				"icon": "$(camel-run)",
 				"enablement": "resourceFilename =~ /\\.(java|xml|yaml)$/"
+			},
+			{
+				"command": "apache.camel.kubernetes.deploy",
+				"title": "Deploy Integration with Apache Camel Kubernetes Run",
+				"icon": "$(rocket)"
 			}
 		],
 		"menus": {
@@ -293,6 +311,13 @@
 					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
 					"group": "3_camelrun@3"
 				}
+			],
+			"editor/title": [
+				{
+					"command": "apache.camel.kubernetes.deploy",
+					"when": "resourceFilename =~ /\\.(java|xml|yaml)$/",
+					"group": "navigation"
+				}
 			]
 		}
 	},
@@ -306,7 +331,8 @@
 		"lint": "eslint src",
 		"test": "node ./out/test/runTest.js",
 		"ui-test": "node ./out/ui-test/uitest_runner.js",
-		"ui-coverage": "npm run ui-test -- coverage"
+		"ui-test:deploy": "npm run ui-test -- deploy",
+		"ui-test:coverage": "npm run ui-test -- coverage"
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "^2.9.0",

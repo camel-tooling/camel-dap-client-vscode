@@ -132,7 +132,7 @@ describe('Camel User Settings', function () {
 
         it('Should add another parameter', async function () {
             this.timeout(20000);
-            const arraySetting = await (await new Workbench().openSettings()).findSetting('Extra Launch Parameter', 'Camel', 'Debug Adapter') as ArraySetting;
+            const arraySetting = await (await new Workbench().openSettings()).findSettingByID("camel.debugAdapter.ExtraLaunchParameter") as ArraySetting;
             const add1 = await arraySetting.add();
             await add1.setValue(newParameter);
             await add1.ok();
@@ -156,7 +156,7 @@ describe('Camel User Settings', function () {
 
         it('Should remove parameter', async function () {
             this.timeout(15000);
-            const arraySetting = await (await new Workbench().openSettings()).findSetting('Extra Launch Parameter', 'Camel', 'Debug Adapter') as ArraySetting;
+            const arraySetting = await (await new Workbench().openSettings()).findSettingByID("camel.debugAdapter.ExtraLaunchParameter") as ArraySetting;
             const toRemove = await arraySetting.getItem(newParameter);
             await toRemove?.remove();
             await waitUntilItemNotExists(newParameter, arraySetting);

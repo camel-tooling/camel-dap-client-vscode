@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, TaskScope, workspace } from 'vscode';
+import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, tasks, TaskScope, workspace } from 'vscode';
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
@@ -24,6 +24,8 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	public static readonly labelProvidedRunAllTask: string = "Run with JBang All Camel Applications";
 	public static readonly labelProvidedRunAllFromContainingFolderWithDebugActivatedTask: string = "Start All Camel applications from containing folder with debug enabled with JBang";
 	public static readonly labelProvidedRunAllFromContainingFolderTask: string = "Run with JBang All Camel Applications from containing folder";
+	public static readonly labelProvidedDeployTask: string = "Deploy Integration with Apache Camel Kubernetes Run";
+	public static readonly labelAddKubernetesPluginTask: string = "Camel JBang add Kubernetes plugin";
 
 	provideTasks(_token: CancellationToken): ProviderResult<Task[]> {
 		const tasks: Task[] = [];
@@ -34,10 +36,12 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllTask));
 		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderWithDebugActivatedTask));
 		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelProvidedDeployTask));
+		tasks.push(this.createTask(CamelJBangTaskProvider.labelAddKubernetesPluginTask));
 		return tasks;
 	}
 
-	createTask(taskLabel: string) :Task{
+	createTask(taskLabel: string): Task {
 		switch (taskLabel) {
 			case CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask:
 				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask, '${relativeFile}', undefined);
@@ -51,13 +55,90 @@ export class CamelJBangTaskProvider implements TaskProvider {
 				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderWithDebugActivatedTask, '*','${fileDirname}');
 			case CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask:
 				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask, '*', '${fileDirname}');
+			case CamelJBangTaskProvider.labelProvidedDeployTask:
+				return this.createDeployTask(CamelJBangTaskProvider.labelProvidedDeployTask, '${relativeFile}', undefined);
+			case CamelJBangTaskProvider.labelAddKubernetesPluginTask:
+				return this.createAddKubernetesPluginTask('kubernetes', CamelJBangTaskProvider.labelAddKubernetesPluginTask);
 			default:
 				break;
 		}
 		throw new Error('Method not implemented.');
 	}
 
-	private createRunTask(taskLabel :string, patternForCamelFiles :string, cwd :string | undefined) {
+	private createDeployTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
+		const shellExecOptions: ShellExecutionOptions = {
+			cwd: cwd
+		};
+		const deployTask = new Task(
+			{
+				"label": taskLabel,
+				"type": "shell"
+			},
+			TaskScope.Workspace,
+			taskLabel,
+			'camel',
+			new ShellExecution(
+				'jbang',
+				[
+					{
+						// "value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
+						// it can be switched back after bump to default version Camel JBang 4.8.1
+						// the 4.9.0-SNAPSHOT version will be used only for deploy feature
+						"value": `-Dcamel.jbang.version=4.9.0-SNAPSHOT`,
+						"quoting": ShellQuoting.Strong
+					},
+					'camel@apache/camel',
+					'kubernetes',
+					'run',
+					patternForCamelFiles,
+					this.getCamelVersion(),
+					...this.getKubernetesExtraParameters()
+				].filter(function (arg) { return arg; }), // remove ALL empty values ("", null, undefined and 0)
+				shellExecOptions
+			)
+		);
+		deployTask.isBackground = true;
+		return deployTask;
+	}
+
+	private createAddKubernetesPluginTask(plugin: string, taskLabel: string) {
+		const addPluginTask = new Task(
+			{
+				"label": taskLabel,
+				"type": "shell"
+			},
+			TaskScope.Workspace,
+			taskLabel,
+			'camel',
+			new ShellExecution(
+				'jbang',
+				[
+					{
+						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
+						"quoting": ShellQuoting.Strong
+					},
+					'camel@apache/camel',
+					'plugin',
+					'add',
+					plugin
+				]
+			)
+		);
+		return addPluginTask;
+	}
+
+	async waitForTaskEnd(label: string): Promise<void> {
+		await new Promise<void>(resolve => {
+			const disposable = tasks.onDidEndTask((e) => {
+				if (e.execution.task.name === label) {
+					disposable.dispose();
+					resolve();
+				}
+			});
+		});
+	}
+
+	private createRunTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
 		const shellExecOptions: ShellExecutionOptions = {
 			cwd: cwd
 		};
@@ -92,7 +173,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		return runTask;
 	}
 
-	private createRunWithDebugTask(taskLabel :string, patternForCamelFiles :string, cwd : string | undefined) {
+	private createRunWithDebugTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
 		console.log(`cwd : ${cwd}`);
 		const taskDefinition: TaskDefinition = {
 			"label": taskLabel,
@@ -185,6 +266,15 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		const extraLaunchParameter = workspace.getConfiguration().get('camel.debugAdapter.ExtraLaunchParameter') as string[];
 		if (extraLaunchParameter) {
 			return extraLaunchParameter;
+		} else {
+			return [];
+		}
+	}
+
+	private getKubernetesExtraParameters(): string[] {
+		const extraParameters = workspace.getConfiguration().get('camel.debugAdapter.KubernetesRunParameters') as string[];
+		if (extraParameters) {
+			return extraParameters;
 		} else {
 			return [];
 		}

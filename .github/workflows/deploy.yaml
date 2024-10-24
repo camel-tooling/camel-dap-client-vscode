@@ -1,4 +1,4 @@
-name: UI Code Coverage
+name: Deploy to Kubernetes CI
 
 on:
   push:
@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  coverage:
+  deploy:
     env:
       CODE_VERSION: max
       TEST_RESOURCES: test-resources
@@ -44,21 +44,53 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Start Minikube
+        uses: medyagh/setup-minikube@latest
+        with:
+          driver: docker
+          addons: registry
+
+      - name: Cluster info
+        run: |
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+
       - name: Install
         run: npm ci
 
       - name: Compile
         run: npm run compile
 
-      # 'set +e' and 'exit 0' - that means the workflow will not fail even the test failures are present. The failing tests are not directive for the code coverage reports itself
-      - name: Coverage
+      - name: UI Tests
         run: |
-          set +e
-          xvfb-run --auto-servernum npm run ui-test:coverage
-          exit 0
+          eval $(minikube -p minikube docker-env)
+          xvfb-run --auto-servernum npm run ui-test:deploy
+
       - name: Upload Coverage Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ui-test-coverage
-          path: ${{ github.workspace }}/coverage
+          name: ui-test-screenshots
+          path: test-resources/screenshots/*.png
+
+  check:
+    if: always()
+    runs-on: ubuntu-latest
+    name: Status Check
+    needs: [ deploy ]
+    steps:
+      - name: Test Matrix Result
+        run: |
+          echo result = ${{ needs.deploy.result }}
+      - name: Status Check - success
+        if: ${{ needs.deploy.result == 'success' }}
+        run: |
+          echo "All tests successfully completed!"
+          exit 0
+      - name: Status Check - failure
+        if: ${{ needs.deploy.result != 'success' }}
+        run: |
+          echo "Status Check failed!"
+          exit 1

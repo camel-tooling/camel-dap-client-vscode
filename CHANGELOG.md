@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 1.4.0
 
+- Provide command for a deployment of Camel standalone file using Camel JBang Kubernetes plugin. It is available for Camel JBang version 4.8+.
+
 ## 1.3.0
 
 - Provide command and quick action to run with JBang from paretn folder of current opened file

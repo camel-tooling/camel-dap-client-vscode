@@ -5,7 +5,7 @@ node_modules
 *.vsix
 jars/camel-dap-server.jar
 test-resources
-.camel-jbang
+.camel-jbang*
 .test-extensions
 *sbom.json
 coverage
