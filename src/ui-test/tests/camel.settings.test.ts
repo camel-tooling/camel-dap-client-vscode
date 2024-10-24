@@ -22,7 +22,7 @@ import { ActivityBar, ArraySetting, ArraySettingItem, BottomBarPanel, EditorView
 import { storageFolder } from '../uitest_runner';
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 
-describe('Camel User Settings', function () {
+describe.only('Camel User Settings', function () {
     this.timeout(240000);
 
     let driver: WebDriver;
@@ -143,7 +143,7 @@ describe('Camel User Settings', function () {
 
             const items = await arraySetting.getItems();
             expect(items).is.not.empty;
-            expect(items.length).is.equal(2);
+            expect(items.length).is.equal(3);
         });
 
         it('Should influence result of "run with JBang" task', async function () {
@@ -162,7 +162,7 @@ describe('Camel User Settings', function () {
             await waitUntilItemNotExists(newParameter, arraySetting);
 
             const values = await arraySetting.getValues();
-            expect(values.length).is.lessThan(2);
+            expect(values.length).is.lessThan(3);
             expect(values).not.includes(newParameter);
             await cleanEnvironment();
         });

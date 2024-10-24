@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 1.4.0
 
+- Include `*.xsl` files by default when launching with Camel JBang
+
 ## 1.3.0
 
 - Provide command and quick action to run with JBang from paretn folder of current opened file

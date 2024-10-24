@@ -109,7 +109,8 @@
 					"additionalProperties": false,
 					"markdownDescription": "User defined parameter to be applied at every launch. In case of spaces, the values needs to be enclosed with quotes. Default value is `[\"--local-kamelet-dir=.\"]`\n\n**Note**: Excluding `--dev`, `--logging-level`, `--dep`, `--camel-version` and `--repos` which are already being used\n\nFor possible values see:\n\n camel run --help\n\nor\n\njbang camel@apache/camel run --help",
 					"default": [
-						"--local-kamelet-dir=."
+						"--local-kamelet-dir=.",
+						"*.xsl"
 					]
 				}
 			}
