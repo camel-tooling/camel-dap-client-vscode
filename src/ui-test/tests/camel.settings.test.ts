@@ -143,7 +143,7 @@ describe('Camel User Settings', function () {
 
             const items = await arraySetting.getItems();
             expect(items).is.not.empty;
-            expect(items.length).is.equal(2);
+            expect(items.length).is.equal(3);
         });
 
         it('Should influence result of "run with JBang" task', async function () {
@@ -162,7 +162,7 @@ describe('Camel User Settings', function () {
             await waitUntilItemNotExists(newParameter, arraySetting);
 
             const values = await arraySetting.getValues();
-            expect(values.length).is.lessThan(2);
+            expect(values.length).is.lessThan(3);
             expect(values).not.includes(newParameter);
             await cleanEnvironment();
         });
