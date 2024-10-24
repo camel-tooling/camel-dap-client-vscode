@@ -79,10 +79,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: xvfb-run --auto-servernum npm run ui-test
 
-      - name: ui test (macos, windows)
-        id: uiTest_MacOS_Windows
-        if: matrix.os != 'ubuntu-latest'
+      - name: ui test (macos)
+        id: uiTest_MacOS
+        if: matrix.os == 'macos-latest'
         run: npm run ui-test
+      
+      - name: ui test windows
+        id: uiTest_Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+          npm run ui-test
 
       - name: vsce package
         run: vsce package
