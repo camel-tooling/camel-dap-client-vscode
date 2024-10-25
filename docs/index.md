@@ -53,8 +53,9 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
   - or Quarkus Devs
 - Deploy Integration (standalone Camel file) with [Apache Camel Kubernetes](https://camel.apache.org/manual/camel-jbang-kubernetes.html) plugin.
   - It allows **one-click deployment into OpenShift** by default
+  - to see logs or delete deployment see [Manage deployment lifecycle](./content/kubernetes-deploy.md#manage-deployment-lifecycle)
   - requires Camel JBang 4.8+
-  - for deployment into Kubernetes cluster see [how to deploy into local Kubernetes cluster](./content/kubernetes-deploy.md)
+  - for deployment into Kubernetes cluster see [how to deploy into local Kubernetes cluster](./content/kubernetes-deploy.md#how-to-deploy-into-local-kubernetes-cluster)
 
 ### Advanced
 
