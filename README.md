@@ -62,8 +62,9 @@ This is the <a href="https://code.visualstudio.com/">Visual Studio Code</a> exte
 - Configuration snippets to launch Camel application ready to accept a Camel debugger connection using JBang, Maven with Camel maven plugin or Quarkus Devs
 - Deploy Integration (standalone Camel file) with [Apache Camel Kubernetes](https://camel.apache.org/manual/camel-jbang-kubernetes.html) plugin.
   - It allows **one-click deployment into OpenShift** by default
+  - to see logs or delete deployment see [Manage deployment lifecycle](./docs/content/kubernetes-deploy.md#manage-deployment-lifecycle)
   - requires Camel JBang 4.8+
-  - for deployment into Kubernetes cluster see [how to deploy into local Kubernetes cluster](./docs/content/kubernetes-deploy.md)
+  - for deployment into Kubernetes cluster see [how to deploy into local Kubernetes cluster](./docs/content/kubernetes-deploy.md#how-to-deploy-into-local-kubernetes-cluster)
 
 ### Requirements
 
