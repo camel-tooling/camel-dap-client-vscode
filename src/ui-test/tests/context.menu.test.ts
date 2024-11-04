@@ -24,7 +24,7 @@ import {
     SideBarView,
     VSBrowser,
     WebDriver,
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import {
     CAMEL_ROUTE_YAML_WITH_SPACE,
     CAMEL_RUN_ACTION_LABEL,
@@ -48,7 +48,7 @@ import {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
 
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
@@ -93,7 +93,7 @@ import {
 
         await selectContextMenuItem(CAMEL_RUN_DEBUG_ACTION_LABEL, await openContextMenu(CAMEL_ROUTE_YAML_WITH_SPACE));
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
-        await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+        await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
         await disconnectDebugger(driver);
         await killTerminal();
     });

@@ -25,7 +25,7 @@ import {
   VSBrowser,
   WebDriver,
   Workbench,
-} from "vscode-uitests-tooling";
+} from "vscode-extension-tester";
 import { MULTIPLEROUTES_YAML, RESOURCES_DIR, SINGLEROUTE_YAML } from "../variables";
 import {
   executeCommand,
@@ -51,7 +51,7 @@ describe("Support pause of Camel debugger", function () {
     }
     driver = VSBrowser.instance.driver;
     await VSBrowser.instance.openResources(RESOURCES_DIR);
-    await (await new ActivityBar().getViewControl('Explorer')).openView();
+    await (await new ActivityBar().getViewControl('Explorer'))?.openView();
   });
 
   afterEach(async function () {
@@ -60,7 +60,7 @@ describe("Support pause of Camel debugger", function () {
     }
     else {
       await disconnectDebugger(driver);
-      await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+      await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
       await killTerminal();
       await new EditorView().closeAllEditors();
     }
@@ -142,7 +142,7 @@ describe("Support pause of Camel debugger", function () {
       return (await editorView.getOpenEditorTitles()).find(title => title === file);
     }, 5000);
     await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
-    await (await new ActivityBar().getViewControl('Run')).openView();
+    await (await new ActivityBar().getViewControl('Run'))?.openView();
     await waitUntilTerminalHasText(driver, [DEBUGGER_ATTACHED_MESSAGE], 4000, 120000);
   }
 });

@@ -37,11 +37,8 @@ import {
     ViewItem,
     WebDriver,
     Workbench,
-    error,
-    errors,
-    repeat,
     until
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { ENABLING_CAMEL_DEBUGGER } from './variables';
@@ -249,7 +246,7 @@ export async function replaceTextInCodeEditor(text: string, replacement: string)
  * @returns A Promise that resolves to the retrieved VariableSectionItem or undefined if not found.
  */
 export async function getDebuggerSectionItem(driver: WebDriver, item: string, section: string, subsection?: string): Promise<VariableSectionItem | undefined> {
-    const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
+    const debugView = (await (await new ActivityBar().getViewControl('Run'))?.openView()) as DebugView;
     return await driver.wait(async function () {
         try {
             const variablesSection = await debugView.getVariablesSection();
@@ -278,7 +275,7 @@ export async function getDebuggerSectionItem(driver: WebDriver, item: string, se
  * @returns A Promise that resolves to the retrieved BreakpointSectionItem or undefined if not found.
  */
 export async function getBreakpoint(driver: WebDriver, line: number): Promise<BreakpointSectionItem | undefined> {
-    const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
+    const debugView = (await (await new ActivityBar().getViewControl('Run'))?.openView()) as DebugView;
     return await driver.wait(async function () {
         try {
             const breakpointSection = await debugView.getBreakpointSection();
@@ -294,16 +291,11 @@ export async function getBreakpoint(driver: WebDriver, line: number): Promise<Br
  * @param title The title of the CodeLens to find.
  * @returns A Promise that resolves to the found CodeLens.
  */
-export async function findCodelens(title: string): Promise<CodeLens> {
-    return await repeat(async () => {
+export async function findCodelens(driver: WebDriver, title: string): Promise<CodeLens> {
+    return await driver.wait(async () => {
         const editor = new TextEditor();
-        return await editor.getCodeLens(title);
-    }, {
-        timeout: 10_000,
-        threshold: 750,
-        ignoreErrors: [...errors.INTERACTIVITY_ERRORS, error.TimeoutError],
-        message: `could not find codelens: ${title}`
-    });
+        return await editor.getCodeLens(title) as CodeLens;
+    }, 10_000, `could not find codelens: ${title}`, 750);
 }
 
 /**
@@ -399,7 +391,7 @@ export async function selectFromCA(expectedItem: string, timeout = 15000): Promi
     contentAssist = await waitUntilContentAssistContains(expectedItem, timeout);
     if (contentAssist !== null) {
         const item = await contentAssist.getItem(expectedItem);
-        await item.click();
+        await item?.click();
     }
 }
 
@@ -616,10 +608,10 @@ export async function moveDebugBar(time: number = 60_000): Promise<void> {
 export async function notificationCenterContains(notificationText: string): Promise <boolean> {
     const notifications = await new Workbench().getNotifications();
     for(const notification of notifications) {
-      const message = await notification.getMessage();
-      if(message === notificationText){
-          return true;
-      }
+        const message = await notification.getMessage();
+        if(message === notificationText){
+            return true;
+        }
     }
     return false;
 }

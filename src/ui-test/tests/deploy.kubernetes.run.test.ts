@@ -23,11 +23,10 @@ import {
     BottomBarPanel,
     EditorAction,
     EditorView,
-    repeat,
     SideBarView,
     VSBrowser,
     Workbench,
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import { killTerminal, waitUntilTerminalHasText } from '../utils';
 import { execSync } from 'child_process';
 
@@ -41,17 +40,14 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
     before(async function () {
         jbangVersion = await getJBangVersion();
         await VSBrowser.instance.openResources(RESOURCES_PATH);
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
         editorView = new EditorView();
-        await repeat(async function () {
+        await editorView.getDriver().wait(async function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
-        }, {
-            timeout: 10_000,
-            message: `The test file ${CAMEL_ROUTE_YAML_WITH_SPACE} was not opened`
-        });
+        }, 10_000, `The test file ${CAMEL_ROUTE_YAML_WITH_SPACE} was not opened`);
     });
 
     after(async function () {

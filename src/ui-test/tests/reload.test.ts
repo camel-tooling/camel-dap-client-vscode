@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import * as path from 'path';
+import * as fs from "fs-extra";
 import {
     ActivityBar,
     after,
@@ -23,9 +24,7 @@ import {
     SideBarView,
     VSBrowser,
     WebDriver,
-    resources,
-    workspaces
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import {
     CAMEL_RUN_ACTION_QUICKPICKS_LABEL,
     waitUntilTerminalHasText,
@@ -49,21 +48,15 @@ describe('Jbang commands with automatic reload', function () {
     this.timeout(300000);
 
     let driver: WebDriver;
-    let resourceManager: resources.IResourceManager;
+
+    const RESOURCES = path.resolve('src', 'ui-test', 'resources');
 
     before(async function () {
         driver = VSBrowser.instance.driver;
+        fs.copyFileSync(path.join(RESOURCES, CAMEL_ROUTE_YAML_WITH_SPACE), path.join(RESOURCES, CAMEL_ROUTE_YAML_WITH_SPACE_COPY));
+        await VSBrowser.instance.openResources(RESOURCES);
 
-        resourceManager = resources.createResourceManager(
-            VSBrowser.instance,
-            workspaces.createWorkspace(VSBrowser.instance, 'src/ui-test/resources'),
-            'src/ui-test/resources'
-        );
-        await resourceManager.copy(CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
-
-        await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
-
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE_COPY);
@@ -80,15 +73,7 @@ describe('Jbang commands with automatic reload', function () {
     after(async function () {
         await killTerminal();
         await new EditorView().closeAllEditors();
-        // Necessary try block to avoid "EBUSY" error on windows instances 
-        // File can be hold by the Java process for a bit more time
-        await driver.wait(async () => {
-            try {
-                return await resourceManager.delete(CAMEL_ROUTE_YAML_WITH_SPACE_COPY) === undefined;
-            } catch {
-                return false;
-            }
-        }, 60000);
+        fs.removeSync(path.join(RESOURCES, CAMEL_ROUTE_YAML_WITH_SPACE_COPY));
     });
 
     beforeEach(async function () {
