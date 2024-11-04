@@ -24,7 +24,7 @@ import {
     SideBarView,
     VSBrowser,
     WebDriver,
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import {
     CAMEL_RUN_ACTION_LABEL,
     CAMEL_RUN_DEBUG_ACTION_LABEL,
@@ -47,7 +47,7 @@ describe('Camel file editor test', function () {
             driver = VSBrowser.instance.driver;
             await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources', 'actions'));
 
-            await (await new ActivityBar().getViewControl('Explorer')).openView();
+            await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
             const section = await new SideBarView().getContent().getSection('actions');
             await section.openItem('top', TOP_ROUTE_1);
@@ -128,7 +128,7 @@ describe('Camel file editor test', function () {
 
                 await waitUntilTerminalHasText(driver, debugActionLabels.terminalText, 2000, 120000);
 
-                await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+                await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
                 await disconnectDebugger(driver);
                 await killTerminal();
             });

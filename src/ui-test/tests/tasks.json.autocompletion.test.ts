@@ -16,7 +16,7 @@
  */
 import { expect } from "chai";
 import { activateEditor, closeEditor, getFileContent, openFileInEditor, selectFromCA } from "../utils";
-import { ActivityBar, TextEditor, VSBrowser, WebDriver, afterEach } from "vscode-uitests-tooling";
+import { ActivityBar, TextEditor, VSBrowser, WebDriver, afterEach } from "vscode-extension-tester";
 import * as path from "path";
 import { RESOURCES_DIR, RESOURCES_TASK_EXAMPLES_DIR, TASKS_TEST_FILE } from "../variables";
 
@@ -34,7 +34,7 @@ describe('Completion inside tasks.json', function () {
         
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
     });
 
     afterEach(async function () {

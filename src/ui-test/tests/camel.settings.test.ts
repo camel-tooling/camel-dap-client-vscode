@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { Context } from 'mocha';
 import * as fs from 'node:fs';
 import * as path from 'path';
-import { ActivityBar, ArraySetting, ArraySettingItem, BottomBarPanel, EditorView, SideBarView, VSBrowser, WebDriver, Workbench, afterEach, before, beforeEach } from 'vscode-uitests-tooling';
+import { ActivityBar, ArraySetting, ArraySettingItem, BottomBarPanel, EditorView, SideBarView, VSBrowser, WebDriver, Workbench, afterEach, before, beforeEach } from 'vscode-extension-tester';
 import { storageFolder } from '../uitest_runner';
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 
@@ -169,7 +169,7 @@ describe('Camel User Settings', function () {
     });
 
     async function prepareEnvironment(): Promise<void> {
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 

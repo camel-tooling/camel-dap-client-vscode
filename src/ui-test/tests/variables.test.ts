@@ -23,7 +23,7 @@ import {
     TextEditor,
     VSBrowser,
     WebDriver
-} from "vscode-uitests-tooling";
+} from "vscode-extension-tester";
 import {
     CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL,
     disconnectDebugger,
@@ -52,7 +52,7 @@ describe('Display exchange variables values test', function () {
         driver = VSBrowser.instance.driver;
 
         await VSBrowser.instance.openResources(RESOURCES_DIR);
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
         const section = await new SideBarView().getContent().getSection('resources');
 
         await section.openItem(VARIABLESTEST_YAML);
@@ -62,7 +62,7 @@ describe('Display exchange variables values test', function () {
         }, 5000);
 
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
-        await (await new ActivityBar().getViewControl('Run')).openView();
+        await (await new ActivityBar().getViewControl('Run'))?.openView();
         await waitUntilTerminalHasText(driver, [DEBUGGER_ATTACHED_MESSAGE], 4000, 120000);
 
         textEditor = new TextEditor();
@@ -74,7 +74,7 @@ describe('Display exchange variables values test', function () {
         }
         else {
             await disconnectDebugger(driver);
-            await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+            await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
             await killTerminal();
             await new EditorView().closeAllEditors();
         }

@@ -23,7 +23,7 @@ import {
     SideBarView,
     VSBrowser,
     WebDriver,
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import {
     CAMEL_RUN_ACTION_QUICKPICKS_LABEL,
     CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL,
@@ -53,7 +53,7 @@ describe('JBang commands execution through command palette', function () {
     beforeEach(async function () {
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
 
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
@@ -81,6 +81,6 @@ describe('JBang commands execution through command palette', function () {
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         await disconnectDebugger(driver);
-        await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+        await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
     });
 });

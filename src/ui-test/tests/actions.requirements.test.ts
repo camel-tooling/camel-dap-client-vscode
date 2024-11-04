@@ -16,7 +16,7 @@
  */
 
 import path from "path";
-import { ActivityBar, EditorActionDropdown, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-uitests-tooling";
+import { ActivityBar, EditorActionDropdown, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-extension-tester";
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL, CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL } from "../variables";
 import { expect } from "chai";
 import { notificationCenterContains, waitUntilNotificationShows } from "../utils";
@@ -88,7 +88,7 @@ describe('Check actions requirements to run/debug', function () {
     async function noFolderOpened(): Promise<boolean>{
         const activityBar = new ActivityBar();
         const explorerView = await activityBar.getViewControl('Explorer');
-        await explorerView.openView();
+        await explorerView?.openView();
         const explorer = await new SideBarView().getContent();
         const sections = await explorer.getSections();
         return ((await sections.at(0)?.getTitle()) === "No Folder Opened");

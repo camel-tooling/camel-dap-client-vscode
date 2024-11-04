@@ -26,7 +26,7 @@ import {
     TextEditor,
     VSBrowser,
     WebDriver
-} from "vscode-uitests-tooling";
+} from "vscode-extension-tester";
 import {
     CAMEL_ROUTE_YAML_WITH_SPACE,
     CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL,
@@ -66,7 +66,7 @@ describe('Camel Debugger tests', function () {
 
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
 
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
@@ -77,7 +77,7 @@ describe('Camel Debugger tests', function () {
         }, 5000);
 
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
-        await (await new ActivityBar().getViewControl('Run')).openView();
+        await (await new ActivityBar().getViewControl('Run'))?.openView();
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         textEditor = new TextEditor();
     });
@@ -88,7 +88,7 @@ describe('Camel Debugger tests', function () {
         }
         else {
             await disconnectDebugger(driver);
-            await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+            await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
             await killTerminal();
             await new EditorView().closeAllEditors();
         }     
@@ -169,7 +169,7 @@ describe('Camel Debugger tests', function () {
             this.test?.skip();
         }
         skip = true;
-        const debugView = (await (await new ActivityBar().getViewControl('Run')).openView()) as DebugView;
+        const debugView = (await (await new ActivityBar().getViewControl('Run'))?.openView()) as DebugView;
         await (await debugView.getContent().getSection('Watch')).collapse();
         await (await debugView.getContent().getSection('Call Stack')).collapse();
         

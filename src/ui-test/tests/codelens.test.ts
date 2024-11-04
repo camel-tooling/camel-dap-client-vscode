@@ -21,11 +21,10 @@ import {
     after,
     before,
     EditorView,
-    repeat,
     SideBarView,
     VSBrowser,
     WebDriver
-} from 'vscode-uitests-tooling';
+} from 'vscode-extension-tester';
 import {
     disconnectDebugger,
     findCodelens,
@@ -50,18 +49,15 @@ describe('JBang commands execution through command codelens', function () {
     beforeEach(async function () {
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
 
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(variables.CAMEL_ROUTE_YAML_WITH_SPACE);
 
         const editorView = new EditorView();
-        await repeat(async function () {
+        await driver.wait(async function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === variables.CAMEL_ROUTE_YAML_WITH_SPACE);
-        }, {
-            timeout: 10000,
-            message: `The test file ${variables.CAMEL_ROUTE_YAML_WITH_SPACE} was not opened`
-        });
+        }, 10000, `The test file ${variables.CAMEL_ROUTE_YAML_WITH_SPACE} was not opened`);
     });
 
     afterEach(async function () {
@@ -69,7 +65,7 @@ describe('JBang commands execution through command codelens', function () {
     });
 
     it(`Execute command 'apache.camel.run.jbang' with codelens '${variables.CAMEL_RUN_CODELENS}'`, async function () {
-        const codelens = await findCodelens(variables.CAMEL_RUN_CODELENS);
+        const codelens = await findCodelens(driver, variables.CAMEL_RUN_CODELENS);
         await codelens.click();
         await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN, 4000, 350000);
     });
@@ -79,11 +75,10 @@ describe('JBang commands execution through command codelens', function () {
             this.skip();
         }
 
-        const codelens = await findCodelens(variables.CAMEL_DEBUG_CODELENS);
+        const codelens = await findCodelens(driver, variables.CAMEL_DEBUG_CODELENS);
         await codelens.click();
         await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN_DEBUG, 4000, 350000);
         await disconnectDebugger(driver);
-        await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
-
+        await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
     });
 });

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActivityBar, DebugView, EditorView, TextEditor, VSBrowser, WebDriver } from "vscode-uitests-tooling";
+import { ActivityBar, DebugView, EditorView, TextEditor, VSBrowser, WebDriver } from "vscode-extension-tester";
 import { DEBUGGER_ATTACHED_MESSAGE, activateEditor, activateTerminalView, createFile, createFolder, deleteResource, disconnectDebugger, executeCommand, executeCommandInTerminal, getFileContent, killTerminal, openFileInEditor, selectFromCA, selectTask, waitUntilTerminalHasText } from "../utils";
 import { ATTACH_DEBUGGER_USING_PRELAUNCH_TASK, ENABLING_CAMEL_DEBUGGER, LAUNCH_JSON, LAUNCH_START_AND_ATTACH_DEBUGGER, MAIN_CAMEL_EXAMPLE_DIR, MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR, MVN_BUILD_SUCCESS, MVN_CLEAN, MVN_COMPILE, RESOURCES_DIR, RESOURCES_DOT_VSCODE_DIR, RUN_WITH_JBANG_WITH_CAMEL_DEBUG, START_WITH_CAMEL_DEBUG_MVN_GOAL, TASKS_COMMAND, TASKS_TEST_FILE, TASKS_TEST_FILE_CAMEL_XML } from "../variables";
 import * as path from 'path';
@@ -36,7 +36,7 @@ describe('Launch configuration from tasks.json autocompletion', function () {
     async function setupEnvironment(resourceDir: string, vscodeDir: string, launch: boolean = false) {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(resourceDir);
-        await (await new ActivityBar().getViewControl('Explorer')).openView();
+        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
 
         await deleteResource(vscodeDir);
         await createFolder(vscodeDir);
@@ -132,7 +132,7 @@ describe('Launch configuration from tasks.json autocompletion', function () {
 
         after(async function () {
             await disconnectDebugger(driver);
-            await (await new ActivityBar().getViewControl('Run and Debug')).closeView();
+            await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
             await tearDownEnvironment(RESOURCES_DOT_VSCODE_DIR);
         });
 
@@ -145,7 +145,7 @@ describe('Launch configuration from tasks.json autocompletion', function () {
 
             await openFileInEditor(driver, RESOURCES_DIR, TASKS_TEST_FILE_CAMEL_XML);
             const btn = await new ActivityBar().getViewControl('Run');
-            const debugView = (await btn.openView()) as DebugView;
+            const debugView = (await btn?.openView()) as DebugView;
 
             const configs = await debugView.getLaunchConfigurations();
 
