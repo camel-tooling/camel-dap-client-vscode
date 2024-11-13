@@ -9,3 +9,4 @@ test-resources
 .test-extensions
 *sbom.json
 coverage
+test Fixture with speci@l chars/.vscode/settings.json
