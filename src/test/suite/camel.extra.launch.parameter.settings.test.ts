@@ -17,6 +17,8 @@
 'use strict';
 
 import { expect } from 'chai';
+import { createFileSync, rmSync } from 'fs-extra';
+import { resolve } from 'path';
 import { workspace } from 'vscode';
 import { CamelJBangTaskProvider } from '../../task/CamelJBangTaskProvider';
 import { getCamelTask, getTaskCommandArguments } from './util';
@@ -25,6 +27,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 	const EXTRA_LAUNCH_PARAMETER = ['--fresh'];
 	const EXTRA_LAUNCH_PARAMETER_ID = 'camel.debugAdapter.ExtraLaunchParameter';
+	const TMP_XSL_FILE = resolve(__dirname, '../../../test Fixture with speci@l chars', 'tmp-file.xsl');
 
 	let defaultExtraLaunchParameter = [''];
 
@@ -34,6 +37,10 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 	teardown(async function () {
 		await workspace.getConfiguration().update(EXTRA_LAUNCH_PARAMETER_ID, defaultExtraLaunchParameter);
+	});
+
+	suiteTeardown(function () {
+		rmSync(TMP_XSL_FILE);
 	});
 
 	test('Default extra launch parameter is not empty', function () {
@@ -61,6 +68,17 @@ suite('Should run commands with the extra launch parameter specified in settings
 		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		const extraLaunchParameterPosition = 8;
 		expect((getTaskCommandArguments(camelRunAndDebugTask)![extraLaunchParameterPosition] as string)).to.includes(EXTRA_LAUNCH_PARAMETER[0]);
+	});
+
+	test(`Should skip '*.xsl' argument when there is none XSL file in workspace`, async function () {
+		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
+		expect(getTaskCommandArguments(camelRunTask)).to.not.includes('*.xsl');
+	});
+
+	test(`Should add '*.xsl' argument when there is a XSL file in workspace`, async function () {
+		createFileSync(TMP_XSL_FILE);
+		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
+		expect(getTaskCommandArguments(camelRunTask)).to.includes('*.xsl');
 	});
 
 });

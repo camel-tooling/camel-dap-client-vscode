@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, tasks, TaskScope, workspace } from 'vscode';
+import { globSync } from 'glob';
+import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, tasks, TaskScope, workspace, WorkspaceFolder } from 'vscode';
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
@@ -171,7 +172,6 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private createRunWithDebugTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
-		console.log(`cwd : ${cwd}`);
 		const taskDefinition: TaskDefinition = {
 			"label": taskLabel,
 			"type": "shell"
@@ -262,12 +262,24 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	private getExtraLaunchParameter(): string[] {
 		const extraLaunchParameter = workspace.getConfiguration().get('camel.debugAdapter.ExtraLaunchParameter') as string[];
 		if (extraLaunchParameter) {
-			return extraLaunchParameter;
+			return this.handleMissingXslFiles(extraLaunchParameter);
 		} else {
 			return [];
 		}
 	}
 
+	/**
+	 * Mainly in ZSH shell there is problem when camel jbang is executed with non existing files added using '*.xsl' file pattern
+	 * it is caused by ZSH null glob option disabled by default for ZSH shell
+	 */
+	private handleMissingXslFiles(extraLaunchParameters: string[]): string[] {
+		const xsls = globSync(`${(workspace.workspaceFolders as WorkspaceFolder[])[0].uri.path}/**/*.xsl`).length > 0;
+		if (xsls) {
+			return extraLaunchParameters; // don't modify default extra launch parameters specified via settings which should by default contain *.xsl
+		} else {
+			return extraLaunchParameters.filter(parameter => parameter !== '*.xsl');
+		}
+	}
 	private getKubernetesExtraParameters(): string[] {
 		const extraParameters = workspace.getConfiguration().get('camel.debugAdapter.KubernetesRunParameters') as string[];
 		if (extraParameters) {
