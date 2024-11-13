@@ -4,6 +4,8 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 1.5.0
 
+- Use containing folder by default with commands and quick editor action when launching a specific Camel Route. It allows to have other relative parameters still working when it is inside a subfolder.
+
 ## 1.4.0
 
 - Update default Camel version used for Camel JBang from 4.7.0 to 4.8.1

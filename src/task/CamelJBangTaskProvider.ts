@@ -44,9 +44,9 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	createTask(taskLabel: string): Task {
 		switch (taskLabel) {
 			case CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask:
-				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask, '${relativeFile}', undefined);
+				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask, '${fileBasename}', '${fileDirname}');
 			case CamelJBangTaskProvider.labelProvidedRunTask:
-				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunTask, '${relativeFile}', undefined);
+				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunTask, '${fileBasename}', '${fileDirname}');
 			case CamelJBangTaskProvider.labelProvidedRunAllWithDebugActivatedTask:
 				return this.createRunWithDebugTask(CamelJBangTaskProvider.labelProvidedRunAllWithDebugActivatedTask, '*', undefined);
 			case CamelJBangTaskProvider.labelProvidedRunAllTask:
@@ -56,7 +56,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			case CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask:
 				return this.createRunTask(CamelJBangTaskProvider.labelProvidedRunAllFromContainingFolderTask, '*', '${fileDirname}');
 			case CamelJBangTaskProvider.labelProvidedDeployTask:
-				return this.createDeployTask(CamelJBangTaskProvider.labelProvidedDeployTask, '${relativeFile}', undefined);
+				return this.createDeployTask(CamelJBangTaskProvider.labelProvidedDeployTask, '${fileBasename}', '${fileDirname}');
 			case CamelJBangTaskProvider.labelAddKubernetesPluginTask:
 				return this.createAddKubernetesPluginTask('kubernetes', CamelJBangTaskProvider.labelAddKubernetesPluginTask);
 			default:
