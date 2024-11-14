@@ -343,7 +343,7 @@
 		"@types/node": "^14.18.63",
 		"@types/vscode": "^1.82.0",
 		"@typescript-eslint/eslint-plugin": "^8.14.0",
-		"@vscode/test-electron": "^2.3.9",
+		"@vscode/test-electron": "^2.4.1",
 		"async-wait-until": "^2.0.12",
 		"chai": "^4.5.0",
 		"eslint": "^9.14.0",
