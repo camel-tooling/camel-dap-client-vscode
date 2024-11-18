@@ -6,6 +6,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 - Use containing folder by default with commands and quick editor action when launching a specific Camel Route. It allows to have other relative parameters still working when it is inside a subfolder.
 - Skip '*.xsl' argument for all run commands when there is none XSL file found in a workspace
+- Upgrade embedded Debug Adapter for Apache Camel to 1.5.0
 
 ## 1.4.0
 
