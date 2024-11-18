@@ -214,8 +214,6 @@ export async function disconnectDebugger(driver: WebDriver, interval = 500): Pro
  * @returns A Promise that resolves to TerminalView instance.
  */
 export async function activateTerminalView(): Promise<TerminalView> {
-    // workaround ExTester issue - https://github.com/redhat-developer/vscode-extension-tester/issues/785
-    await new Workbench().executeCommand('Terminal: Focus on Terminal View');
     return await new BottomBarPanel().openTerminalView();
 }
 
