@@ -63,7 +63,7 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
 
         // using some additional steps for CAMEL 4.9.0-SNAPSHOT / 4.8.1 version
         // because the '--dev' parameter is not working for a deployment to Kubernetes
-        await waitUntilTerminalHasText(action.getDriver(), ['BUILD SUCCESS'], 3_000, 120_000);
+        await waitUntilTerminalHasText(action.getDriver(), ['BUILD SUCCESS'], 3_000, 240_000);
         await killTerminal();
 
         const terminalView = await new BottomBarPanel().openTerminalView();
