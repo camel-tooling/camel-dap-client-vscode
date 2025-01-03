@@ -16,7 +16,6 @@
     "terminal.integrated.sendKeybindingsToShell": true,
     "git.autoRepositoryDetection": false,
     "camel.debugAdapter.KubernetesRunParameters": [
-        "--cluster-type=minikube",
-        "--build-property=quarkus.kubernetes.image-pull-policy=Never"
+        "--cluster-type=kubernetes"
     ]
 }
