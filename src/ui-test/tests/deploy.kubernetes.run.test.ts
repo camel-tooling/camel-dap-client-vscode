@@ -45,7 +45,7 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
 
-        await replaceKubernetesRunSetting('--cluster-type=openshift', '--cluster-type=kubernetes');
+        //await replaceKubernetesRunSetting('--cluster-type=openshift', '--cluster-type=kubernetes');
 
         editorView = new EditorView();
         await editorView.getDriver().wait(async function () {
@@ -58,7 +58,7 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
         await editorView.closeAllEditors();
         // remove deployed integration from a local cluster
         execSync(`jbang -Dcamel.jbang.version=${jbangVersion} camel@apache/camel kubernetes delete --name=demoroute`, { stdio: 'inherit', cwd: RESOURCES_PATH });
-        await replaceKubernetesRunSetting('--cluster-type=kubernetes', '--cluster-type=openshift');
+        //await replaceKubernetesRunSetting('--cluster-type=kubernetes', '--cluster-type=openshift');
     });
 
     it('Deploy integration to Kubernetes (Minikube)', async function () {
@@ -89,9 +89,9 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
     }
 
 });
-async function replaceKubernetesRunSetting(toReplace: string, newValue: string) {
-    const arraySetting = await (await new Workbench().openSettings()).findSettingByID("camel.debugAdapter.KubernetesRunParameters") as ArraySetting;
-    const clusterType = await arraySetting.getItem(toReplace);
-    await clusterType?.setValue(newValue);
-}
+// async function replaceKubernetesRunSetting(toReplace: string, newValue: string) {
+//     const arraySetting = await (await new Workbench().openSettings()).findSettingByID("camel.debugAdapter.KubernetesRunParameters") as ArraySetting;
+//     const clusterType = await arraySetting.getItem(toReplace);
+//     await clusterType?.setValue(newValue);
+// }
 
