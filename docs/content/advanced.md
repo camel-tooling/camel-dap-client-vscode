@@ -70,3 +70,7 @@ or for a local connection using PID of the Camel application process:
     ]
 }
 ```
+
+## Automatic schema association for Camel YAML file
+
+To easily allow schema association we can install [YAML Language Support by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) extension. If you take a look into documentation there are examples of usage. See [Associating schemas](https://github.com/redhat-developer/vscode-yaml?tab=readme-ov-file#associating-schemas).

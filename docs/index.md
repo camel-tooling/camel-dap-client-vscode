@@ -60,3 +60,4 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
 ### Advanced
 
 - See [Advanced Configurations](./content/advanced.md) page with configurations examples for advanced use cases.
+  - [Automatic schema association for Camel YAML file](./content/advanced.md#automatic-schema-association-for-camel-yaml-file)
