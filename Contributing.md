@@ -25,8 +25,8 @@ When testing new version of the Camel Debug Adapter Server, just replace the jar
 	* Create the Pull Request
 	* Wait for Pull Request to be merged
 * Check that someone listed as _submitter_ in the [Jenkinsfile](Jenkinsfile) is available
-* Check build is working fine on [GitHub Actions](https://github.com/camel-tooling/camel-dap-client-vscode/actions) and [Jenkins CI](https://master-jenkins-csb-fusetools-qe.apps.ocp-c1.prod.psi.redhat.com/view/VS%20Code%20-%20release/job/vscode/job/eng/job/vscode-camel-dap-release/)
-* Start build on [Jenkins CI](https://master-jenkins-csb-fusetools-qe.apps.ocp-c1.prod.psi.redhat.com/view/VS%20Code%20-%20release/job/vscode/job/eng/job/vscode-camel-dap-release/) with _publishToMarketPlace_ and _publishToOVSX_ parameters checked
+* Check build is working fine on [GitHub Actions](https://github.com/camel-tooling/camel-dap-client-vscode/actions) and [Jenkins CI](https://jenkins-csb-fusetools-qe-master.dno.corp.redhat.com/view/VS%20Code%20-%20release/job/vscode/job/eng/job/vscode-camel-dap-release/)
+* Start build on [Jenkins CI](https://jenkins-csb-fusetools-qe-master.dno.corp.redhat.com/view/VS%20Code%20-%20release/job/vscode/job/eng/job/vscode-camel-dap-release/) with _publishToMarketPlace_ and _publishToOVSX_ parameters checked
 * Wait the build is waiting on step _Publish to Marketplace_
 * Check manually the `vsix` file pushed on [snapshots area](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-debug-adapter-apache-camel/)
 * For someone from _submitter_ list:
