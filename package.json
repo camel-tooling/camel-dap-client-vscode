@@ -331,7 +331,8 @@
 		"lint": "eslint src",
 		"test": "node ./out/test/runTest.js",
 		"ui-test": "node ./out/ui-test/uitest_runner.js",
-		"ui-test:deploy": "npm run ui-test -- deploy",
+		"ui-test:deploy:minikube": "npm run ui-test -- minikube",
+		"ui-test:deploy:openshift": "npm run ui-test -- openshift",
 		"ui-test:coverage": "npm run ui-test -- coverage"
 	},
 	"devDependencies": {
