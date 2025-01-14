@@ -17,6 +17,13 @@
     "git.autoRepositoryDetection": false,
     "camel.debugAdapter.KubernetesRunParameters": [
         "--cluster-type=minikube",
-        "--build-property=quarkus.kubernetes.image-pull-policy=Never"
+        "--build-property=quarkus.kubernetes.image-pull-policy=Never",
+        "--image-builder=docker",
+        "--image-registry",
+        "registry.minikube",
+        "--trait",
+        "container.image-push=true",
+        "--trait",
+        "container.image-pull-policy=IfNotPresent"
     ]
 }
