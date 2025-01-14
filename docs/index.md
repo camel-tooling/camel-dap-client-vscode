@@ -60,3 +60,11 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
 ### Advanced
 
 - See [Advanced Configurations](./content/advanced.md) page with configurations examples for advanced use cases.
+
+### Known limitations
+
+#### With Camel 4.9
+
+Due to [CAMEL-21612](https://issues.apache.org/jira/browse/CAMEL-21612], the Camel debugger in VS Code is not working out of the box. To use the Camel debugger if you are not using any kamelets, you can workaround it by going to File -> Preferences -> Settings, then type `Extra launch parameter` and remove the `--local-kamelet-dir=.` default option.
+
+Note that you will have also to change the settings of Camel JBang to use 4.9, File -> Preferences -> Settings -> Camel -> Debug Adapter -> JBang version.
