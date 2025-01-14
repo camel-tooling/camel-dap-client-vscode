@@ -3,8 +3,8 @@
 node('rhel9'){
 	stage('Checkout repo') {
 		deleteDir()
-		git url: 'https://github.com/camel-tooling/camel-dap-client-vscode.git',
-		    branch: 'main'
+		git url: "https://github.com/${FORK}/camel-dap-client-vscode.git",
+			branch: "${BRANCH}"
 	}
 
 	stage('Install requirements') {
@@ -27,11 +27,23 @@ node('rhel9'){
 
 	withEnv(['JUNIT_REPORT_PATH=report.xml']) {
         stage('Test') {
-    		wrap([$class: 'Xvnc']) {
-    			sh "npm test --silent"
-    			junit 'report.xml'
-    		}
+			wrap([$class: 'Xvnc']) {
+				sh "npm test --silent"
+				junit 'report.xml'
+			}
         }
+	}
+
+	withEnv(['TEST_RESOURCES=test-resources','CODE_VERSION=max']) {
+		stage('UI Test: OpenShift deployment') {
+			wrap([$class: 'Xvnc']) {
+				withCredentials([[$class: 'StringBinding', credentialsId: 'oc_developer_token', variable: 'TOKEN']]) {
+					sh 'oc login --token=${TOKEN} --server=https://api.ft-417-a.fuse.integration-qe.com:6443 --insecure-skip-tls-verify=true'
+					sh 'oc project camel-dap-uitest'
+				}
+				sh 'npm run ui-test:deploy:openshift'
+			}
+		}
 	}
 
 	stage('Package') {
@@ -92,8 +104,8 @@ node('rhel9'){
             sh "sftp -C ${UPLOAD_LOCATION}/stable/vscode-debug-adapter-apache-camel/ <<< \$'put -p -r ${tgz[0].path}'"
 
             sh "npm install -g ovsx"
-		    withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
-			    sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
+			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
+				sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
 			}
         }
 	}

@@ -26,15 +26,33 @@ const releaseType: ReleaseQuality = process.env.CODE_TYPE === 'insider' ? Releas
 export const projectPath = path.resolve(__dirname, '..', '..');
 const extensionFolder = variables.EXTENSION_DIR;
 const coverage = process.argv[2] === 'coverage';
-const deploy = process.argv[2] === 'deploy';
+const deploy = process.argv[2];
 
 async function main(): Promise<void> {
 	const tester = new ExTester(storageFolder, releaseType, extensionFolder, coverage);
-	const tests = deploy ? 'out/ui-test/tests/deploy*.test.js' : [
-		'out/ui-test/env/set.camel.version.js',
-		'out/ui-test/tests/!(deploy)*.test.js', // run everything, except deployment tests
-		'out/ui-test/env/check.camel.version.js'
-	];
+
+	let tests: string | string[] = '';
+	let settings: string = './src/ui-test/resources/';
+
+	switch (deploy) {
+		case 'minikube':
+			tests = 'out/ui-test/tests/deploy.kubernetes*.test.js';
+			settings += 'vscode-settings-minikube.json';
+			break;
+		case 'openshift':
+			tests = 'out/ui-test/tests/deploy.kubernetes*.test.js';
+			// openshift deployment is tested with default settings deploy parameters
+			settings += 'vscode-settings.json';
+			break;
+		default:
+			tests = [
+				'out/ui-test/env/set.camel.version.js',
+				'out/ui-test/tests/!(deploy)*.test.js', // run everything, except deployment tests
+				'out/ui-test/env/check.camel.version.js'
+			];
+			settings += 'vscode-settings.json';
+			break;
+	}
 
 	await tester.setupAndRunTests(
 		tests,
@@ -44,7 +62,7 @@ async function main(): Promise<void> {
 		},
 		{
 			'cleanup': true,
-			'settings': './src/ui-test/resources/vscode-settings.json',
+			'settings': settings,
 			resources: []
 		}
 	);
