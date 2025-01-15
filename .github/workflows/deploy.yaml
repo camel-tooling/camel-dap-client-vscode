@@ -17,7 +17,7 @@ jobs:
       CODE_VERSION: max
       TEST_RESOURCES: test-resources
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -63,6 +63,9 @@ jobs:
       - name: Compile
         run: npm run compile
 
+      - name: Allow unprivileged user namespace (ubuntu)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
       - name: UI Tests
         run: |
           eval $(minikube -p minikube docker-env)
@@ -77,7 +80,7 @@ jobs:
 
   check:
     if: always()
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: Status Check
     needs: [ deploy ]
     steps:
