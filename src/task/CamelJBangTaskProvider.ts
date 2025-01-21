@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { globSync } from 'glob';
-import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, tasks, TaskScope, workspace, WorkspaceFolder } from 'vscode';
+import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOptions, ShellQuoting, Task, TaskDefinition, TaskProvider, TaskRevealKind, tasks, TaskScope, workspace } from 'vscode';
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
@@ -273,9 +273,14 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	 * it is caused by ZSH null glob option disabled by default for ZSH shell
 	 */
 	private handleMissingXslFiles(extraLaunchParameters: string[]): string[] {
-		const xsls = globSync(`${(workspace.workspaceFolders as WorkspaceFolder[])[0].uri.path}/**/*.xsl`).length > 0;
-		if (xsls) {
-			return extraLaunchParameters; // don't modify default extra launch parameters specified via settings which should by default contain *.xsl
+		const workspaceFolders = workspace.workspaceFolders;
+		if (workspaceFolders !== undefined && workspaceFolders.length !== 0) {
+			const xsls = globSync(`${workspaceFolders[0].uri.path}/**/*.xsl`).length > 0;
+			if (xsls) {
+				return extraLaunchParameters; // don't modify default extra launch parameters specified via settings which should by default contain *.xsl
+			} else {
+				return extraLaunchParameters.filter(parameter => parameter !== '*.xsl');
+			}
 		} else {
 			return extraLaunchParameters.filter(parameter => parameter !== '*.xsl');
 		}
