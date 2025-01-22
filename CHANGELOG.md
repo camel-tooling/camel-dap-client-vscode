@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 1.7.0
+
+
+
 ## 1.6.0
 
 - Avoid potential activation error when no workspace/folder is opened
