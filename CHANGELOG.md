@@ -5,6 +5,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 1.6.0
 
 - Avoid potential activation error when no workspace/folder is opened
+- Upgrade embedded Debug Adapter for Apache Camel to 1.6.0
 
 ## 1.5.0
 
