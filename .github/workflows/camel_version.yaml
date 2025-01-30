@@ -41,6 +41,7 @@ jobs:
         if: ${{ startsWith(matrix.camel-version, '4.8.0') }}
         with:
           repositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
+          pluginRepositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
           
       - name: Check settings.xml created
         run: cat ~/.m2/settings.xml
