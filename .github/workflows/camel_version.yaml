@@ -36,16 +36,6 @@ jobs:
           java-version: 17
           distribution: "temurin"
 
-      - name: Add Red Hat Maven GA repository to settings.xml for 4.8.0 productized
-        uses: s4u/maven-settings-action@v3.1.0
-        if: ${{ startsWith(matrix.camel-version, '4.8.0') }}
-        with:
-          repositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
-          pluginRepositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
-          
-      - name: Check settings.xml created
-        run: cat ~/.m2/settings.xml
-
       - name: Install JBang ubuntu
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
@@ -68,7 +58,17 @@ jobs:
 
       - name: Allow unprivileged user namespace (ubuntu)
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-
+        
+      - name: Add Red Hat Maven GA repository to settings.xml for 4.8.0 productized
+        uses: s4u/maven-settings-action@v3.1.0
+        if: ${{ startsWith(matrix.camel-version, '4.8.0') }}
+        with:
+          repositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
+          pluginRepositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
+          githubServer: false
+          
+      - name: Check settings.xml created
+        run: cat ~/.m2/settings.xml
       - name: ui test
         id: uiTest
         run: xvfb-run --auto-servernum npm run ui-test
