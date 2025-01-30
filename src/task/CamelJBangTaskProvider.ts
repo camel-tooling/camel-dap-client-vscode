@@ -263,6 +263,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 						// In case Camel Jbang 4.8.0 and Camel productized version with 4.8.0 - it should work with --repository
 						return `--repository=${reposPlaceholder}${url}`;
 					} else {
+						console.log('is it at least passing here on the CI?');
 						// In case Camel productized version with 4.8.0 and not Camel Jbang 4.8.0 - this property cannot work. Users need to specify the repo globally (or in application.properties?)
 						return '';
 					}
