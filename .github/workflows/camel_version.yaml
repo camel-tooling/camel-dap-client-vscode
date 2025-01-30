@@ -35,6 +35,12 @@ jobs:
         with:
           java-version: 17
           distribution: "temurin"
+
+      - name: Add Red Hat Maven GA repository to settings.xml for 4.8.0 productized
+        uses: s4u/maven-settings-action@v3.1.0
+        if: ${{ startsWith(matrix.camel-version, '4.8.0') }}
+        with:
+          repositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
       
       - name: Install JBang ubuntu
         run: |

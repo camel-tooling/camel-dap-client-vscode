@@ -250,10 +250,28 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private getRedHatMavenRepository(): string {
-		if (this.getCamelVersion().includes('redhat')) {
+		const camelVersion = this.getCamelVersion();
+		if (camelVersion.includes('redhat')) {
 			const url = workspace.getConfiguration().get('camel.debugAdapter.RedHatMavenRepository') as string;
 			const reposPlaceholder = this.getCamelGlobalRepos();
-			return url ? `--repos=${reposPlaceholder}${url}` : '';
+			if (url) {
+				const camelVersion = workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
+				const camelJbangCliVersion = this.getCamelJBangCLIVersion();
+				// Special handling to try to improve workarounds for https://issues.apache.org/jira/browse/CAMEL-21283
+				if (camelVersion.startsWith('4.8.0')) {
+					if (camelJbangCliVersion?.startsWith('4.8.0')) {
+						// In case Camel Jbang 4.8.0 and Camel productized version with 4.8.0 - it should work with --repository
+						return `--repository=${reposPlaceholder}${url}`;
+					} else {
+						// In case Camel productized version with 4.8.0 and not Camel Jbang 4.8.0 - this property cannot work. Users need to specify the repo globally (or in application.properties?)
+						return '';
+					}
+				} else {
+					return `--repos=${reposPlaceholder}${url}`;
+				}
+			} else {
+				return '';
+			}
 		} else {
 			return '';
 		}

@@ -4,7 +4,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 
 ## 1.7.0
 
-
+- Improvement to handle 4.8.0.redhat versions. See known limitation in documentation for more information.
 
 ## 1.6.0
 
