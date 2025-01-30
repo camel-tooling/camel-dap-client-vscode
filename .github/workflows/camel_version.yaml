@@ -41,7 +41,10 @@ jobs:
         if: ${{ startsWith(matrix.camel-version, '4.8.0') }}
         with:
           repositories: '[{"id":"redhat.ga","name":"Red Hat Maven repository GA","url":"https://maven.repository.redhat.com/ga"}]'
-      
+          
+      - name: Check settings.xml created
+        run: cat ~/.m2/settings.xml
+
       - name: Install JBang ubuntu
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
