@@ -56,14 +56,11 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
         await killTerminal();
         await editorView.closeAllEditors();
         // remove deployed integration from a local cluster
+        let clusterType = '';
         if (kubernetesRunParameters[0].includes('openshift')) {
-            // workaround: because of issues with 'camel kubernetes delete --name=<name>' in versions 4.8.1+ and OpenShift we need to cleanup using 'oc'
-            // see https://issues.apache.org/jira/browse/CAMEL-21702
-            execSync(`oc delete deployment demoroute`, { stdio: 'inherit' });
-        } else {
-            // minikube
-            execSync(`jbang -Dcamel.jbang.version=${jbangVersion} camel@apache/camel kubernetes delete --name=demoroute`, { stdio: 'inherit', cwd: RESOURCES_PATH });
+            clusterType = '--cluster-type=openshift';
         }
+        execSync(`jbang -Dcamel.jbang.version=${jbangVersion} camel@apache/camel kubernetes delete --name=demoroute ${clusterType}`, { stdio: 'inherit', cwd: RESOURCES_PATH });
     });
 
     it('Deploy integration to OpenShift or Kubernetes (Minikube)', async function () {
