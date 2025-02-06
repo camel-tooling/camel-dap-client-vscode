@@ -140,6 +140,7 @@ export async function selectContextMenuItem(command: string, menu: ContextMenu):
  * @returns A Promise that resolves to a boolean indicating whether the terminal view has the texts or not.
  */
 export async function waitUntilTerminalHasText(driver: WebDriver, textArray: string[], interval = 2000, timeout = 60000): Promise<void> {
+    console.log(`awaiting that the messages ${textArray} is available`);
     if(VSBrowser.instance.version > '1.86.2' && textArray.includes(DEBUGGER_ATTACHED_MESSAGE)) {
         // for newer VS Code versions, the Debug Bar has default floating position in collision with command palette
         // which leads to problems when trying to click on quick picks
@@ -153,11 +154,13 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
             const terminalText = await terminal.getText();
             for await (const text of textArray) {
                 if (!(terminalText.includes(text))) {
+                    console.log(`terminal text currently which doesn't contain the expected text: ${terminalText}`);
                     return false;
                 }
             }
             return true;
         } catch (err) {
+            console.log(`error when trying to look at the terminal ${err}`);
             return false;
         }
     }, timeout, undefined, interval);
