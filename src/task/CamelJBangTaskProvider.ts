@@ -201,6 +201,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 						"value": '-Dorg.apache.camel.debugger.suspend=true',
 						"quoting": ShellQuoting.Strong
 					},
+					'--verbose',
 					'camel@apache/camel',
 					'run',
 					patternForCamelFiles,
