@@ -155,6 +155,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
 						"quoting": ShellQuoting.Strong
 					},
+					'verbose',
 					'camel@apache/camel',
 					'run',
 					patternForCamelFiles,
