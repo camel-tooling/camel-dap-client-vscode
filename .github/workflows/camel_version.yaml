@@ -69,6 +69,8 @@ jobs:
           
       - name: Check settings.xml created
         run: cat ~/.m2/settings.xml
+      - name: Check settings.xml in /home/runner/.m2
+        run: cat /home/runner/.m2/settings.xml
       - name: ui test
         id: uiTest
         run: xvfb-run --auto-servernum npm run ui-test
