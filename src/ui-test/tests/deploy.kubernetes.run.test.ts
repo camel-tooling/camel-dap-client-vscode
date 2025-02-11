@@ -72,7 +72,7 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
 
         // using some additional steps for CAMEL 4.9.0-SNAPSHOT / 4.8.1 version
         // because the '--dev' parameter is not working for a deployment to Kubernetes
-        await waitUntilTerminalHasText(action.getDriver(), ['BUILD SUCCESS'], 3_000, 600_000); // OpenShift requires higher timeout because it is pulling more dependencies
+        await waitUntilTerminalHasText(action.getDriver(), ['Terminal will be reused by tasks'], 3_000, 600_000); // OpenShift requires higher timeout because it is pulling more dependencies
         await killTerminal();
 
         const terminalView = await new BottomBarPanel().openTerminalView();
