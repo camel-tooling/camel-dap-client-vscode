@@ -44,11 +44,17 @@ jobs:
           node-version: 20
           cache: npm
 
+      - id:  setup-docker-qemu
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Start Minikube
         uses: medyagh/setup-minikube@latest
         with:
           driver: docker
-          addons: registry
+          addons: registry,registry-aliases
+          container-runtime: docker
+          insecure-registry: '10.0.0.0/24'
 
       - name: Cluster info
         run: |
@@ -63,6 +69,12 @@ jobs:
       - name: Compile
         run: npm run compile
 
+      - name: set env
+        run: |
+          eval $(minikube -p minikube docker-env)
+          echo "INSTALL_REGISTRY=$(kubectl -n kube-system get service registry -o jsonpath='{.spec.clusterIP}')" >> $GITHUB_ENV
+          echo $INSTALL_REGISTRY
+          
       - name: Allow unprivileged user namespace (ubuntu)
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
