@@ -65,13 +65,19 @@ describe('JBang commands execution through command codelens', function () {
     });
 
     it(`Execute command 'apache.camel.run.jbang' with codelens '${variables.CAMEL_RUN_CODELENS}'`, async function () {
+        console.log('test starting...');
         try {
             const codelens = await findCodelens(driver, variables.CAMEL_RUN_CODELENS);
+            console.log('codelens found');
             await codelens.click();
+            console.log('codelens clicked');
         } catch {
+            console.log('workaround happening');
             // Workaround: try another time as it seems that sometimes the codelens is recomputed and there is a stale reference error
             const codelens = await findCodelens(driver, variables.CAMEL_RUN_CODELENS);
+            console.log('codelens found');
             await codelens.click();
+            console.log('codelens clicked');
         }
         await waitUntilTerminalHasText(driver, variables.TEST_ARRAY_RUN, 4000, 350000);
     });

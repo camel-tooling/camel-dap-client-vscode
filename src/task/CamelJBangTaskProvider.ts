@@ -155,6 +155,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 						"value": `-Dcamel.jbang.version=${this.getCamelJBangCLIVersion()}`,
 						"quoting": ShellQuoting.Strong
 					},
+					'--verbose',
 					'camel@apache/camel',
 					'run',
 					patternForCamelFiles,
@@ -201,6 +202,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 						"value": '-Dorg.apache.camel.debugger.suspend=true',
 						"quoting": ShellQuoting.Strong
 					},
+					'--verbose',
 					'camel@apache/camel',
 					'run',
 					patternForCamelFiles,
@@ -250,11 +252,37 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private getRedHatMavenRepository(): string {
-		if (this.getCamelVersion().includes('redhat')) {
+		const camelVersion = this.getCamelVersion();
+		if (camelVersion.includes('redhat')) {
+			console.log('it is a red hat version.');
 			const url = workspace.getConfiguration().get('camel.debugAdapter.RedHatMavenRepository') as string;
 			const reposPlaceholder = this.getCamelGlobalRepos();
-			return url ? `--repos=${reposPlaceholder}${url}` : '';
+			if (url) {
+				console.log('Red Hat Maven GA repository configured');
+				const camelVersion = workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
+				const camelJbangCliVersion = this.getCamelJBangCLIVersion();
+				// Special handling to try to improve workarounds for https://issues.apache.org/jira/browse/CAMEL-21283
+				if (camelVersion.startsWith('4.8.0')) {
+					console.log('cmel version stratting with 4.8.0');
+					if (camelJbangCliVersion?.startsWith('4.8.0')) {
+						console.log('all versions starting with 4.8.0');
+						// In case Camel Jbang 4.8.0 and Camel productized version with 4.8.0 - it should work with --repository
+						return `--repository=${reposPlaceholder}${url}`;
+					} else {
+						console.log('is it at least passing here on the CI?');
+						// In case Camel productized version with 4.8.0 and not Camel Jbang 4.8.0 - this property cannot work. Users need to specify the repo globally (or in application.properties?)
+						return '';
+					}
+				} else {
+					console.log('camel version not starting with 4.8.0');
+					return `--repos=${reposPlaceholder}${url}`;
+				}
+			} else {
+				console.log('No Red Hat Maven GA repository configured.');
+				return '';
+			}
 		} else {
+			console.log('it is not a red hat version.');
 			return '';
 		}
 	}

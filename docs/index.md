@@ -68,3 +68,30 @@ This extension adds <a href="https://camel.apache.org/manual/debugger.html">Came
 Due to [CAMEL-21612](https://issues.apache.org/jira/browse/CAMEL-21612], the Camel debugger in VS Code is not working out of the box. To use the Camel debugger if you are not using any kamelets, you can workaround it by going to File -> Preferences -> Settings, then type `Extra launch parameter` and remove the `--local-kamelet-dir=.` default option.
 
 Note that you will have also to change the settings of Camel JBang to use 4.9, File -> Preferences -> Settings -> Camel -> Debug Adapter -> JBang version.
+
+#### With Camel 4.8.0.redhat-XXXXX
+
+Due to [CAMEL-21283](https://issues.apache.org/jira/browse/CAMEL-21283), the commands are not working out of the box with the productized versions 4.8.0.redhat-XXXXX versions. The Red Hat Maven repository GA must be configured in the local `~/.m2/settings.xml` file. To configure it, you could provide this profile:
+
+```xml
+	<profiles>
+		<profile>
+			<id>Red Hat</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<id>redhat.ga</id>
+					<url>https://maven.repository.redhat.com/ga</url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>redhat.ga</id>
+					<url>https://maven.repository.redhat.com/ga</url>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+  ```
