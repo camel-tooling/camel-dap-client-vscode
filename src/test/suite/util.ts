@@ -18,7 +18,7 @@ import path = require('path');
 import * as vscode from 'vscode';
 
 const getDocPath = (p: string) => {
-	return path.resolve(__dirname, '../../../test Fixture with speci@l chars', p);
+	return path.resolve(__dirname, '../../../../test Fixture with speci@l chars', p);
 };
 
 export const getDocUri = (p: string) => {

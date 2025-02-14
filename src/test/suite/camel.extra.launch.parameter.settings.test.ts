@@ -27,7 +27,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 
 	const EXTRA_LAUNCH_PARAMETER = ['--fresh'];
 	const EXTRA_LAUNCH_PARAMETER_ID = 'camel.debugAdapter.ExtraLaunchParameter';
-	const TMP_XSL_FILE = resolve(__dirname, '../../../test Fixture with speci@l chars', 'tmp-file.xsl');
+	const TMP_XSL_FILE = resolve(__dirname, '../../../../test Fixture with speci@l chars', 'tmp-file.xsl');
 
 	let defaultExtraLaunchParameter = [''];
 

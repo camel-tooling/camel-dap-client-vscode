@@ -6,7 +6,7 @@ async function main() {
 	try {
 		// The folder containing the Extension Manifest package.json
 		// Passed to `--extensionDevelopmentPath`
-		const extensionDevelopmentPath = path.resolve(__dirname, '../../');
+		const extensionDevelopmentPath = path.resolve(__dirname, '../../../');
 		console.log(`extensionDevelopmentPath = ${extensionDevelopmentPath}`);
 
 		// The path to test runner
@@ -14,7 +14,7 @@ async function main() {
 		const extensionTestsPath = path.resolve(__dirname, './suite/index');
 		console.log(`extensionTestsPath = ${extensionTestsPath}`);
 
-		const testWorkspace = path.resolve(__dirname, '../../test Fixture with speci@l chars');
+		const testWorkspace = path.resolve(__dirname, '../../../test Fixture with speci@l chars');
 		console.log(`testWorkspace = ${testWorkspace}`);
 
 		const vscodeVersion = computeVSCodeVersionToPlayTestWith();

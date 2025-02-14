@@ -28,7 +28,7 @@
 		"Debug Adapter Protocol",
 		"Debugging"
 	],
-	"main": "./out/extension.js",
+	"main": "./out/src/extension.js",
 	"activationEvents": [
 		"onLanguage:xml",
 		"workspaceContains:**/*.xml",
@@ -329,8 +329,8 @@
 		"pretest": "npm run compile",
 		"preui-test": "npm run compile",
 		"lint": "eslint src",
-		"test": "node ./out/test/runTest.js",
-		"ui-test": "node ./out/ui-test/uitest_runner.js",
+		"test": "node ./out/src/test/runTest.js",
+		"ui-test": "node ./out/src/ui-test/uitest_runner.js",
 		"ui-test:deploy:minikube": "npm run ui-test -- minikube",
 		"ui-test:deploy:openshift": "npm run ui-test -- openshift",
 		"ui-test:coverage": "npm run ui-test -- coverage"
