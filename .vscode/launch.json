@@ -26,13 +26,47 @@
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
+				"--extensionTestsPath=${workspaceFolder}/out/src/test/suite/index",
 				"${workspaceRoot}/test Fixture with speci@l chars"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/src/test/**/*.js"
 			],
 			"preLaunchTask": "npm: watch"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch Camel Debug Adapter UI Tests",
+			"preLaunchTask": "npm: watch",
+			"program": "${workspaceFolder}/out/src/ui-test/uitest_runner.js",
+			"sourceMaps": true,
+			"cwd": "${workspaceFolder}",
+			"runtimeArgs": [
+				"--nolazy",
+				"--inspect"
+			],
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"autoAttachChildProcesses": true,
+			"env": {
+				"CODE_VERSION": "max"
+			}
+		},
+		{
+			"type": "node",
+			"request": "attach",
+			"name": "Attach to Node Process",
+			"port": 9229,
+			"restart": true,
+			"timeout": 10000,
+			"sourceMaps": true,
+			"cwd": "${workspaceFolder}",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"autoAttachChildProcesses": true
 		}
 	]
 }

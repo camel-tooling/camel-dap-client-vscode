@@ -21,6 +21,10 @@ import * as fs from 'fs';
 import * as variables from './variables';
 import { ExTester, ReleaseQuality } from 'vscode-extension-tester';
 
+process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled Rejection:', reason);
+});
+
 export const storageFolder = variables.TEST_RESOURCES_DIR;
 const releaseType: ReleaseQuality = process.env.CODE_TYPE === 'insider' ? ReleaseQuality.Insider : ReleaseQuality.Stable;
 export const projectPath = path.resolve(__dirname, '..', '..');
