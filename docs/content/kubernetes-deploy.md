@@ -25,11 +25,15 @@ To remove current integration, you can use also Camel CLI. In this case the comm
 jbang camel@apache/camel kubernetes delete --name=<name>
 ```
 
+#### Version limitations
+
+With Camel 4.8 and 4.9, the deployment in development mode is not working correctly. When using these versions, please remove the `--dev` from the list in settings: `Extensions > Debug Adapter for Apache Camel` -> `Camel > Debug Adapter: Kubernetes Run Parameters`.
+
 #### Troubleshooting
 
-For a latest releases of Camel (4.8.1+) there could be problem when deleting deployments using Camel Jbang CLI, for details you can see reported upstream issue [CAMEL-21388](https://issues.apache.org/jira/browse/CAMEL-21388).
+For some releases of Camel (4.8.1 - 4.10) there could be problem when deleting deployments using Camel Jbang CLI, for details you can see reported upstream issue [CAMEL-21388](https://issues.apache.org/jira/browse/CAMEL-21388).
 
-In that case please try with previous version which was working better.
+In that case please try with previous or newer version which was working better.
 
 ```shell
 jbang -Dcamel.jbang.version=4.8.0 camel@apache/camel kubernetes delete --name=<name>

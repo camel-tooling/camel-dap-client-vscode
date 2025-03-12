@@ -1,5 +1,7 @@
 {
     "camel.debugAdapter.KubernetesRunParameters": [
+        "--dev",
+        "--verbose",
         "--cluster-type=minikube",
         "--build-property=quarkus.kubernetes.image-pull-policy=Never",
         "--image-builder=docker",
