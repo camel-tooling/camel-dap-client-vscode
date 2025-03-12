@@ -40,19 +40,19 @@ async function main(): Promise<void> {
 
 	switch (deploy) {
 		case 'minikube':
-			tests = 'out/ui-test/tests/deploy.kubernetes*.test.js';
+			tests = 'out/src/ui-test/tests/deploy.kubernetes*.test.js';
 			settings += 'vscode-settings-minikube.json';
 			break;
 		case 'openshift':
-			tests = 'out/ui-test/tests/deploy.kubernetes*.test.js';
+			tests = 'out/src/ui-test/tests/deploy.kubernetes*.test.js';
 			// openshift deployment is tested with default settings deploy parameters
 			settings += 'vscode-settings.json';
 			break;
 		default:
 			tests = [
-				'out/ui-test/env/set.camel.version.js',
-				'out/ui-test/tests/!(deploy)*.test.js', // run everything, except deployment tests
-				'out/ui-test/env/check.camel.version.js'
+				'out/src/ui-test/env/set.camel.version.js',
+				'out/src/ui-test/tests/!(deploy)*.test.js', // run everything, except deployment tests
+				'out/src/ui-test/env/check.camel.version.js'
 			];
 			settings += 'vscode-settings.json';
 			break;
