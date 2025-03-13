@@ -84,7 +84,7 @@
 				"camel.debugAdapter.JBangVersion": {
 					"type": "string",
 					"markdownDescription": "Apache Camel JBang CLI version used for internal VS Code JBang commands execution. Camel JBang CLI requirements can differ between versions, it is recommended to use `default` version to ensure all extension features work properly.\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension.",
-					"default": "4.8.1"
+					"default": "4.10.2"
 				},
 				"camel.debugAdapter.CamelVersion": {
 					"type": "string",
@@ -122,7 +122,9 @@
 					"additionalProperties": false,
 					"markdownDescription": "User defined parameters to be applied at every deploy (See [Camel JBang Kubernetes](https://camel.apache.org/manual/camel-jbang-kubernetes.html)). In case of spaces, the values needs to be enclosed with quotes. Default value is `[\"--cluster-type=openshift\"]`\n\n**Note**: Excluding `--camel-version` which is already being set in `#camel.debugAdapter.CamelVersion#`.\n\nFor more possible values see: `camel kubernetes run --help` or `jbang camel@apache/camel kubernetes run --help`",
 					"default": [
-						"--cluster-type=openshift"
+						"--dev",
+						"--cluster-type=openshift",
+						"--verbose"
 					]
 				}
 			}
