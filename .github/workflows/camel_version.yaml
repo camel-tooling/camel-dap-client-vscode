@@ -14,11 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
         camel-version:
           - "4.4.5"
           - "4.0.0.redhat-00036"
           - "4.4.0.redhat-00046"
+          - "4.8.3.redhat-00004"
     timeout-minutes: 30
 
     env:
@@ -27,8 +27,8 @@ jobs:
       TEST_RESOURCES: test-resources
       CAMEL_VERSION: ${{ matrix.camel-version }}
 
-    runs-on: ${{ matrix.os }}
-    name: ${{ matrix.camel-version }} / ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    name: ${{ matrix.camel-version }}
 
     steps:
       - name: Checkout Repository
@@ -43,15 +43,10 @@ jobs:
       - name: Test java
         run: java --version
       
-      - name: Install JBang (ubuntu, macOS)
-        if: ${{ startsWith(matrix.os, 'ubuntu') }} || matrix.os == 'macos-latest'
+      - name: Install JBang
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           echo "$HOME/.jbang/bin" >> $GITHUB_PATH
-
-      - name: Install JBang (windows)
-        if: matrix.os == 'windows-latest'
-        run: choco install jbang
 
       - name: Setup JBang (trusted sources)
         run: jbang trust add https://github.com/apache/
@@ -69,18 +64,11 @@ jobs:
         run: npm ci
 
       - name: Allow unprivileged user namespace (ubuntu)
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
-      - name: ui test (ubuntu)
-        id: uiTest_Ubuntu
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      - name: ui test
+        id: uiTest
         run: xvfb-run --auto-servernum npm run ui-test
-
-      - name: ui test (macos, windows)
-        id: uiTest_MacOS_Windows
-        if: ${{ !startsWith(matrix.os, 'ubuntu') }}
-        run: npm run ui-test
 
       - name: vsce package
         run: vsce package
@@ -89,24 +77,20 @@ jobs:
         uses: actions/upload-artifact@v4
         if: |
           (failure() || cancelled()) &&
-          (steps.uiTest_Ubuntu.outcome == 'failure' ||
-          steps.uiTest_MacOS_Windows.outcome == 'failure' ||
-          steps.uiTest_Ubuntu.outcome == 'cancelled' ||
-          steps.uiTest_MacOS_Windows.outcome == 'cancelled')
+          (steps.uiTest.outcome == 'failure' ||
+          steps.uiTest.outcome == 'cancelled')
         with:
-          name: ${{ matrix.os }}-${{ matrix.camel-version }}-ui-test-logs
+          name: ${{ matrix.camel-version }}-ui-test-logs
           path: test-resources/settings/logs/*
 
       - name: Store UI Test Screenshots
         uses: actions/upload-artifact@v4
         if: |
           (failure() || cancelled()) &&
-          (steps.uiTest_Ubuntu.outcome == 'failure' ||
-          steps.uiTest_MacOS_Windows.outcome == 'failure' ||
-          steps.uiTest_Ubuntu.outcome == 'cancelled' ||
-          steps.uiTest_MacOS_Windows.outcome == 'cancelled')
+          (steps.uiTest.outcome == 'failure' ||
+          steps.uiTest.outcome == 'cancelled')
         with:
-          name: ${{ matrix.os }}-${{ matrix.camel-version }}-ui-test-screenshots
+          name: ${{ matrix.camel-version }}-ui-test-screenshots
           path: test-resources/screenshots/*.png
 
   check:
