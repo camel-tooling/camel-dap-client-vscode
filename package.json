@@ -363,7 +363,7 @@
 	"dependencies": {
 		"@redhat-developer/vscode-redhat-telemetry": "^0.9.1",
 		"fs-extra": "^11.3.0",
-		"glob": "^11.0.1",
+		"glob": "^11.0.2",
 		"jsonc-parser": "^3.3.1"
 	}
 }
