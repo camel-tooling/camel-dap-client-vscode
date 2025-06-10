@@ -88,7 +88,7 @@ jobs:
         if: always()
         with:
           name: ui-test-screenshots
-          path: test-resources/screenshots/*.png
+          path: test-resources/screenshots/*/*.png
 
   check:
     if: always()
