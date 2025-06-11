@@ -5,7 +5,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 ## 1.8.0
 
 - Potential breakage: when using a Camel Jbang version strictly prior to 4.11, the parameter `--disable-auto` must be removed from the setting `Kubernetes Run Parameters`
-- Update default Camel version used for Camel JBang from 4.10.2 to 4.11.0
+- Update default Camel version used for Camel JBang from 4.10.2 to 4.12.0
 
 ## 1.7.0
 
