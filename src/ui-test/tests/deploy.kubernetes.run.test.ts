@@ -51,6 +51,7 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
     });
 
     it('Deploy integration to OpenShift or Kubernetes (Minikube)', async function () {
+        await VSBrowser.instance.driver.sleep(500);
         await waitUntil(async() => {
             try {
                 return await editorView.getAction('Deploy Integration with Apache Camel Kubernetes Run') !== undefined;
