@@ -34,6 +34,7 @@ import {
     isCamelVersionProductized,
 } from '../utils';
 import { CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL, TOP_ROUTE_1 } from '../variables';
+import waitUntil from 'async-wait-until';
 
 describe('Camel file editor test', function () {
 
@@ -67,7 +68,7 @@ describe('Camel file editor test', function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
-            await driver.sleep(500);
+            await actionAvailable(editorView, "Run or Debug...");
             const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
             const menu = await action.open();
             expect(await menu.hasItem(CAMEL_RUN_ACTION_LABEL)).true;
@@ -80,7 +81,7 @@ describe('Camel file editor test', function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
-            await driver.sleep(500);
+            await actionAvailable(editorView, "Run or Debug...");
             const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
             const menu = await action.open();
             expect(await menu.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
@@ -100,6 +101,7 @@ describe('Camel file editor test', function () {
                 if (process.platform === "darwin") {
                     this.skip();
                 }
+                await actionAvailable(editorView, "Run or Debug...");
                 const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
                 const menu = await action.open();
                 await menu.select(runActionLabels.label);
@@ -122,6 +124,7 @@ describe('Camel file editor test', function () {
                 if (process.platform === "darwin"){
                     this.skip();
                 }
+                await actionAvailable(editorView, "Run or Debug...");
                 const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
                 const menu = await action.open();
                 await menu.select(debugActionLabels.label);
@@ -135,3 +138,14 @@ describe('Camel file editor test', function () {
         });
     });
 });
+
+async function actionAvailable(editorView: EditorView, actionLabel: string) {
+    await waitUntil(async() => {
+        try {
+            return await editorView.getAction(actionLabel) !== undefined;
+        } catch {
+            return false;
+        }
+    });
+}
+
