@@ -38,7 +38,7 @@ import waitUntil from 'async-wait-until';
 
 describe('Camel file editor test', function () {
 
-    describe.only('Camel Actions', function () {
+    describe('Camel Actions', function () {
         this.timeout(300000);
 
         let driver: WebDriver;
