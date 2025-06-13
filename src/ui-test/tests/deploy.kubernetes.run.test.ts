@@ -25,6 +25,7 @@ import {
 import { killTerminal, waitUntilTerminalHasText } from '../utils';
 import { CAMEL_ROUTE_YAML_WITH_SPACE } from '../variables';
 import waitUntil from 'async-wait-until';
+import { actionAvailable } from './helper/Awaiters';
 
 /**
  * Note: OC login needs to be done before executing this test for deployment into OpenShift
@@ -52,13 +53,7 @@ describe('Camel standalone file deployment using Camel JBang Kubernetes Run', fu
 
     it('Deploy integration to OpenShift or Kubernetes (Minikube)', async function () {
         await VSBrowser.instance.driver.sleep(500);
-        await waitUntil(async() => {
-            try {
-                return await editorView.getAction('Deploy Integration with Apache Camel Kubernetes Run') !== undefined;
-            } catch {
-                return false;
-            }
-        });
+        await actionAvailable(editorView, 'Deploy Integration with Apache Camel Kubernetes Run');
         const action = (await editorView.getAction('Deploy Integration with Apache Camel Kubernetes Run')) as EditorAction;
         await action.click();
         await waitUntilTerminalHasText(action.getDriver(), ['Hello Camel from'], 10_000, 900_000);

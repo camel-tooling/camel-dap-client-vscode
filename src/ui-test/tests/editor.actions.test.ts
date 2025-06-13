@@ -34,7 +34,7 @@ import {
     isCamelVersionProductized,
 } from '../utils';
 import { CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL, TOP_ROUTE_1 } from '../variables';
-import waitUntil from 'async-wait-until';
+import { actionAvailable } from './helper/Awaiters';
 
 describe('Camel file editor test', function () {
 
@@ -138,14 +138,3 @@ describe('Camel file editor test', function () {
         });
     });
 });
-
-async function actionAvailable(editorView: EditorView, actionLabel: string) {
-    await waitUntil(async() => {
-        try {
-            return await editorView.getAction(actionLabel) !== undefined;
-        } catch {
-            return false;
-        }
-    });
-}
-
