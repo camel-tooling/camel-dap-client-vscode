@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        version: [ "1.90.2", max ] # [ "x.x.x" | latest | max ]
+        version: [ "1.98.2", max ] # [ "x.x.x" | latest | max ]
         type: [ stable ] # [ stable | insider ]
       fail-fast: false
     timeout-minutes: 30
@@ -162,7 +162,7 @@ jobs:
           steps.uiTest_MacOS_Windows.outcome == 'cancelled')
         with:
           name: ${{ matrix.os }}-${{ matrix.version }}-ui-test-screenshots
-          path: test-resources/screenshots/*.png
+          path: test-resources/screenshots/*/*.png
 
   check:
     if: always()
