@@ -45,7 +45,7 @@ import { ENABLING_CAMEL_DEBUGGER } from './variables';
 import { storageFolder } from "./uitest_runner";
 
 // the changes in debug side bar view were presented for new VS Code versions
-export const DEBUG_ITEM_OPERATOR = VSBrowser.instance.version > '1.90.9' ? ' =' : ':';
+export const DEBUG_ITEM_OPERATOR = ' =';
 
 export const DEFAULT_HEADER = 'YamlHeader';
 export const DEFAULT_PROPERTY = 'yaml-dsl';
