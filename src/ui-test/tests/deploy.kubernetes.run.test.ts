@@ -24,7 +24,6 @@ import {
 } from 'vscode-extension-tester';
 import { killTerminal, waitUntilTerminalHasText } from '../utils';
 import { CAMEL_ROUTE_YAML_WITH_SPACE } from '../variables';
-import waitUntil from 'async-wait-until';
 import { actionAvailable } from './helper/Awaiters';
 
 /**
