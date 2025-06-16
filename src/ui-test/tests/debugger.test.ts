@@ -152,12 +152,16 @@ describe('Camel Debugger tests', function () {
             this.test?.skip();
         }
         skip = true;
-
+        console.log('Update Body value with Camel debugger start');
         let sectionItem = await getDebuggerSectionItem(driver, 'Body' + DEBUG_ITEM_OPERATOR, 'Message');
+        console.log('SectionItem found');
         await sectionItem?.setVariableValue(TEST_BODY);
+        console.log('set value in section item');
         await waitUntilTerminalHasText(driver, [TEST_BODY]);
+        console.log('terminal has text found');
 
         sectionItem = await getDebuggerSectionItem(driver, 'Body' + DEBUG_ITEM_OPERATOR, 'Message');
+        console.log('updated sectionItem searched');
         expect(await sectionItem?.getVariableValue()).to.be.equal(TEST_BODY);
 
         await clearTerminal();
