@@ -139,12 +139,7 @@ describe('Install test, Extensions View', function () {
                 item = await marketplace.findItem(`@installed ${name}`) as ExtensionsViewItem;
                 return true;
             } catch (e) {
-                if (e instanceof error.StaleElementReferenceError) {
-                    return {
-                        delay: 1000,
-                        value: undefined
-                    };
-                }
+               return false;
             }
         }, timeout, 'Page was not rendered');
         return item!;
