@@ -19,7 +19,6 @@ import * as path from 'path';
 import {
     ActivityBar,
     BottomBarPanel,
-    EditorActionDropdown,
     EditorView,
     SideBarView,
     VSBrowser,
@@ -34,7 +33,7 @@ import {
     isCamelVersionProductized,
 } from '../utils';
 import { CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL, TOP_ROUTE_1 } from '../variables';
-import { actionAvailable } from './helper/Awaiters';
+import { openDropDownMenuEditorAction, selectDropDownMenuEditorAction } from './helper/Awaiters';
 
 describe('Camel file editor test', function () {
 
@@ -68,26 +67,22 @@ describe('Camel file editor test', function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
-            await actionAvailable(editorView, "Run or Debug...");
-            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-            const menu = await action.open();
-            expect(await menu.hasItem(CAMEL_RUN_ACTION_LABEL)).true;
-            expect(await menu.hasItem(CAMEL_RUN_WORKSPACE_ACTION_LABEL)).true;
-            expect(await menu.hasItem(CAMEL_RUN_FOLDER_ACTION_LABEL)).true;
-            await menu.close();
+            const menu = await openDropDownMenuEditorAction(editorView, "Run or Debug...");
+            expect(await menu?.hasItem(CAMEL_RUN_ACTION_LABEL)).true;
+            expect(await menu?.hasItem(CAMEL_RUN_WORKSPACE_ACTION_LABEL)).true;
+            expect(await menu?.hasItem(CAMEL_RUN_FOLDER_ACTION_LABEL)).true;
+            await menu?.close();
         });
 
         it('Debug and Run actions are available', async function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
-            await actionAvailable(editorView, "Run or Debug...");
-            const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-            const menu = await action.open();
-            expect(await menu.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
-            expect(await menu.hasItem(CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL)).true;
-            expect(await menu.hasItem(CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL)).true;
-            await menu.close();
+            const menu = await openDropDownMenuEditorAction(editorView, "Run or Debug...");
+            expect(await menu?.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
+            expect(await menu?.hasItem(CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL)).true;
+            expect(await menu?.hasItem(CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL)).true;
+            await menu?.close();
         });
 
         const runActionLabels = [
@@ -101,10 +96,7 @@ describe('Camel file editor test', function () {
                 if (process.platform === "darwin") {
                     this.skip();
                 }
-                await actionAvailable(editorView, "Run or Debug...");
-                const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-                const menu = await action.open();
-                await menu.select(runActionLabels.label);
+                await selectDropDownMenuEditorAction(editorView, "Run or Debug...", runActionLabels.label);
                 await waitUntilTerminalHasText(driver, runActionLabels.terminalText, 2000, 120000);
                 await killTerminal();
             });
@@ -124,10 +116,7 @@ describe('Camel file editor test', function () {
                 if (process.platform === "darwin"){
                     this.skip();
                 }
-                await actionAvailable(editorView, "Run or Debug...");
-                const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-                const menu = await action.open();
-                await menu.select(debugActionLabels.label);
+                await selectDropDownMenuEditorAction(editorView, "Run or Debug...", debugActionLabels.label);
 
                 await waitUntilTerminalHasText(driver, debugActionLabels.terminalText, 2000, 120000);
 

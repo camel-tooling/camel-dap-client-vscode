@@ -16,11 +16,11 @@
  */
 
 import path from "path";
-import { ActivityBar, EditorActionDropdown, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-extension-tester";
+import { ActivityBar, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-extension-tester";
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL, CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL } from "../variables";
 import { expect } from "chai";
 import { notificationCenterContains, waitUntilNotificationShows } from "../utils";
-import { actionAvailable } from './helper/Awaiters';
+import { selectDropDownMenuEditorAction } from './helper/Awaiters';
 
 describe('Check actions requirements to run/debug', function () {
     this.timeout(90000);
@@ -77,10 +77,7 @@ describe('Check actions requirements to run/debug', function () {
     });
 
     async function clickButtonAndVerifyNotification(actionLabel: string) {
-        await actionAvailable(editorView, "Run or Debug...");
-        const action = (await editorView.getAction("Run or Debug...")) as EditorActionDropdown;
-        const menu = await action.open();
-        await menu.select(actionLabel);
+        await selectDropDownMenuEditorAction(editorView, "Run or Debug...", actionLabel);
         await waitUntilNotificationShows(driver, NOTIFICATION_TEXT);
         expect(await notificationCenterContains(NOTIFICATION_TEXT)).to.be.true;
         const center = await new Workbench().openNotificationsCenter();
