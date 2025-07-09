@@ -84,7 +84,7 @@
 				"camel.debugAdapter.JBangVersion": {
 					"type": "string",
 					"markdownDescription": "Apache Camel JBang CLI version used for internal VS Code JBang commands execution. Camel JBang CLI requirements can differ between versions, it is recommended to use `default` version to ensure all extension features work properly.\n\n**Note**: This change will affect only commands provided by Debug Adapter for Apache Camel extension.",
-					"default": "4.12.0"
+					"default": "4.13.0"
 				},
 				"camel.debugAdapter.CamelVersion": {
 					"type": "string",
