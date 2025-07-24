@@ -340,7 +340,7 @@
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "^5.2.2",
-		"@types/chai": "^4.3.20",
+		"@types/chai": "^5.2.2",
 		"@types/fs-extra": "^11.0.4",
 		"@types/glob": "^8.1.0",
 		"@types/mocha": "^10.0.10",
@@ -349,7 +349,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.38.0",
 		"@vscode/test-electron": "^2.3.9",
 		"async-wait-until": "^2.0.27",
-		"chai": "^4.5.0",
+		"chai": "^5.2.1",
 		"eslint": "^9.31.0",
 		"eslint-define-config": "^2.1.0",
 		"eslint-plugin-chai-friendly": "^1.1.0",
