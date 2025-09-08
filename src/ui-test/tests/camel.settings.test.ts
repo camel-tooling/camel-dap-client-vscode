@@ -162,7 +162,7 @@ describe('Camel User Settings', function () {
             await waitUntilItemNotExists(newParameter, arraySetting);
 
             const values = await arraySetting.getValues();
-            expect(values.length).is.lessThan(3);
+            expect(values.length, `Curretn parameters are ${values}, we are expecting them to not contain ${newParameter}`).is.lessThan(3);
             expect(values).not.includes(newParameter);
             await cleanEnvironment();
         });
