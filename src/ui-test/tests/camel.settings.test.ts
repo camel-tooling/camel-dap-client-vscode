@@ -151,7 +151,10 @@ describe('Camel User Settings', function () {
 
             await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
             await waitUntilTerminalHasText(driver, [defaultExtraLaunchParameterSetting, newParameter, `Tracing is enabled on CamelContext`], 15000, 180000);
-
+            
+            // cleaning for next test
+            await killTerminal();
+            await new BottomBarPanel().toggle(false);
         });
 
         it('Should remove parameter', async function () {
@@ -162,7 +165,7 @@ describe('Camel User Settings', function () {
             await waitUntilItemNotExists(newParameter, arraySetting);
 
             const values = await arraySetting.getValues();
-            expect(values.length, `Curretn parameters are ${values}, we are expecting them to not contain ${newParameter}`).is.lessThan(3);
+            expect(values.length, `Current parameters are ${values}, we are expecting them to not contain ${newParameter}`).is.lessThan(3);
             expect(values).not.includes(newParameter);
             await cleanEnvironment();
         });
