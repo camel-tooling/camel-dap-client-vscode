@@ -36,7 +36,12 @@ describe('Launch configuration from tasks.json autocompletion', function () {
     async function setupEnvironment(resourceDir: string, vscodeDir: string, launch: boolean = false) {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(resourceDir);
-        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
+        try {
+            await (await new ActivityBar().getViewControl('Explorer'))?.openView();
+        } catch {
+            // workaround: retry in case of StaleElementReferenceError
+            await (await new ActivityBar().getViewControl('Explorer'))?.openView();
+        }
 
         await deleteResource(vscodeDir);
         await createFolder(vscodeDir);
