@@ -149,8 +149,7 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
     await driver.sleep(interval);
     await driver.wait(async function () {
         try {
-            const terminal = await activateTerminalView();
-            const terminalText = await terminal.getText();
+            const terminalText = await getTerminalText();
             for await (const text of textArray) {
                 if (!(terminalText.includes(text))) {
                     return false;
@@ -160,7 +159,7 @@ export async function waitUntilTerminalHasText(driver: WebDriver, textArray: str
         } catch (err) {
             return false;
         }
-    }, timeout, undefined, interval);
+    }, timeout, `Expecting texts in terminal ${textArray} were not found in ${await getTerminalText()}`, interval);
 }
 
 /**
@@ -633,3 +632,9 @@ export async function waitUntilNotificationShows(driver: WebDriver, notification
         }
     }, timeout, "Required notification not available", interval);
 }
+
+async function getTerminalText() : Promise<string> {
+    const terminal = await activateTerminalView();
+    return await terminal.getText();
+}
+
