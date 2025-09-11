@@ -357,7 +357,7 @@
 		"mocha": "^10.8.2",
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.1.1",
-		"typescript": "^5.8.3",
+		"typescript": "^5.9.2",
 		"vscode-extension-tester": "^8.15.0"
 	},
 	"dependencies": {
