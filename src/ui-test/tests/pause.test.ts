@@ -35,6 +35,7 @@ import {
   disconnectDebugger,
   killTerminal,
   isCamelVersionProductized,
+  waitUntilViewOpened,
 } from "../utils";
 import { assert } from "chai";
 
@@ -51,7 +52,7 @@ describe("Support pause of Camel debugger", function () {
     }
     driver = VSBrowser.instance.driver;
     await VSBrowser.instance.openResources(RESOURCES_DIR);
-    await (await new ActivityBar().getViewControl('Explorer'))?.openView();
+    await waitUntilViewOpened('Explorer');
   });
 
   afterEach(async function () {
