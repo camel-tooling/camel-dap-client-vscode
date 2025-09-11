@@ -45,7 +45,8 @@ import {
     DEFAULT_MESSAGE,
     isCamelVersionProductized,
     isVersionNewer,
-    DEBUG_ITEM_OPERATOR
+    DEBUG_ITEM_OPERATOR,
+    waitUntilViewOpened
 } from '../utils';
 import waitUntil from 'async-wait-until';
 
@@ -68,15 +69,7 @@ describe('Camel Debugger tests', function () {
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
         console.log('src/ui-test/resources opened');
 
-        // workaround: using waitUntil as sometimes the ActivityBar is not ready and then the View is redrawn causing staleElement error
-        await waitUntil(async() => {
-            try {
-                return await (await new ActivityBar().getViewControl('Explorer'))?.openView() !== undefined;
-            } catch {
-                return false;
-            }
-        }, 10000, 1000);
-
+        await waitUntilViewOpened('Explorer');
         console.log('Explorer view opened');
 
         const section = await new SideBarView().getContent().getSection('resources');

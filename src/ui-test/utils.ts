@@ -43,6 +43,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import { ENABLING_CAMEL_DEBUGGER } from './variables';
 import { storageFolder } from "./uitest_runner";
+import waitUntil from 'async-wait-until';
 
 // the changes in debug side bar view were presented for new VS Code versions
 export const DEBUG_ITEM_OPERATOR = ' =';
@@ -636,5 +637,20 @@ export async function waitUntilNotificationShows(driver: WebDriver, notification
 async function getTerminalText() : Promise<string> {
     const terminal = await activateTerminalView();
     return await terminal.getText();
+}
+
+/**
+ * workaround to await (await new ActivityBar().getViewControl(viewName))?.openView()
+ * using waitUntil as sometimes the ActivityBar is not ready and then the View is redrawn causing staleElement error
+ * @param viewName 
+ */
+export async function waitUntilViewOpened(viewName :string) {
+    await waitUntil(async () => {
+        try {
+            return await (await new ActivityBar().getViewControl(viewName))?.openView() !== undefined;
+        } catch {
+            return false;
+        }
+    }, 10000, 1000);
 }
 
