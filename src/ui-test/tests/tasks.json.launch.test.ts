@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { ActivityBar, DebugView, EditorView, TextEditor, VSBrowser, WebDriver } from "vscode-extension-tester";
-import { DEBUGGER_ATTACHED_MESSAGE, activateEditor, activateTerminalView, createFile, createFolder, deleteResource, disconnectDebugger, executeCommand, executeCommandInTerminal, getFileContent, killTerminal, openFileInEditor, selectFromCA, selectTask, waitUntilTerminalHasText } from "../utils";
+import { DEBUGGER_ATTACHED_MESSAGE, activateEditor, activateTerminalView, createFile, createFolder, deleteResource, disconnectDebugger, executeCommand, executeCommandInTerminal, getFileContent, killTerminal, openFileInEditor, selectFromCA, selectTask, waitUntilTerminalHasText, waitUntilViewOpened } from "../utils";
 import { ATTACH_DEBUGGER_USING_PRELAUNCH_TASK, ENABLING_CAMEL_DEBUGGER, LAUNCH_JSON, LAUNCH_START_AND_ATTACH_DEBUGGER, MAIN_CAMEL_EXAMPLE_DIR, MAIN_CAMEL_EXAMPLE_DOT_VSCODE_DIR, MVN_BUILD_SUCCESS, MVN_CLEAN, MVN_COMPILE, RESOURCES_DIR, RESOURCES_DOT_VSCODE_DIR, RUN_WITH_JBANG_WITH_CAMEL_DEBUG, START_WITH_CAMEL_DEBUG_MVN_GOAL, TASKS_COMMAND, TASKS_TEST_FILE, TASKS_TEST_FILE_CAMEL_XML } from "../variables";
 import * as path from 'path';
 import { assert } from "chai";
@@ -36,12 +36,7 @@ describe('Launch configuration from tasks.json autocompletion', function () {
     async function setupEnvironment(resourceDir: string, vscodeDir: string, launch: boolean = false) {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(resourceDir);
-        try {
-            await (await new ActivityBar().getViewControl('Explorer'))?.openView();
-        } catch {
-            // workaround: retry in case of StaleElementReferenceError
-            await (await new ActivityBar().getViewControl('Explorer'))?.openView();
-        }
+        await waitUntilViewOpened('Explorer');
 
         await deleteResource(vscodeDir);
         await createFolder(vscodeDir);

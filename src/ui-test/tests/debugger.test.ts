@@ -45,8 +45,10 @@ import {
     DEFAULT_MESSAGE,
     isCamelVersionProductized,
     isVersionNewer,
-    DEBUG_ITEM_OPERATOR
+    DEBUG_ITEM_OPERATOR,
+    waitUntilViewOpened
 } from '../utils';
+import waitUntil from 'async-wait-until';
 
 describe('Camel Debugger tests', function () {
     this.timeout(300000);
@@ -65,19 +67,26 @@ describe('Camel Debugger tests', function () {
         driver = VSBrowser.instance.driver;
 
         await VSBrowser.instance.openResources(path.resolve('src', 'ui-test', 'resources'));
+        console.log('src/ui-test/resources opened');
 
-        await (await new ActivityBar().getViewControl('Explorer'))?.openView();
+        await waitUntilViewOpened('Explorer');
+        console.log('Explorer view opened');
 
         const section = await new SideBarView().getContent().getSection('resources');
         await section.openItem(CAMEL_ROUTE_YAML_WITH_SPACE);
+
+        console.log('Clicked to open the Camel route');
 
         const editorView = new EditorView();
         await driver.wait(async function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === CAMEL_ROUTE_YAML_WITH_SPACE);
         }, 5000);
+        console.log('Camel route editor opened');
 
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
+        console.log('Run and debug command launched');
         await (await new ActivityBar().getViewControl('Run'))?.openView();
+        console.log('run view opened');
         await waitUntilTerminalHasText(driver, TEST_ARRAY_RUN_DEBUG, 4000, 120000);
         textEditor = new TextEditor();
     });
