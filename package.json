@@ -358,7 +358,7 @@
 		"mocha-jenkins-reporter": "^0.4.8",
 		"mvn-artifact-download": "^6.1.1",
 		"typescript": "^5.8.3",
-		"vscode-extension-tester": "^8.15.0"
+		"vscode-extension-tester": "^8.17.0"
 	},
 	"dependencies": {
 		"@redhat-developer/vscode-redhat-telemetry": "^0.9.1",
