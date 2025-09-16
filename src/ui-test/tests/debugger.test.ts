@@ -48,7 +48,6 @@ import {
     DEBUG_ITEM_OPERATOR,
     waitUntilViewOpened
 } from '../utils';
-import waitUntil from 'async-wait-until';
 
 describe('Camel Debugger tests', function () {
     this.timeout(300000);
