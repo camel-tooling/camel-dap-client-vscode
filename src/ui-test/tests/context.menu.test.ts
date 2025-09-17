@@ -38,6 +38,7 @@ import {
     selectContextMenuItem,
     waitUntilTerminalHasText
 } from '../utils';
+import { waitForPortToBeFreed } from './helper/PortHelper';
 
 (process.platform === 'darwin' ? describe.skip : describe)('Camel file context menu test', function () {
     this.timeout(240000);
@@ -96,5 +97,6 @@ import {
         await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
         await disconnectDebugger(driver);
         await killTerminal();
+        await waitForPortToBeFreed(1099);
     });
 });
