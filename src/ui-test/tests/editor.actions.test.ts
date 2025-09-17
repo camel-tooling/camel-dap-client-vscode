@@ -34,6 +34,7 @@ import {
 } from '../utils';
 import { CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL, TOP_ROUTE_1 } from '../variables';
 import { openDropDownMenuEditorAction, selectDropDownMenuEditorAction } from './helper/Awaiters';
+import { waitForPortToBeFreed } from './helper/PortHelper';
 
 describe('Camel file editor test', function () {
 
@@ -56,6 +57,7 @@ describe('Camel file editor test', function () {
             await driver.wait(async function () {
                 return (await editorView.getOpenEditorTitles()).find(title => title === TOP_ROUTE_1);
             }, 5000);
+            await waitForPortToBeFreed(1099);
         });
 
         afterEach(async function () {
