@@ -7,6 +7,7 @@ All notable changes to the "vscode-debug-adapter-apache-camel" extension will be
 - Use Node 22 instead of Node 20
 - Minimal version of VS Code is now 1.100
 - Update default Camel version used for Camel JBang from 4.13.0 to 4.14.0
+- Upgrade embedded Debug Adapter for Apache Camel to 1.10.0
 
 ## 1.9.0
 
