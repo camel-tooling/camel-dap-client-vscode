@@ -2,6 +2,8 @@
 
 All notable changes to the "vscode-debug-adapter-apache-camel" extension will be documented in this file.
 
+## 1.11.0
+
 ## 1.10.0
 
 - Use Node 22 instead of Node 20
