@@ -361,7 +361,7 @@
 		"vscode-extension-tester": "^8.17.0"
 	},
 	"dependencies": {
-		"@redhat-developer/vscode-redhat-telemetry": "^0.9.1",
+		"@redhat-developer/vscode-redhat-telemetry": "^0.10.0",
 		"fs-extra": "^11.3.2",
 		"glob": "^11.0.3",
 		"jsonc-parser": "^3.3.1"
