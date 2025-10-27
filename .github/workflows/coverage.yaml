@@ -60,7 +60,7 @@ jobs:
           xvfb-run --auto-servernum npm run ui-test:coverage
           exit 0
       - name: Upload Coverage Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: ui-test-coverage
