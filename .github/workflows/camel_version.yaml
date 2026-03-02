@@ -76,7 +76,7 @@ jobs:
         run: vsce package
 
       - name: Store UI test log
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: |
           (failure() || cancelled()) &&
           (steps.uiTest.outcome == 'failure' ||
@@ -86,7 +86,7 @@ jobs:
           path: test-resources/settings/logs/*
 
       - name: Store UI Test Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: |
           (failure() || cancelled()) &&
           (steps.uiTest.outcome == 'failure' ||
