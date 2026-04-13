@@ -38,6 +38,7 @@ import {
   waitUntilViewOpened,
 } from "../utils";
 import { assert } from "chai";
+import { waitForPortToBeFreed } from "./helper/PortHelper";
 
 describe("Support pause of Camel debugger", function () {
   this.timeout(300000);
@@ -53,6 +54,7 @@ describe("Support pause of Camel debugger", function () {
     driver = VSBrowser.instance.driver;
     await VSBrowser.instance.openResources(RESOURCES_DIR);
     await waitUntilViewOpened('Explorer');
+    await waitForPortToBeFreed(1099);
   });
 
   afterEach(async function () {
@@ -63,6 +65,7 @@ describe("Support pause of Camel debugger", function () {
       await disconnectDebugger(driver);
       await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
       await killTerminal();
+      await waitForPortToBeFreed(1099);
       await new EditorView().closeAllEditors();
     }
   });

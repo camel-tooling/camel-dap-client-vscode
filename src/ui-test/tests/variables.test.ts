@@ -37,6 +37,7 @@ import {
     DEBUG_ITEM_OPERATOR,
 } from '../utils';
 import { RESOURCES_DIR, VARIABLESTEST_YAML } from '../variables';
+import { waitForPortToBeFreed } from './helper/PortHelper';
 
 describe('Display exchange variables values test', function () {
     this.timeout(300000);
@@ -61,6 +62,7 @@ describe('Display exchange variables values test', function () {
             return (await editorView.getOpenEditorTitles()).find(title => title === VARIABLESTEST_YAML);
         }, 5000);
 
+        await waitForPortToBeFreed(1099);
         await executeCommand(CAMEL_RUN_DEBUG_ACTION_QUICKPICKS_LABEL);
         await (await new ActivityBar().getViewControl('Run'))?.openView();
         await waitUntilTerminalHasText(driver, [DEBUGGER_ATTACHED_MESSAGE], 4000, 120000);
@@ -76,6 +78,7 @@ describe('Display exchange variables values test', function () {
             await disconnectDebugger(driver);
             await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
             await killTerminal();
+            await waitForPortToBeFreed(1099);
             await new EditorView().closeAllEditors();
         }
     });

@@ -7,6 +7,7 @@ jars/camel-dap-server.jar
 test-resources
 .camel-jbang*
 .test-extensions
+.codex
 *sbom.json
 coverage
 test Fixture with speci@l chars/.vscode/settings.json
