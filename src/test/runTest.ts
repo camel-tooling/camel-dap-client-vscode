@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { downloadAndUnzipVSCode, resolveCliArgsFromVSCodeExecutablePath, runTests } from '@vscode/test-electron';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 
 async function main() {
 	try {
@@ -20,6 +20,9 @@ async function main() {
 		const vscodeVersion = computeVSCodeVersionToPlayTestWith();
 		console.log(`vscodeVersion = ${vscodeVersion}`);
 
+		const vscodeTestPath = path.resolve(extensionDevelopmentPath, '.vscode-test');
+		const vscodeExtensionsPath = path.resolve(vscodeTestPath, 'extensions');
+
 		const vscodeExecutablePath = await downloadAndUnzipVSCode(vscodeVersion);
 		const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 		spawnSync(cli, [...args, '--install-extension', 'redhat.vscode-yaml'], {
@@ -27,9 +30,21 @@ async function main() {
 			stdio: 'inherit'
 		});
 
-		await runTests({ vscodeExecutablePath, extensionDevelopmentPath, extensionTestsPath, launchArgs: [testWorkspace, '--disable-workspace-trust', '--user-data-dir', `${extensionDevelopmentPath}/.vscode-test`] });
+		const launchArgs = [
+			testWorkspace,
+			'--disable-workspace-trust',
+			'--user-data-dir',
+			vscodeTestPath
+		];
+
+		if (process.platform === 'win32') {
+			// @vscode/test-electron launches extension tests via the Windows shell, which breaks this workspace path.
+			await runTestsWithoutShell(vscodeExecutablePath, extensionDevelopmentPath, extensionTestsPath, launchArgs, vscodeExtensionsPath);
+		} else {
+			await runTests({ vscodeExecutablePath, extensionDevelopmentPath, extensionTestsPath, launchArgs });
+		}
 	} catch (err) {
-		console.error('Failed to run tests');
+		console.error('Failed to run tests', err);
 		process.exit(1);
 	}
 
@@ -41,6 +56,35 @@ async function main() {
 			return 'insiders';
 		}
 		return envVersion;
+	}
+
+	function runTestsWithoutShell(vscodeExecutablePath: string, extensionDevelopmentPath: string, extensionTestsPath: string, launchArgs: string[], vscodeExtensionsPath: string) {
+		return new Promise<void>((resolve, reject) => {
+			const args = launchArgs.concat([
+				'--extensions-dir',
+				vscodeExtensionsPath,
+				'--no-sandbox',
+				'--disable-gpu-sandbox',
+				'--disable-updates',
+				'--skip-welcome',
+				'--skip-release-notes',
+				'--disable-workspace-trust',
+				`--extensionTestsPath=${extensionTestsPath}`,
+				`--extensionDevelopmentPath=${extensionDevelopmentPath}`
+			]);
+			const child = spawn(vscodeExecutablePath, args, { env: process.env });
+
+			child.stdout.on('data', (data) => process.stdout.write(data));
+			child.stderr.on('data', (data) => process.stderr.write(data));
+			child.on('error', reject);
+			child.on('close', (code) => {
+				if (code === 0) {
+					resolve();
+				} else {
+					reject(new Error(`Test run failed with exit code ${code}`));
+				}
+			});
+		});
 	}
 
 }
