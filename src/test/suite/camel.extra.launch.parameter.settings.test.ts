@@ -40,7 +40,7 @@ suite('Should run commands with the extra launch parameter specified in settings
 	});
 
 	suiteTeardown(function () {
-		rmSync(TMP_XSL_FILE);
+		rmSync(TMP_XSL_FILE, { force: true });
 	});
 
 	test('Default extra launch parameter is not empty', function () {
