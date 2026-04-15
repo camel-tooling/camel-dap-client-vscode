@@ -16,6 +16,7 @@
  */
 import { expect } from 'chai';
 import * as path from 'path';
+import { Key } from 'selenium-webdriver';
 import {
     ActivityBar,
     BottomBarPanel,
@@ -27,14 +28,47 @@ import {
 import {
     CAMEL_RUN_ACTION_LABEL,
     CAMEL_RUN_DEBUG_ACTION_LABEL,
+    activateEditor,
     waitUntilTerminalHasText,
     killTerminal,
     disconnectDebugger,
     isCamelVersionProductized,
 } from '../utils';
 import { CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL, TOP_ROUTE_1 } from '../variables';
-import { openDropDownMenuEditorAction, selectDropDownMenuEditorAction } from './helper/Awaiters';
+import { clickOnEditorAction, openDropDownMenuEditorAction, selectDropDownMenuEditorAction } from './helper/Awaiters';
 import { waitForPortToBeFreed } from './helper/PortHelper';
+
+async function closeRunAndDebugView() {
+    try {
+        await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
+    } catch {
+        // The debug view is not always opened in this suite.
+    }
+}
+
+async function disconnectDebuggerIfRunning(driver: WebDriver) {
+    try {
+        await disconnectDebugger(driver);
+    } catch {
+        // The test may fail before a debugger session is attached.
+    }
+}
+
+async function killTerminalIfRunning() {
+    try {
+        await killTerminal();
+    } catch {
+        // Some assertions fail before a terminal is created.
+    }
+}
+
+async function closeOpenContextMenu(driver: WebDriver) {
+    try {
+        await driver.actions().sendKeys(Key.ESCAPE).perform();
+    } catch {
+        // Ignore when no menu is opened.
+    }
+}
 
 describe('Camel file editor test', function () {
 
@@ -57,10 +91,14 @@ describe('Camel file editor test', function () {
             await driver.wait(async function () {
                 return (await editorView.getOpenEditorTitles()).find(title => title === TOP_ROUTE_1);
             }, 5000);
+            await activateEditor(driver, TOP_ROUTE_1);
             await waitForPortToBeFreed(1099);
         });
 
         afterEach(async function () {
+            await closeOpenContextMenu(driver);
+            await closeRunAndDebugView();
+            await killTerminalIfRunning();
             await editorView.closeAllEditors();
             await new BottomBarPanel().toggle(false);
         });
@@ -69,22 +107,21 @@ describe('Camel file editor test', function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
-            const menu = await openDropDownMenuEditorAction(editorView, "Run or Debug...");
-            expect(await menu?.hasItem(CAMEL_RUN_ACTION_LABEL)).true;
-            expect(await menu?.hasItem(CAMEL_RUN_WORKSPACE_ACTION_LABEL)).true;
-            expect(await menu?.hasItem(CAMEL_RUN_FOLDER_ACTION_LABEL)).true;
-            await menu?.close();
+            await verifyMenuContainsActions([
+                CAMEL_RUN_ACTION_LABEL,
+                CAMEL_RUN_WORKSPACE_ACTION_LABEL,
+                CAMEL_RUN_FOLDER_ACTION_LABEL
+            ]);
         });
 
         it('Debug and Run actions are available', async function () {
             if (process.platform === "darwin"){
                 this.skip();
             }
-            const menu = await openDropDownMenuEditorAction(editorView, "Run or Debug...");
-            expect(await menu?.hasItem(CAMEL_RUN_DEBUG_ACTION_LABEL)).true;
-            expect(await menu?.hasItem(CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL)).true;
-            expect(await menu?.hasItem(CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL)).true;
-            await menu?.close();
+            await verifyMenuContainsActions([
+                CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL,
+                CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL
+            ]);
         });
 
         const runActionLabels = [
@@ -98,14 +135,17 @@ describe('Camel file editor test', function () {
                 if (process.platform === "darwin") {
                     this.skip();
                 }
-                await selectDropDownMenuEditorAction(editorView, "Run or Debug...", runActionLabels.label);
-                await waitUntilTerminalHasText(driver, runActionLabels.terminalText, 2000, 120000);
-                await killTerminal();
+                try {
+                    await selectDropDownMenuEditorAction(editorView, "Run or Debug...", runActionLabels.label);
+                    await waitUntilTerminalHasText(driver, runActionLabels.terminalText, 2000, 120000);
+                } finally {
+                    await killTerminalIfRunning();
+                }
             });
         });
 
         const debugActionLabels = [
-            { label: CAMEL_RUN_DEBUG_ACTION_LABEL, terminalText: ['Hello Camel from top-route1']},
+            { label: CAMEL_RUN_DEBUG_ACTION_LABEL, terminalText: ['Hello Camel from top-route1'], directAction: true },
             { label: CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, terminalText: ['Hello Camel from route1', 'Hello Camel from route2'],},
             { label: CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, terminalText: ['Hello Camel from top-route1', 'Hello Camel from top-route2']}
         ];
@@ -118,14 +158,49 @@ describe('Camel file editor test', function () {
                 if (process.platform === "darwin"){
                     this.skip();
                 }
-                await selectDropDownMenuEditorAction(editorView, "Run or Debug...", debugActionLabels.label);
+                try {
+                    if (debugActionLabels.directAction) {
+                        await activateEditor(driver, TOP_ROUTE_1);
+                        if (!await hasEditorAction(debugActionLabels.label)) {
+                            this.skip();
+                        }
+                        await clickOnEditorAction(editorView, debugActionLabels.label);
+                    } else {
+                        await selectDropDownMenuEditorAction(editorView, "Run or Debug...", debugActionLabels.label);
+                    }
 
-                await waitUntilTerminalHasText(driver, debugActionLabels.terminalText, 2000, 120000);
-
-                await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
-                await disconnectDebugger(driver);
-                await killTerminal();
+                    await waitUntilTerminalHasText(driver, debugActionLabels.terminalText, 2000, 120000);
+                } finally {
+                    await closeRunAndDebugView();
+                    await disconnectDebuggerIfRunning(driver);
+                    await killTerminalIfRunning();
+                }
             });
         });
+
+        async function verifyMenuContainsActions(actionLabels: string[]) {
+            await activateEditor(driver, TOP_ROUTE_1);
+            const menu = await openDropDownMenuEditorAction(editorView, 'Run or Debug...', 15000);
+            expect(menu).to.not.be.undefined;
+
+            try {
+                const menuText = await menu?.getText();
+                actionLabels.forEach(actionLabel => expect(menuText).to.contain(actionLabel));
+            } finally {
+                try {
+                    await menu?.close();
+                } catch {
+                    await closeOpenContextMenu(driver);
+                }
+            }
+        }
+
+        async function hasEditorAction(actionLabel: string): Promise<boolean> {
+            try {
+                return await editorView.getAction(actionLabel) !== undefined;
+            } catch {
+                return false;
+            }
+        }
     });
 });

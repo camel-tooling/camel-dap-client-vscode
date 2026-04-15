@@ -15,10 +15,10 @@ export async function clickOnEditorAction(editorView: EditorView, actionLabel: s
         } catch {
             return false;
         }
-    });
+    }, 10000, 500);
 }
 
-export async function openDropDownMenuEditorAction(editorView: EditorView, actionLabel: string) :Promise<ContextMenu | undefined>{
+export async function openDropDownMenuEditorAction(editorView: EditorView, actionLabel: string, timeout: number = 10000) :Promise<ContextMenu | undefined>{
     let contextMenu : ContextMenu | undefined = undefined;
     await waitUntil(async () => {
         try {
@@ -32,11 +32,11 @@ export async function openDropDownMenuEditorAction(editorView: EditorView, actio
         } catch {
             return false;
         }
-    });
+    }, timeout, 500);
     return contextMenu;
 }
 
-export async function selectDropDownMenuEditorAction(editorView: EditorView, actionLabel: string, subActionLabel: string) :Promise<ContextMenu | undefined>{
+export async function selectDropDownMenuEditorAction(editorView: EditorView, actionLabel: string, subActionLabel: string, timeout: number = 10000) :Promise<ContextMenu | undefined>{
     let contextMenu : ContextMenu | undefined = undefined;
     await waitUntil(async () => {
         try {
@@ -51,6 +51,6 @@ export async function selectDropDownMenuEditorAction(editorView: EditorView, act
         } catch {
             return false;
         }
-    });
+    }, timeout, 500);
     return contextMenu;
 }

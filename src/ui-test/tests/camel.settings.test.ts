@@ -22,6 +22,23 @@ import { ActivityBar, ArraySetting, ArraySettingItem, BottomBarPanel, EditorView
 import { storageFolder } from '../uitest_runner';
 import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 
+async function closeSettingsEditor(): Promise<void> {
+    const editorView = new EditorView();
+    const settingsEditorTitle = (await editorView.getOpenEditorTitles())
+        .find(title => title.includes('Settings') || title.includes('Preferences'));
+
+    if (settingsEditorTitle) {
+        await editorView.closeEditor(settingsEditorTitle);
+        return;
+    }
+
+    try {
+        await new Workbench().executeCommand('View: Close Editor');
+    } catch {
+        // Newer VS Code versions can render the settings editor with a different title.
+    }
+}
+
 describe('Camel User Settings', function () {
     this.timeout(240000);
 
@@ -199,13 +216,13 @@ describe('Camel User Settings', function () {
         const textField = await (await new Workbench().openSettings()).findSetting(title, ...path);
         await textField.setValue(value);
         await driver.sleep(500);
-        await new EditorView().closeEditor('Settings');
+        await closeSettingsEditor();
     }
 
     async function getSettingsValue(title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<string | boolean> {
         const textField = await (await new Workbench().openSettings()).findSetting(title, ...path);
         const value = await textField.getValue();
-        await new EditorView().closeEditor('Settings');
+        await closeSettingsEditor();
         return value;
     }
 
@@ -213,7 +230,7 @@ describe('Camel User Settings', function () {
         const arraySetting = await (await new Workbench().openSettings()).findSetting(title, ...path) as ArraySetting;
         const arrayItem = await arraySetting.getItem(row) as ArraySettingItem;
         const itemValue = await arrayItem.getValue() as string;
-        await new EditorView().closeEditor('Settings');
+        await closeSettingsEditor();
         return itemValue;
     }
 

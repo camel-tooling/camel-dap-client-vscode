@@ -16,7 +16,8 @@
  */
 'use strict';
 
-import { ShellQuotedString, workspace } from 'vscode';
+import * as path from 'node:path';
+import { ShellExecution, ShellQuotedString, workspace } from 'vscode';
 import { CamelJBangTaskProvider } from '../../task/CamelJBangTaskProvider';
 import { expect } from 'chai';
 import { getCamelTask, getTaskCommandArguments } from './util';
@@ -25,6 +26,7 @@ suite('Should run commands with Camel JBang version specified in settings', () =
 
 	const CAMEL_JBANG_VERSION = '3.20.2';
 	const CAMEL_JBANG_VERSION_SETTINGS_ID = 'camel.debugAdapter.JBangVersion';
+	const TEST_JAVA_HOME = path.resolve('src', 'test', 'resources', 'java-home');
 
 	let defaultJBangVersion = '';
 
@@ -63,6 +65,29 @@ suite('Should run commands with Camel JBang version specified in settings', () =
 	test('Generated tasks keep the camel.jbang task type', async function () {
 		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
 		expect(camelRunTask.definition.type).to.equal(CamelJBangTaskProvider.taskType);
+	});
+
+	test('Generated tasks inherit JAVA_HOME for JBang execution', async function () {
+		const originalJavaHome = process.env.JAVA_HOME;
+		const originalJBangJavaHome = process.env.JBANG_JAVA_HOME;
+
+		try {
+			process.env.JAVA_HOME = TEST_JAVA_HOME;
+			delete process.env.JBANG_JAVA_HOME;
+
+			const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
+			const env = (camelRunTask.execution as ShellExecution).options?.env;
+
+			expect(env?.JAVA_HOME).to.equal(TEST_JAVA_HOME);
+			expect(env?.JBANG_JAVA_HOME).to.equal(TEST_JAVA_HOME);
+		} finally {
+			process.env.JAVA_HOME = originalJavaHome;
+			if (originalJBangJavaHome) {
+				process.env.JBANG_JAVA_HOME = originalJBangJavaHome;
+			} else {
+				delete process.env.JBANG_JAVA_HOME;
+			}
+		}
 	});
 
 });

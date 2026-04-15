@@ -17,10 +17,10 @@
 
 import path from "path";
 import { ActivityBar, EditorView, SideBarView, VSBrowser, WebDriver, Workbench } from "vscode-extension-tester";
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL, CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL, CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL } from "../variables";
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_LABEL, CAMEL_RUN_DEBUG_ACTION_LABEL, CAMEL_RUN_FOLDER_ACTION_LABEL, CAMEL_RUN_WORKSPACE_ACTION_LABEL } from "../variables";
 import { expect } from "chai";
 import { notificationCenterContains, waitUntilNotificationShows } from "../utils";
-import { selectDropDownMenuEditorAction } from './helper/Awaiters';
+import { openDropDownMenuEditorAction, selectDropDownMenuEditorAction } from './helper/Awaiters';
 
 describe('Check actions requirements to run/debug', function () {
     this.timeout(90000);
@@ -62,16 +62,14 @@ describe('Check actions requirements to run/debug', function () {
         });
     });
 
-    (process.platform === "darwin" ? describe.skip : describe)('Click on Debug and Run button and check warning message is displayed', function() {
+    (process.platform === "darwin" ? describe.skip : describe)('Click on Debug and Run button and check action is unavailable', function() {
         const debugActionLabels = [
-            { label: CAMEL_RUN_DEBUG_ACTION_LABEL},
-            { label: CAMEL_RUN_DEBUG_WORKSPACE_ACTION_LABEL},
-            { label: CAMEL_RUN_DEBUG_FOLDER_ACTION_LABEL}
+            { label: CAMEL_RUN_DEBUG_ACTION_LABEL}
         ];
 
         debugActionLabels.forEach(({ label }) => {
             it(`${label} button}`, async function () {
-                await clickButtonAndVerifyNotification(label);
+                await verifyActionUnavailable(label);
             });     
         });
     });
@@ -82,6 +80,17 @@ describe('Check actions requirements to run/debug', function () {
         expect(await notificationCenterContains(NOTIFICATION_TEXT)).to.be.true;
         const center = await new Workbench().openNotificationsCenter();
         await center.clearAllNotifications();
+    }
+
+    async function verifyActionUnavailable(actionLabel: string) {
+        const menu = await openDropDownMenuEditorAction(editorView, "Run or Debug...");
+        expect(menu).to.not.be.undefined;
+
+        try {
+            expect(await menu?.hasItem(actionLabel)).to.be.false;
+        } finally {
+            await menu?.close();
+        }
     }
 
     async function noFolderOpened(): Promise<boolean>{

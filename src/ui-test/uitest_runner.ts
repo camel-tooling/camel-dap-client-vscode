@@ -58,7 +58,7 @@ async function main(): Promise<void> {
 			break;
 	}
 
-	await tester.setupAndRunTests(
+	const exitCode = await tester.setupAndRunTests(
 		tests,
 		process.env.CODE_VERSION,
 		{
@@ -70,11 +70,13 @@ async function main(): Promise<void> {
 			resources: []
 		}
 	);
-	fs.rmSync(extensionFolder, { recursive: true });
+	fs.rmSync(extensionFolder, { recursive: true, force: true });
+	process.exit(exitCode);
 }
 
 if (require.main === module) {
 	main().catch((error) => {
-		throw Error('Unhandled promise rejection in main: ', error);
+		console.error('Unhandled promise rejection in main:', error);
+		process.exit(1);
 	});
 }

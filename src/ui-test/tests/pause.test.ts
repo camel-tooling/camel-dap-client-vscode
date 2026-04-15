@@ -38,6 +38,9 @@ import {
   waitUntilViewOpened,
 } from "../utils";
 import { assert } from "chai";
+import { waitForPortToBeFreed } from "./helper/PortHelper";
+
+const JMX_PORT = 1099;
 
 describe("Support pause of Camel debugger", function () {
   this.timeout(300000);
@@ -53,6 +56,7 @@ describe("Support pause of Camel debugger", function () {
     driver = VSBrowser.instance.driver;
     await VSBrowser.instance.openResources(RESOURCES_DIR);
     await waitUntilViewOpened('Explorer');
+    await waitForPortToBeFreed(JMX_PORT);
   });
 
   afterEach(async function () {
@@ -60,10 +64,26 @@ describe("Support pause of Camel debugger", function () {
       // do nothing - after is executed even if skip is called in before
     }
     else {
-      await disconnectDebugger(driver);
-      await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
-      await killTerminal();
-      await new EditorView().closeAllEditors();
+      try {
+        await disconnectDebugger(driver);
+      } catch {
+        // The test may fail before a debugger session is fully attached.
+      }
+      try {
+        await (await new ActivityBar().getViewControl('Run and Debug'))?.closeView();
+      } catch {
+        // The debug view is not always opened in this suite.
+      }
+      try {
+        await killTerminal();
+      } catch {
+        // Some failures happen before the terminal is fully initialized.
+      }
+      try {
+        await new EditorView().closeAllEditors();
+      } catch {
+        // Editors may already be closed when cleanup runs.
+      }
     }
   });
 

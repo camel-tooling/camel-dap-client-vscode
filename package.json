@@ -216,7 +216,7 @@
 				"background": {
 					"activeOnStart": true,
 					"beginsPattern": "^.*$",
-					"endsPattern": "^.*(JMX Connector thread started and|Debugger JMXConnector) listening at.*$"
+					"endsPattern": "^.*((JMX Connector thread started and|Debugger JMXConnector) listening at|Enabling Camel debugger).*$"
 				}
 			}
 		],
