@@ -60,4 +60,9 @@ suite('Should run commands with Camel JBang version specified in settings', () =
 		expect((getTaskCommandArguments(camelRunAndDebugTask)![0] as ShellQuotedString).value).to.includes(CAMEL_JBANG_VERSION);
 	});
 
+	test('Generated tasks keep the camel.jbang task type', async function () {
+		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
+		expect(camelRunTask.definition.type).to.equal(CamelJBangTaskProvider.taskType);
+	});
+
 });

@@ -41,7 +41,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerCompletionItemProvider(tasksJson, new CamelApplicationLauncherTasksCompletionItemProvider());
 
 	const taskProvider = new CamelJBangTaskProvider();
-	vscode.tasks.registerTaskProvider('camel.jbang', taskProvider);
+	vscode.tasks.registerTaskProvider(CamelJBangTaskProvider.taskType, taskProvider);
 
 	const redhatService = await getRedHatService(context);
 	telemetryService = await redhatService.getTelemetryService();
