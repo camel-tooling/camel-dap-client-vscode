@@ -19,6 +19,7 @@ import { CancellationToken, ProviderResult, ShellExecution, ShellExecutionOption
 
 export class CamelJBangTaskProvider implements TaskProvider {
 
+	public static readonly taskType: string = 'camel.jbang';
 	public static readonly labelProvidedRunWithDebugActivatedTask: string = "Start Opened Camel application with debug enabled with JBang";
 	public static readonly labelProvidedRunTask: string = "Run with JBang Opened Camel Application";
 	public static readonly labelProvidedRunAllWithDebugActivatedTask: string = "Start All Camel applications with debug enabled with JBang";
@@ -71,10 +72,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			cwd: cwd
 		};
 		const deployTask = new Task(
-			{
-				"label": taskLabel,
-				"type": "shell"
-			},
+			this.createTaskDefinition(taskLabel),
 			TaskScope.Workspace,
 			taskLabel,
 			'camel',
@@ -101,10 +99,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 
 	private createAddKubernetesPluginTask(plugin: string, taskLabel: string) {
 		const addPluginTask = new Task(
-			{
-				"label": taskLabel,
-				"type": "shell"
-			},
+			this.createTaskDefinition(taskLabel),
 			TaskScope.Workspace,
 			taskLabel,
 			'camel',
@@ -141,10 +136,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 			cwd: cwd
 		};
 		const runTask = new Task(
-			{
-				"label": taskLabel,
-				"type": "shell"
-			},
+			this.createTaskDefinition(taskLabel),
 			TaskScope.Workspace,
 			taskLabel,
 			'camel',
@@ -172,11 +164,6 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private createRunWithDebugTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
-		const taskDefinition: TaskDefinition = {
-			"label": taskLabel,
-			"type": "shell"
-		};
-
 		const shellExecOptions: ShellExecutionOptions = {
 			// see https://issues.apache.org/jira/browse/CAMEL-20431
 			env: {
@@ -186,7 +173,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		};
 
 		const runWithDebugActivatedTask = new Task(
-			taskDefinition,
+			this.createTaskDefinition(taskLabel),
 			TaskScope.Workspace,
 			taskLabel,
 			'camel',
@@ -225,6 +212,13 @@ export class CamelJBangTaskProvider implements TaskProvider {
 
 	resolveTask(_task: Task, _token: CancellationToken): ProviderResult<Task> {
 		return undefined;
+	}
+
+	private createTaskDefinition(taskLabel: string): TaskDefinition {
+		return {
+			label: taskLabel,
+			type: CamelJBangTaskProvider.taskType
+		};
 	}
 
 	private getCamelJBangCLIVersion(): string {
