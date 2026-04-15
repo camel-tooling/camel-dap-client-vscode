@@ -24,21 +24,25 @@ import { getCamelTask, getTaskCommandArguments } from './util';
 suite('Should run commands with Maven Repository specified in settings', () => {
 
 	const RH_CAMEL_VERSION = '3.20.1.redhat-00026';
+	const RH_CAMEL_VERSION_WITHOUT_GLOBAL_PLACEHOLDER = '4.14.2.redhat-00019';
 	const CAMEL_VERSION_SETTINGS_ID = 'camel.debugAdapter.CamelVersion';
 	const REPOSITORY_SETTINGS_ID = 'camel.debugAdapter.RedHatMavenRepository';
 	const GLOBAL_CAMEL_MAVEN_CONFIG_ID = 'camel.debugAdapter.redHatMavenRepository.global';
 
 	let initialCamelVersion = '';
 	let defaultMavenRepository = '';
+	let initialGlobalMavenRepository = true;
 
 	suiteSetup(async function () {
 		initialCamelVersion = workspace.getConfiguration().get(CAMEL_VERSION_SETTINGS_ID) as string;
 		defaultMavenRepository = workspace.getConfiguration().get(REPOSITORY_SETTINGS_ID) as string;
+		initialGlobalMavenRepository = workspace.getConfiguration().get(GLOBAL_CAMEL_MAVEN_CONFIG_ID) as boolean;
 	});
 
 	teardown(async function () {
 		this.timeout(4000);
 		await workspace.getConfiguration().update(CAMEL_VERSION_SETTINGS_ID, initialCamelVersion);
+		await workspace.getConfiguration().update(GLOBAL_CAMEL_MAVEN_CONFIG_ID, initialGlobalMavenRepository);
 	});
 
 	test('Default upstream Camel Version in commands is not using Red Hat Maven Repository', async function () {
@@ -61,6 +65,18 @@ suite('Should run commands with Maven Repository specified in settings', () => {
 
 		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
 		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.includes(`--repos=#repos,${defaultMavenRepository}`);
+	});
+
+	test('Known incompatible productized Camel version does not use the global repositories placeholder', async function () {
+		await workspace.getConfiguration().update(CAMEL_VERSION_SETTINGS_ID, RH_CAMEL_VERSION_WITHOUT_GLOBAL_PLACEHOLDER);
+
+		const camelRunTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunTask);
+		expect(getTaskCommandArguments(camelRunTask)).to.includes(`--repos=${defaultMavenRepository}`);
+		expect(getTaskCommandArguments(camelRunTask)).to.not.includes(`--repos=#repos`);
+
+		const camelRunAndDebugTask = await getCamelTask(CamelJBangTaskProvider.labelProvidedRunWithDebugActivatedTask);
+		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.includes(`--repos=${defaultMavenRepository}`);
+		expect(getTaskCommandArguments(camelRunAndDebugTask)).to.not.includes(`--repos=#repos`);
 	});
 
 	test('Placeholder \'#repos\' is not used when Global Maven Repository is not set', async function () {

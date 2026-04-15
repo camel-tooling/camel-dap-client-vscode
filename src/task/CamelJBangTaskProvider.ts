@@ -68,9 +68,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private createDeployTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
-		const shellExecOptions: ShellExecutionOptions = {
-			cwd: cwd
-		};
+		const shellExecOptions = this.createShellExecutionOptions(cwd);
 		const deployTask = new Task(
 			this.createTaskDefinition(taskLabel),
 			TaskScope.Workspace,
@@ -132,9 +130,7 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private createRunTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
-		const shellExecOptions: ShellExecutionOptions = {
-			cwd: cwd
-		};
+		const shellExecOptions = this.createShellExecutionOptions(cwd);
 		const runTask = new Task(
 			this.createTaskDefinition(taskLabel),
 			TaskScope.Workspace,
@@ -164,13 +160,10 @@ export class CamelJBangTaskProvider implements TaskProvider {
 	}
 
 	private createRunWithDebugTask(taskLabel: string, patternForCamelFiles: string, cwd: string | undefined) {
-		const shellExecOptions: ShellExecutionOptions = {
+		const shellExecOptions = this.createShellExecutionOptions(cwd, {
 			// see https://issues.apache.org/jira/browse/CAMEL-20431
-			env: {
-				'CAMEL_DEBUGGER_SUSPEND': 'true'
-			},
-			cwd: cwd
-		};
+			'CAMEL_DEBUGGER_SUSPEND': 'true'
+		});
 
 		const runWithDebugActivatedTask = new Task(
 			this.createTaskDefinition(taskLabel),
@@ -221,12 +214,37 @@ export class CamelJBangTaskProvider implements TaskProvider {
 		};
 	}
 
+	private createShellExecutionOptions(cwd: string | undefined, env: Record<string, string> = {}): ShellExecutionOptions {
+		return {
+			cwd: cwd,
+			env: {
+				...this.getJavaEnvironmentVariables(),
+				...env
+			}
+		};
+	}
+
+	private getJavaEnvironmentVariables(): Record<string, string> {
+		const javaHome = process.env.JAVA_HOME ?? process.env.JBANG_JAVA_HOME ?? process.env.JAVA_HOME_17_X64;
+		if (javaHome) {
+			return {
+				JAVA_HOME: javaHome,
+				JBANG_JAVA_HOME: javaHome
+			};
+		}
+		return {};
+	}
+
 	private getCamelJBangCLIVersion(): string {
 		return workspace.getConfiguration().get('camel.debugAdapter.JBangVersion') as string;
 	}
 
+	private getConfiguredCamelVersion(): string {
+		return workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
+	}
+
 	private getCamelVersion(): string {
-		const camelVersion = workspace.getConfiguration().get('camel.debugAdapter.CamelVersion') as string;
+		const camelVersion = this.getConfiguredCamelVersion();
 		if (camelVersion) {
 			return `--camel-version=${camelVersion}`;
 		} else {
@@ -236,11 +254,17 @@ export class CamelJBangTaskProvider implements TaskProvider {
 
 	private getCamelGlobalRepos(): string {
 		const globalRepos = workspace.getConfiguration().get('camel.debugAdapter.redHatMavenRepository.global') as boolean;
-		if (globalRepos) {
+		if (globalRepos && this.isCamelGlobalReposPlaceholderSupported()) {
 			return '#repos,';
 		} else {
 			return '';
 		}
+	}
+
+	private isCamelGlobalReposPlaceholderSupported(): boolean {
+		// Camel 4.14.2.redhat-00019 fails on "#repos,<url>" with
+		// "java.lang.IllegalArgumentException: URI is not absolute".
+		return this.getConfiguredCamelVersion() !== '4.14.2.redhat-00019';
 	}
 
 	private getRedHatMavenRepository(): string {

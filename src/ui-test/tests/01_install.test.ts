@@ -28,12 +28,17 @@ import {
     WebDriver,
 } from 'vscode-extension-tester';
 
+function normalizePublisher(value: string): string {
+    return value.replaceAll(/\s+/g, '').toLowerCase();
+}
+
 describe('Install test, Extensions View', function () {
     this.timeout(60000);
     this.slow(10000);
     const extensionMetadata: { [key: string]: any } = JSON.parse(fs.readFileSync('package.json', {
         encoding: 'utf-8'
     }));
+    const expectedPublisher = normalizePublisher(String(extensionMetadata['publisher']));
     let item: ExtensionsViewItem;
     let driver: WebDriver;
 
@@ -76,7 +81,7 @@ describe('Install test, Extensions View', function () {
                 throw e;
             }
         }, this.timeout(), 'Page was not rendered well');
-        expect(testAuthor).to.be.equal('Red Hat');
+        expect(normalizePublisher(String(testAuthor))).to.be.equal(expectedPublisher);
     });
 
     it('Has correct title', async function () {
@@ -136,13 +141,13 @@ describe('Install test, Extensions View', function () {
             try {
                 const extensionsView = await (await new ActivityBar().getViewControl('Extensions'))?.openView();
                 const marketplace = (await extensionsView?.getContent().getSection('Installed')) as ExtensionsViewSection;
-                item = await marketplace.findItem(`@installed ${name}`) as ExtensionsViewItem;
-                return true;
+                item = await marketplace.findItem(`@installed ${name}`) as ExtensionsViewItem ?? await marketplace.findItem(name) as ExtensionsViewItem;
+                return item !== undefined;
             } catch (e) {
                return false;
             }
         }, timeout, 'Page was not rendered');
         return item!;
     }
-});
 
+});

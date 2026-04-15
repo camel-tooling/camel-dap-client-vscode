@@ -59,12 +59,22 @@ describe('Completion inside tasks.json', function () {
         it(`${command}`, async function () {
             await openFileInEditor(driver, RESOURCES_DIR, TASKS_TEST_FILE);
             textEditor = await activateEditor(driver, TASKS_TEST_FILE);
-            // workaround for https://github.com/redhat-developer/vscode-extension-tester/issues/931
-            await textEditor?.setTextAtLine(6, "        ");
-            await textEditor?.moveCursor(6, 9);
+            await positionCursorForSnippetInsertion(textEditor);
             await selectFromCA(command);
             const text = await textEditor?.getText();
             expect(text).equals(getFileContent(file, RESOURCES_TASK_EXAMPLES_DIR));
         });
     });
+
+    async function positionCursorForSnippetInsertion(editor: TextEditor | null): Promise<void> {
+        const content = await editor?.getText();
+        const lines = content?.split(/\r?\n/) ?? [];
+        const insertionLine = lines.findIndex((line, index) => line.trim() === '' && lines[index - 1]?.includes('"tasks": ['));
+
+        expect(insertionLine, 'Unable to locate the tasks.json insertion line').to.be.greaterThan(-1);
+
+        // workaround for https://github.com/redhat-developer/vscode-extension-tester/issues/931
+        await editor?.setTextAtLine(insertionLine + 1, '        ');
+        await editor?.setCursor(insertionLine + 1, 9);
+    }
 });
