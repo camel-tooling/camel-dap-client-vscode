@@ -72,10 +72,14 @@ describe('Completion inside tasks.json', function () {
     async function prepareSnippetInsertion(editor: TextEditor | null): Promise<void> {
         const content = await editor?.getText();
         const insertionTarget = /("tasks": \[\r?\n)([ \t]*)(\r?\n[ \t]*\])/;
+        const updatedContent = content!.replace(insertionTarget, `$1$2${SNIPPET_INSERTION_MARKER}$3`);
 
         expect(content).to.match(insertionTarget);
 
-        await editor?.setText(content!.replace(insertionTarget, `$1$2${SNIPPET_INSERTION_MARKER}$3`));
+        await editor?.setText(updatedContent);
+        await driver.wait(async () => {
+            return (await editor?.getText()) === updatedContent;
+        }, 10000, `Unable to update ${TASKS_TEST_FILE} for snippet insertion`);
         await editor?.selectText(SNIPPET_INSERTION_MARKER);
         await editor?.typeText(Key.BACK_SPACE);
     }
