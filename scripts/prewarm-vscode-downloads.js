@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { downloadAndUnzipVSCode } = require('@vscode/test-electron');
@@ -24,20 +25,62 @@ function resolveReleaseType() {
 	return process.env.CODE_TYPE === 'insider' ? ReleaseQuality.Insider : ReleaseQuality.Stable;
 }
 
+function clearCacheEntries(folder, matcher) {
+	if (!fs.existsSync(folder)) {
+		return;
+	}
+
+	for (const entry of fs.readdirSync(folder)) {
+		if (matcher(entry)) {
+			fs.rmSync(path.join(folder, entry), { recursive: true, force: true });
+		}
+	}
+}
+
+function clearTestElectronCache() {
+	clearCacheEntries(path.resolve('.vscode-test'), (entry) => entry.startsWith('vscode-'));
+}
+
+function clearExTesterCache(storageFolder) {
+	clearCacheEntries(storageFolder, (entry) => {
+		return entry === 'Visual Studio Code.app'
+			|| entry === 'Visual Studio Code - Insiders.app'
+			|| entry === 'driverVersion'
+			|| entry.startsWith('VSCode-')
+			|| entry.startsWith('chromedriver')
+			|| entry.endsWith('.zip')
+			|| entry.endsWith('.tar.gz');
+	});
+}
+
+async function retryWithFreshCache(label, clearCache, action) {
+	try {
+		await action();
+	} catch (error) {
+		console.warn(`${label} cache recovery triggered`, error);
+		clearCache();
+		await action();
+	}
+}
+
 async function main() {
 	const storageFolder = resolveStorageFolder();
 	const codeVersion = process.env.CODE_VERSION ?? 'max';
 
 	console.log(`Prewarming @vscode/test-electron cache for ${resolveTestElectronVersion()}`);
-	await downloadAndUnzipVSCode({
-		version: resolveTestElectronVersion(),
-		cachePath: path.resolve('.vscode-test')
+	await retryWithFreshCache('@vscode/test-electron', clearTestElectronCache, async () => {
+		await downloadAndUnzipVSCode({
+			version: resolveTestElectronVersion(),
+			cachePath: path.resolve('.vscode-test')
+		});
 	});
 
 	console.log(`Prewarming vscode-extension-tester cache for ${codeVersion} / ${process.env.CODE_TYPE ?? 'stable'}`);
 	const tester = new ExTester(storageFolder, resolveReleaseType());
-	await tester.downloadCode(codeVersion);
-	await tester.downloadChromeDriver(codeVersion);
+	await retryWithFreshCache('vscode-extension-tester', () => clearExTesterCache(storageFolder), async () => {
+		await tester.downloadCode(codeVersion);
+		await tester.downloadChromeDriver(codeVersion);
+	});
 }
 
 main().catch((error) => {
