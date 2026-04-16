@@ -15,6 +15,7 @@ jobs:
   deploy:
     env:
       CODE_VERSION: max
+      CODE_TYPE: stable
       TEST_RESOURCES: test-resources
 
     runs-on: ubuntu-latest
@@ -66,6 +67,24 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Restore VS Code test cache
+        id: vscode-test-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .vscode-test/vscode-*
+            .vscode-test/extensions
+            test-resources/*.zip
+            test-resources/*.tar.gz
+            test-resources/Visual Studio Code.app
+            test-resources/Visual Studio Code - Insiders.app
+            test-resources/VSCode-*
+            test-resources/chromedriver*
+            test-resources/driverVersion
+          key: vscode-test-cache-v1-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}
+          restore-keys: |
+            vscode-test-cache-v1-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}-
+
       - name: Compile
         run: npm run compile
 
@@ -82,6 +101,22 @@ jobs:
         run: |
           eval $(minikube -p minikube docker-env)
           xvfb-run --auto-servernum npm run ui-test:deploy:minikube
+
+      - name: Save VS Code test cache
+        if: always() && steps.vscode-test-cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .vscode-test/vscode-*
+            .vscode-test/extensions
+            test-resources/*.zip
+            test-resources/*.tar.gz
+            test-resources/Visual Studio Code.app
+            test-resources/Visual Studio Code - Insiders.app
+            test-resources/VSCode-*
+            test-resources/chromedriver*
+            test-resources/driverVersion
+          key: vscode-test-cache-v1-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}
 
       - name: Upload Coverage Results
         uses: actions/upload-artifact@v7
