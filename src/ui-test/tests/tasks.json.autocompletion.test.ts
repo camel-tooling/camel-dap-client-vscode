@@ -18,7 +18,10 @@ import { expect } from "chai";
 import { activateEditor, closeEditor, getFileContent, openFileInEditor, selectFromCA } from "../utils";
 import { ActivityBar, TextEditor, VSBrowser, WebDriver, afterEach } from "vscode-extension-tester";
 import * as path from "path";
+import { Key } from "selenium-webdriver";
 import { RESOURCES_DIR, RESOURCES_TASK_EXAMPLES_DIR, TASKS_TEST_FILE } from "../variables";
+
+const SNIPPET_INSERTION_MARKER = 'camelTaskSnippet';
 
 describe('Completion inside tasks.json', function () {
     this.timeout(120000);
@@ -59,22 +62,21 @@ describe('Completion inside tasks.json', function () {
         it(`${command}`, async function () {
             await openFileInEditor(driver, RESOURCES_DIR, TASKS_TEST_FILE);
             textEditor = await activateEditor(driver, TASKS_TEST_FILE);
-            await positionCursorForSnippetInsertion(textEditor);
+            await prepareSnippetInsertion(textEditor);
             await selectFromCA(command);
             const text = await textEditor?.getText();
             expect(text).equals(getFileContent(file, RESOURCES_TASK_EXAMPLES_DIR));
         });
     });
 
-    async function positionCursorForSnippetInsertion(editor: TextEditor | null): Promise<void> {
+    async function prepareSnippetInsertion(editor: TextEditor | null): Promise<void> {
         const content = await editor?.getText();
-        const lines = content?.split(/\r?\n/) ?? [];
-        const insertionLine = lines.findIndex((line, index) => line.trim() === '' && lines[index - 1]?.includes('"tasks": ['));
+        const insertionTarget = /("tasks": \[\r?\n)([ \t]*)(\r?\n[ \t]*\])/;
 
-        expect(insertionLine, 'Unable to locate the tasks.json insertion line').to.be.greaterThan(-1);
+        expect(content).to.match(insertionTarget);
 
-        // workaround for https://github.com/redhat-developer/vscode-extension-tester/issues/931
-        await editor?.setTextAtLine(insertionLine + 1, '        ');
-        await editor?.setCursor(insertionLine + 1, 9);
+        await editor?.setText(content!.replace(insertionTarget, `$1$2${SNIPPET_INSERTION_MARKER}$3`));
+        await editor?.selectText(SNIPPET_INSERTION_MARKER);
+        await editor?.typeText(Key.BACK_SPACE);
     }
 });
