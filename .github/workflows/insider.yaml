@@ -66,16 +66,14 @@ jobs:
           path: |
             .vscode-test/vscode-*
             .vscode-test/extensions
-            test-resources/*.zip
-            test-resources/*.tar.gz
             test-resources/Visual Studio Code.app
             test-resources/Visual Studio Code - Insiders.app
             test-resources/VSCode-*
             test-resources/chromedriver*
             test-resources/driverVersion
-          key: vscode-test-cache-v1-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}
+          key: vscode-test-cache-v2-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}
           restore-keys: |
-            vscode-test-cache-v1-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}-
+            vscode-test-cache-v2-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}-
 
       - name: npm-compile
         run: npm run compile
@@ -112,14 +110,12 @@ jobs:
           path: |
             .vscode-test/vscode-*
             .vscode-test/extensions
-            test-resources/*.zip
-            test-resources/*.tar.gz
             test-resources/Visual Studio Code.app
             test-resources/Visual Studio Code - Insiders.app
             test-resources/VSCode-*
             test-resources/chromedriver*
             test-resources/driverVersion
-          key: vscode-test-cache-v1-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}
+          key: vscode-test-cache-v2-${{ runner.os }}-${{ runner.arch }}-${{ env.CODE_TYPE }}-${{ env.CODE_VERSION }}
 
       - name: Store VS Code Logs (Ubuntu)
         uses: actions/upload-artifact@v7
