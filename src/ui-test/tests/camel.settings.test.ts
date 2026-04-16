@@ -20,7 +20,7 @@ import * as fs from 'node:fs';
 import * as path from 'path';
 import { ActivityBar, ArraySetting, ArraySettingItem, BottomBarPanel, EditorView, SideBarView, VSBrowser, WebDriver, Workbench, afterEach, before, beforeEach } from 'vscode-extension-tester';
 import { storageFolder } from '../uitest_runner';
-import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
+import { CAMEL_ROUTE_YAML_WITH_SPACE, CAMEL_RUN_ACTION_QUICKPICKS_LABEL, CATALOG_VERSION_ID, EXTRA_LAUNCH_PARAMETER_ID, JBANG_VERSION_ID, RH_MAVEN_REPOSITORY, RH_MAVEN_REPOSITORY_GLOBAL, TEST_ARRAY_RUN, executeCommand, killTerminal, waitUntilTerminalHasText } from '../utils';
 
 async function closeSettingsEditor(): Promise<void> {
     const editorView = new EditorView();
@@ -37,6 +37,19 @@ async function closeSettingsEditor(): Promise<void> {
     } catch {
         // Newer VS Code versions can render the settings editor with a different title.
     }
+}
+
+async function findSettingById<T>(driver: WebDriver, id: string): Promise<T> {
+    let setting: T | undefined;
+    await driver.wait(async () => {
+        try {
+            setting = await (await new Workbench().openSettings()).findSettingByID(id) as T;
+            return setting !== undefined;
+        } catch {
+            return false;
+        }
+    }, 10000, `Setting '${id}' was not found`);
+    return setting!;
 }
 
 describe('Camel User Settings', function () {
@@ -58,9 +71,9 @@ describe('Camel User Settings', function () {
         driver = VSBrowser.instance.driver;
         await VSBrowser.instance.openResources(path.join(RESOURCES));
 
-        defaultJBangVersion = await getSettingsValue('JBang Version') as string;
-        defaultMavenRepository = await getSettingsValue('Red Hat Maven Repository') as string;
-        defaultExtraLaunchParameterSetting = await getArraySettingsValueAtRow(0, 'Extra Launch Parameter', ['Camel', 'Debug Adapter']) as string;
+        defaultJBangVersion = await getSettingsValueById(JBANG_VERSION_ID) as string;
+        defaultMavenRepository = await getSettingsValueById(RH_MAVEN_REPOSITORY) as string;
+        defaultExtraLaunchParameterSetting = await getArraySettingsValueAtRowById(0, EXTRA_LAUNCH_PARAMETER_ID) as string;
     });
 
     describe('Update Camel Version', function () {
@@ -136,7 +149,7 @@ describe('Camel User Settings', function () {
 
         it(`Should not use '#repos' placeholder for global Camel JBang repository config`, async function () {
             await setCamelVersion(productizedCamelVersion);
-            await setSettingsValue(false, 'Global', ['Camel', 'Debug Adapter', 'Red Hat Maven Repository']);
+            await setSettingsValueById(false, RH_MAVEN_REPOSITORY_GLOBAL);
             await executeCommand(CAMEL_RUN_ACTION_QUICKPICKS_LABEL);
 
             await waitUntilTerminalHasText(driver, [`--camel-version=${productizedCamelVersion} --repos=${defaultMavenRepository}`, ...TEST_ARRAY_RUN], 6000, 120000);
@@ -149,7 +162,7 @@ describe('Camel User Settings', function () {
 
         it('Should add another parameter', async function () {
             this.timeout(20000);
-            const arraySetting = await (await new Workbench().openSettings()).findSettingByID("camel.debugAdapter.ExtraLaunchParameter") as ArraySetting;
+            const arraySetting = await findSettingById<ArraySetting>(driver, EXTRA_LAUNCH_PARAMETER_ID);
             const add1 = await arraySetting.add();
             await add1.setValue(newParameter);
             await add1.ok();
@@ -176,7 +189,7 @@ describe('Camel User Settings', function () {
 
         it('Should remove parameter', async function () {
             this.timeout(15000);
-            const arraySetting = await (await new Workbench().openSettings()).findSettingByID("camel.debugAdapter.ExtraLaunchParameter") as ArraySetting;
+            const arraySetting = await findSettingById<ArraySetting>(driver, EXTRA_LAUNCH_PARAMETER_ID);
             const toRemove = await arraySetting.getItem(newParameter);
             await toRemove?.remove();
             await waitUntilItemNotExists(newParameter, arraySetting);
@@ -205,29 +218,29 @@ describe('Camel User Settings', function () {
     }
 
     async function setCamelVersion(version: string): Promise<void> {
-        await setSettingsValue(version, 'Camel Version');
+        await setSettingsValueById(version, CATALOG_VERSION_ID);
     }
 
     async function setJBangVersion(version: string): Promise<void> {
-        await setSettingsValue(version, 'JBang Version');
+        await setSettingsValueById(version, JBANG_VERSION_ID);
     }
 
-    async function setSettingsValue(value: string | boolean, title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<void> {
-        const textField = await (await new Workbench().openSettings()).findSetting(title, ...path);
+    async function setSettingsValueById(value: string | boolean, id: string): Promise<void> {
+        const textField = await findSettingById<{ setValue: (value: string | boolean) => Promise<void> }>(driver, id);
         await textField.setValue(value);
         await driver.sleep(500);
         await closeSettingsEditor();
     }
 
-    async function getSettingsValue(title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<string | boolean> {
-        const textField = await (await new Workbench().openSettings()).findSetting(title, ...path);
+    async function getSettingsValueById(id: string): Promise<string | boolean> {
+        const textField = await findSettingById<{ getValue: () => Promise<string | boolean> }>(driver, id);
         const value = await textField.getValue();
         await closeSettingsEditor();
         return value;
     }
 
-    async function getArraySettingsValueAtRow(row: number, title: string, path: string[] = ['Camel', 'Debug Adapter']): Promise<string | boolean> {
-        const arraySetting = await (await new Workbench().openSettings()).findSetting(title, ...path) as ArraySetting;
+    async function getArraySettingsValueAtRowById(row: number, id: string): Promise<string | boolean> {
+        const arraySetting = await findSettingById<ArraySetting>(driver, id);
         const arrayItem = await arraySetting.getItem(row) as ArraySettingItem;
         const itemValue = await arrayItem.getValue() as string;
         await closeSettingsEditor();
